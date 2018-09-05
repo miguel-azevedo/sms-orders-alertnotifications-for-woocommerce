@@ -40,6 +40,15 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 */
 	private $version;
 
+    /**
+     * The ID of this plugin parent.
+     *
+     * @since    1.0.0
+     * @access   private
+     * @var      string    $plugin_name    The ID of this plugin.
+     */
+    private $parent_plugin_name = 'egoi-for-wp';
+
 	/**
 	 * Initialize the class and set its properties.
 	 *
@@ -73,6 +82,8 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 		 * class.
 		 */
 
+        wp_enqueue_style( $this->plugin_name, plugins_url().'/smart-marketing-for-wp/admin/css/egoi-for-wp-admin.css', array(), $this->version, 'all' );
+
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/smart-marketing-addon-sms-order-admin.css', array(), $this->version, 'all' );
 
 	}
@@ -99,5 +110,32 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/smart-marketing-addon-sms-order-admin.js', array( 'jquery' ), $this->version, false );
 
 	}
+
+    /**
+     * Add an options page to smart marketing menu
+     *
+     * @since  1.0.0
+     */
+    public function add_options_page() {
+
+        $this->plugin_screen_hook_suffix = add_submenu_page(
+            $this->parent_plugin_name,
+            __( 'SMS Order Config', 'addon-sms-order' ),
+            __( 'SMS Order Config', 'addon-sms-order' ),
+            'manage_options',
+            'smart-marketing-addon-sms-order-config',
+            array( $this, 'display_plugin_sms_order_config' )
+        );
+
+    }
+
+    /**
+     * Render the options page for plugin
+     *
+     * @since  1.0.0
+     */
+    public function display_plugin_sms_order_config() {
+        include_once 'partials/smart-marketing-addon-sms-order-admin-config.php';
+    }
 
 }
