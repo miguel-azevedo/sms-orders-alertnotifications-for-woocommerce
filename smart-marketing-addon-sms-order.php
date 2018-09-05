@@ -30,6 +30,23 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
+add_action( 'admin_init', 'child_plugin_has_parent_plugin' );
+function child_plugin_has_parent_plugin() {
+    if ( is_admin() && current_user_can( 'activate_plugins' ) &&  !is_plugin_active( 'smart-marketing-for-wp/egoi-for-wp.php' ) ) {
+        add_action( 'admin_notices', 'child_plugin_notice' );
+
+        deactivate_plugins( plugin_basename( __FILE__ ) );
+
+        if ( isset( $_GET['activate'] ) ) {
+            unset( $_GET['activate'] );
+        }
+    }
+}
+
+function child_plugin_notice(){
+    ?><div class="notice notice-error is-dismissible"><p>Sorry, but Child Plugin requires the Parent plugin to be installed and active.</p></div><?php
+}
+
 /**
  * Currently plugin version.
  * Start at version 1.0.0 and use SemVer - https://semver.org
