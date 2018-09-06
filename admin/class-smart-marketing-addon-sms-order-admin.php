@@ -41,13 +41,35 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	private $version;
 
     /**
-     * The ID of this plugin parent.
+     * The ID of parent of this plugin.
      *
      * @since    1.0.0
      * @access   private
-     * @var      string    $plugin_name    The ID of this plugin.
+     * @var      string    $parent_plugin_name    The ID of parent of this plugin.
      */
     private $parent_plugin_name = 'egoi-for-wp';
+
+	/**
+	 * List of order status WooCommerce hooks
+	 *
+	 * @var array
+	 */
+    protected $order_statuses = array(
+	    "pending" => "Pending payment",
+	    "failed" => "Failed",
+	    "on-hold" => "On Hold",
+	    "processing" => "Processing",
+	    "completed" => "Completed",
+	    "refunded" => "Refunded",
+	    "cancelled" => "Failed",
+    );
+
+	/**
+	 * List of sms languages
+	 *
+	 * @var array
+	 */
+    protected $languages = array( "en", "es", "pt", "pt_BR");
 
 	/**
 	 * Initialize the class and set its properties.
@@ -136,6 +158,31 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
      */
     public function display_plugin_sms_order_config() {
         include_once 'partials/smart-marketing-addon-sms-order-admin-config.php';
+    }
+
+	/**
+	 * Save sms order configs in wordpress options
+	 *
+	 * @param $post
+	 *
+	 * @return bool
+	 */
+    public function process_config_form($post) {
+
+	    if (isset($post['form_id']) && $post['form_id'] == 'form-sms-order-recipients') {
+
+		    update_option('egoi_sms_order_recipients', json_encode($post));
+
+	    } else if (isset($post['form_id']) && $post['form_id'] == 'form-sms-order-texts') {
+
+		    $texts = json_decode(get_option('egoi_sms_order_texts'), true);
+		    $texts[$post['sms_text_language']] = $post;
+		    update_option('egoi_sms_order_texts', json_encode($texts));
+
+	    }
+
+	    return true;
+
     }
 
 }
