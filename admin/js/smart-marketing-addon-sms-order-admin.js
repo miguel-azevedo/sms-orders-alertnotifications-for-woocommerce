@@ -29,4 +29,65 @@
 	 * practising this, we should strive to set a better example in our own work.
 	 */
 
+    $( document ).ready(function() {
+
+    	var languages = ["en", "es", "pt", "pt_BR"];
+		var form_id = $("#form_info").data('form-id');
+		var form_lang = $("#form_info").data('form-lang');
+
+		if (form_id != 'form-sms-order-recipients' && form_id != '') {
+            activeConfigTag("#nav-tab-sms-texts");
+            showConfigWrap("#tab-sms-texts");
+
+			$("#sms_text_language").val(form_lang);
+            disableAllSmsOrderTexts(languages);
+            enableSmsOrderText(form_lang);
+		} else {
+            $("#tab-sms-recipients").show();
+            disableAllSmsOrderTexts(languages);
+		}
+
+        $(".nav-tab-addon").on("click", function () {
+            activeConfigTag(this);
+
+            var tab = $(".nav-tab-active").attr("id");
+            var wrap = "#"+tab.substring(4);
+            showConfigWrap(wrap);
+        });
+
+        $("#sms_text_language").on("change", function () {
+            var lang = $(this).val();
+
+            disableAllSmsOrderTexts(languages);
+            enableSmsOrderText(lang);
+        });
+
+    });
+
+    function activeConfigTag(tag) {
+        $(".nav-tab-addon").each(function () {
+            $(this).attr("class", "nav-tab nav-tab-addon");
+        });
+        $(tag).attr("class", "nav-tab nav-tab-addon nav-tab-active");
+    }
+
+    function showConfigWrap(wrap) {
+        $(".wrap-addon").each(function () {
+            $(this).hide();
+        });
+        $(wrap).show();
+    }
+
+    function disableAllSmsOrderTexts(languages) {
+        languages.forEach(function (lang) {
+            $("#sms_order_texts_"+lang).hide();
+            $("#sms_order_texts_"+lang+" :input").attr("disabled", true);
+        });
+    }
+
+    function enableSmsOrderText(language) {
+        $("#sms_order_texts_"+language).show();
+        $("#sms_order_texts_"+language+" :input").attr("disabled", false);
+    }
+
 })( jQuery );

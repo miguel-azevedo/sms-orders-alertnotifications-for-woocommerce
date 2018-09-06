@@ -12,13 +12,137 @@
  * @subpackage Smart_Marketing_Addon_Sms_Order/admin/partials
  */
 
-?>
+if (isset($_POST['form_id'])) {
+    $this->process_config_form($_POST);
+}
 
+$recipients = json_decode(get_option('egoi_sms_order_recipients'), true);
+$texts = json_decode(get_option('egoi_sms_order_texts'), true);
+
+?>
+<span id="form_info" data-form-id="<?=$_POST['form_id']?>" data-form-lang="<?=$_POST['sms_text_language']?>"></span>
 <!-- head -->
 <h1 class="logo">Smart Marketing - <?php _e( 'SMS Order Config', 'addon-sms-order' ); ?></h1>
 <p class="breadcrumbs">
-    <span class="prefix"><?php echo __( 'You are here: ', 'addon-sms-order' ); ?></span>
+    <span class="prefix"><?php _e( 'You are here: ', 'addon-sms-order' ); ?></span>
     <strong>Smart Marketing</a> &rsaquo;
         <span class="current-crumb"><?php _e( 'SMS Order Config', 'addon-sms-order' ); ?></strong></span>
 </p>
 <hr/>
+
+<h2 class="nav-tab-wrapper">
+    <a class="nav-tab nav-tab-addon nav-tab-active" id="nav-tab-sms-recipients">
+        <?php _e('Recipients', 'addon-sms-order'); ?>
+    </a>
+
+    <a class="nav-tab nav-tab-addon" id="nav-tab-sms-texts">
+        <?php _e('SMS Texts', 'addon-sms-order'); ?>
+    </a>
+</h2>
+
+<!-- wrap SMS Recipients -->
+<div class="wrap tab wrap-addon" id="tab-sms-recipients">
+    <div class="wrap egoi4wp-settings" id="tab-forms">
+        <div class="row">
+            <div class="main-content col col-4" style="margin:0 0 20px;">
+                <div style="font-size:14px; margin:10px 0;">
+                    <?php _e('Recipients', 'addon-sms-order');?>
+                </div>
+                <form action="#" method="post" class="form-sms-order-config" id="form-sms-order-recipients">
+                    <input name="form_id" type="hidden" value="form-sms-order-recipients" />
+                    <table border='0' class="widefat striped">
+                        <thead>
+                        <tr>
+                            <th><?php _e('Order Status', 'addon-sms-order');?></th>
+                            <th><?php _e('Customer', 'addon-sms-order');?></th>
+                            <th><?php _e('Admin', 'addon-sms-order');?></th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                            <?php foreach ($this->order_statuses as $cod => $name) { ?>
+                            <tr>
+                                <td>
+                                    <?php _e($name, 'addon-sms-order');?>
+                                </td>
+                                <td>
+                                    <input class="input-checkbox" type="checkbox" name="egoi_sms_order_customer_<?=$cod?>" value="1"
+                                        <?php checked($recipients['egoi_sms_order_customer_'.$cod], 1);?>
+                                    />
+                                </td>
+                                <td>
+                                    <input class="input-checkbox" type="checkbox" name="egoi_sms_order_admin_<?=$cod?>" value="1"
+	                                    <?php checked($recipients['egoi_sms_order_admin_'.$cod], 1);?>
+                                    />
+                                </td>
+                            </tr>
+                        <?php } ?>
+                        </tbody>
+                    </table>
+                    <?php submit_button(); ?>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- wrap SMS Texts -->
+<div class="wrap tab wrap-addon" id="tab-sms-texts">
+    <div class="wrap egoi4wp-settings" id="tab-forms">
+        <div class="row">
+            <div class="main-content col col-12" style="margin:0 0 20px;">
+
+                <p class="label_span"><?php _e('Select the language', 'addon-sms-order');?></p>
+
+                <form action="#" method="post" class="form-sms-order-config" id="form-sms-order-texts">
+                    <input name="form_id" type="hidden" value="form-sms-order-texts" />
+                    <select class="e-goi-option-select-admin-forms" name="sms_text_language" id="sms_text_language">
+                        <option value="" disabled selected>
+                            <?php _e('Selected the language', 'addon-sms-order');?>
+                        </option>
+                        <option value="pt_BR" <?php selected($_GET['sms_text_language'], 'pt_BR');?>>
+                            <?php _e('Brazilian Portuguese', 'addon-sms-order');?>
+                        </option>
+                        <option value="en" <?php selected($_GET['sms_text_language'], 'en');?> >
+                            <?php _e('English', 'addon-sms-order');?>
+                        </option>
+                        <option value="pt" <?php selected($_GET['sms_text_language'], 'pt');?>>
+                            <?php _e('Portuguese', 'addon-sms-order');?>
+                        </option>
+                        <option value="es" <?php selected($_GET['sms_text_language'], 'es');?>>
+                            <?php _e('Spanish', 'addon-sms-order');?>
+                        </option>
+                    </select>
+
+                    <?php foreach ($this->languages as $lang) { ?>
+                        <div id="sms_order_texts_<?=$lang?>">
+                            <table border="0" class="widefat striped">
+                                <thead>
+                                    <tr>
+                                        <th><?php _e('Order Status', 'addon-sms-order');?></th>
+                                        <th><?php _e('Customer', 'addon-sms-order');?></th>
+                                        <th><?php _e('Admin', 'addon-sms-order');?></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                <?php foreach ($this->order_statuses as $cod => $name) { ?>
+                                    <tr>
+                                        <td><?php _e($name, 'addon-sms-order');?></td>
+                                        <td>
+                                            <textarea name="egoi_sms_order_text_customer_<?=$cod?>"><?=$texts[$lang]["egoi_sms_order_text_customer_".$cod]?></textarea>
+                                        </td>
+                                        <td>
+                                            <textarea name="egoi_sms_order_text_admin_<?=$cod?>"><?=$texts[$lang]["egoi_sms_order_text_admin_".$cod]?></textarea>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+                                </tbody>
+                            </table>
+                            <?php submit_button(); ?>
+                        </div>
+                    <?php } ?>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
