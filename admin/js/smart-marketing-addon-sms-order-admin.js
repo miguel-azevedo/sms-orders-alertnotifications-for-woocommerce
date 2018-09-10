@@ -35,15 +35,16 @@
 		var form_id = $("#form_info").data('form-id');
 		var form_lang = $("#form_info").data('form-lang');
 
-		if (form_id != 'form-sms-order-recipients' && form_id != '') {
-            activeConfigTag("#nav-tab-sms-texts");
-            showConfigWrap("#tab-sms-texts");
+		if ($( "#form_info" ).length && form_id != 'form-sms-order-senders' && form_id != '') {
+			var form_type = form_id.split("-");
+            activeConfigTag("#nav-tab-sms-"+form_type[3]);
+            showConfigWrap("#tab-sms-"+form_type[3]);
 
 			$("#sms_text_language").val(form_lang);
             disableAllSmsOrderTexts(languages);
             enableSmsOrderText(form_lang);
 		} else {
-            $("#tab-sms-recipients").show();
+            $("#tab-sms-senders").show();
             disableAllSmsOrderTexts(languages);
 		}
 

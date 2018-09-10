@@ -16,9 +16,11 @@ if (isset($_POST['form_id'])) {
     $this->process_config_form($_POST);
 }
 
+$sender_option = json_decode(get_option('egoi_sms_order_sender'), true);
 $recipients = json_decode(get_option('egoi_sms_order_recipients'), true);
 $texts = json_decode(get_option('egoi_sms_order_texts'), true);
 
+$senders = $this->getSenders();
 ?>
 <span id="form_info" data-form-id="<?=$_POST['form_id']?>" data-form-lang="<?=$_POST['sms_text_language']?>"></span>
 <!-- head -->
@@ -31,7 +33,11 @@ $texts = json_decode(get_option('egoi_sms_order_texts'), true);
 <hr/>
 
 <h2 class="nav-tab-wrapper">
-    <a class="nav-tab nav-tab-addon nav-tab-active" id="nav-tab-sms-recipients">
+    <a class="nav-tab nav-tab-addon nav-tab-active" id="nav-tab-sms-senders">
+		<?php _e('Senders', 'addon-sms-order'); ?>
+    </a>
+
+    <a class="nav-tab nav-tab-addon" id="nav-tab-sms-recipients">
         <?php _e('Recipients', 'addon-sms-order'); ?>
     </a>
 
@@ -39,6 +45,39 @@ $texts = json_decode(get_option('egoi_sms_order_texts'), true);
         <?php _e('SMS Texts', 'addon-sms-order'); ?>
     </a>
 </h2>
+
+<!-- wrap SMS Senders -->
+<div class="wrap tab wrap-addon" id="tab-sms-senders">
+    <div class="wrap egoi4wp-settings" id="tab-forms">
+        <div class="row">
+            <div class="main-content col col-12" style="margin:0 0 20px;">
+
+                <p class="label_span"><?php _e('Select the sender', 'addon-sms-order');?></p>
+
+                <form action="#" method="post" class="form-sms-order-config" id="form-sms-order-senders">
+                    <input name="form_id" type="hidden" value="form-sms-order-senders" />
+                    <select class="e-goi-option-select-admin-forms" name="sender_hash" id="sender_hash">
+                        <option value="" disabled selected>
+							<?php _e('Selected the sender', 'addon-sms-order');?>
+                        </option>
+                        <?php
+                            if (isset($senders) && count($senders) > 0) {
+                                foreach ($senders as $sender) {
+                                    ?>
+                                    <option value="<?=$sender['FROMID']?>" <?php selected($sender['FROMID'], $sender_option['sender_hash']);?> >
+                                        <?=$sender['SENDER']?>
+                                    </option>
+                                    <?php
+                                }
+                            }
+                        ?>
+                    </select>
+	                <?php submit_button(); ?>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- wrap SMS Recipients -->
 <div class="wrap tab wrap-addon" id="tab-sms-recipients">

@@ -49,6 +49,8 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
      */
     private $parent_plugin_name = 'egoi-for-wp';
 
+    private $apikey;
+
 	/**
 	 * List of order status WooCommerce hooks
 	 *
@@ -83,6 +85,8 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 
+		$apikey = get_option('egoi_api_key');
+		$this->apikey = $apikey['api_key'];
 	}
 
 	/**
@@ -169,7 +173,11 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 */
     public function process_config_form($post) {
 
-	    if (isset($post['form_id']) && $post['form_id'] == 'form-sms-order-recipients') {
+	    if (isset($post['form_id']) && $post['form_id'] == 'form-sms-order-senders') {
+
+		    update_option('egoi_sms_order_sender', json_encode($post));
+
+	    } else if (isset($post['form_id']) && $post['form_id'] == 'form-sms-order-recipients') {
 
 		    update_option('egoi_sms_order_recipients', json_encode($post));
 
@@ -185,4 +193,17 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
     }
 
+
+    public function getSenders() {
+	    $params = array(
+		    'apikey' 		=> $this->apikey,
+		    'channel' 		=> 'telemovel'
+	    );
+
+	    // using Soap with SoapClient
+	    $client = new SoapClient('http://api.e-goi.com/v2/soap.php?wsdl');
+	    $result = $client->getSenders($params);
+
+	    return $result;
+    }
 }
