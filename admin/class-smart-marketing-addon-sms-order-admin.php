@@ -191,22 +191,28 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
 	    	$sender = json_decode(get_option('egoi_sms_order_sender'), true);
 
-	    	$response = $this->curl('http://www.smart-marketing-addon-sms-order-middleware.local/sms', [
+	    	$response = $this->curl('http://www.smart-marketing-addon-sms-order-middleware.local/sms', array(
 			    "apikey" => $this->apikey,
 			    "sender_hash" => $sender['sender_hash'],
 			    "message" => $post['message'],
 			    "recipient" => $post['recipient'],
 			    "type" => 'test',
 			    "order_id" => 0
-		    ]);
+		    ));
 
+	    	$response = json_decode($response);
+	    	if (isset($response->errorCode)) {
+				return false;
+		    }
 	    }
-
 	    return true;
-
     }
 
-
+	/**
+	 * Function to get cellphone senders from E-goi account
+	 *
+	 * @return array with senders
+	 */
     public function getSenders() {
 	    $params = array(
 		    'apikey' 		=> $this->apikey,
@@ -219,6 +225,13 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	    return $result;
     }
 
+	/**
+	 * cURL helper
+	 * @param $url
+	 * @param $post
+	 *
+	 * @return mixed
+	 */
     public function curl($url, $post) {
 	    $ch = curl_init($url);
 	    curl_setopt($ch, CURLOPT_POST, 1);
@@ -226,11 +239,27 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	    curl_setopt($ch, CURLOPT_HEADER, 0);
 	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 	    curl_setopt($ch, CURLOPT_TIMEOUT, 60);
-		var_dump($post);
+
 	    $response = curl_exec($ch);
 
 	    curl_close($ch);
 
 	    return $response;
     }
+
+	public function admin_notice__success() {
+		?>
+		<div class="notice notice-success is-dismissible">
+			<p><?php _e( 'Done!', 'addon-sms-order' ); ?></p>
+		</div>
+		<?php
+	}
+
+	public function admin_notice__error() {
+		?>
+		<div class="notice notice-error is-dismissible">
+			<p><?php _e( 'Irks! An error has occurred.', 'addon-sms-order' ); ?></p>
+		</div>
+		<?php
+	}
 }

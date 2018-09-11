@@ -13,7 +13,12 @@
  */
 
 if (isset($_POST['form_id'])) {
-    $this->process_config_form($_POST);
+    $result = $this->process_config_form($_POST);
+    if ($result) {
+        $this->admin_notice__success();
+    } else {
+	    $this->admin_notice__error();
+    }
 }
 
 $sender_option = json_decode(get_option('egoi_sms_order_sender'), true);
@@ -21,6 +26,7 @@ $recipients = json_decode(get_option('egoi_sms_order_recipients'), true);
 $texts = json_decode(get_option('egoi_sms_order_texts'), true);
 
 $senders = $this->getSenders();
+
 ?>
 <span id="form_info" data-form-id="<?=$_POST['form_id']?>" data-form-lang="<?=$_POST['sms_text_language']?>"></span>
 <!-- head -->

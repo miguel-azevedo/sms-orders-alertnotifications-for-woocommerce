@@ -35,7 +35,7 @@
 		var form_id = $("#form_info").data('form-id');
 		var form_lang = $("#form_info").data('form-lang');
 
-		if ($( "#form_info" ).length && form_id != 'form-sms-order-senders' && form_id != '') {
+		if ($( "#form_info" ).length && form_id != 'form-sms-order-senders' && form_id != 'form-sms-order-tests' && form_id != '') {
 			var form_type = form_id.split("-");
             activeConfigTag("#nav-tab-sms-"+form_type[3]);
             showConfigWrap("#tab-sms-"+form_type[3]);
