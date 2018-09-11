@@ -70,10 +70,40 @@ $senders = $this->getSenders();
                                     <?php
                                 }
                             }
-                        ?>
+                        ?>q
                     </select>
-	                <?php submit_button(); ?>
+                    <table border="0">
+                        <tr>
+                            <td><?php submit_button(); ?></td>
+                            <td><a id="button-test-sms">Send a test SMS</a></td>
+                        </tr>
+                    </table>
                 </form>
+
+                <div id="test-sms" style="display: none;">
+                    <form action="#" method="post">
+                        <input name="form_id" type="hidden" value="form-sms-order-tests" />
+                        <table class="form-table">
+                            <tr valign="top">
+                                <th scope="row">
+                                    <label><?php _e('Recipient', 'addon-sms-order');?></label>
+                                </th>
+                                <td>
+                                    <input type="text" name="recipient" class="regular-text">
+                                </td>
+                            </tr>
+                            <tr valign="top">
+                                <th scope="row">
+                                    <label><?php _e('Message', 'addon-sms-order');?></label>
+                                </th>
+                                <td>
+                                    <textarea name="message" style="width: 25em;"></textarea>
+                                </td>
+                            </tr>
+                        </table>
+	                    <?php submit_button('Send SMS', 'secondary'); ?>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

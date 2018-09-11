@@ -187,6 +187,19 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 		    $texts[$post['sms_text_language']] = $post;
 		    update_option('egoi_sms_order_texts', json_encode($texts));
 
+	    } else if (isset($post['form_id']) && $post['form_id'] == 'form-sms-order-tests') {
+
+	    	$sender = json_decode(get_option('egoi_sms_order_sender'), true);
+
+	    	$response = $this->curl('http://www.smart-marketing-addon-sms-order-middleware.local/sms', [
+			    "apikey" => $this->apikey,
+			    "sender_hash" => $sender['sender_hash'],
+			    "message" => $post['message'],
+			    "recipient" => $post['recipient'],
+			    "type" => 'test',
+			    "order_id" => 0
+		    ]);
+
 	    }
 
 	    return true;
@@ -200,10 +213,24 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 		    'channel' 		=> 'telemovel'
 	    );
 
-	    // using Soap with SoapClient
 	    $client = new SoapClient('http://api.e-goi.com/v2/soap.php?wsdl');
 	    $result = $client->getSenders($params);
 
 	    return $result;
+    }
+
+    public function curl($url, $post) {
+	    $ch = curl_init($url);
+	    curl_setopt($ch, CURLOPT_POST, 1);
+	    curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+	    curl_setopt($ch, CURLOPT_HEADER, 0);
+	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	    curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+		var_dump($post);
+	    $response = curl_exec($ch);
+
+	    curl_close($ch);
+
+	    return $response;
     }
 }

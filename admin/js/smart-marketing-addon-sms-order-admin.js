@@ -63,6 +63,10 @@
             enableSmsOrderText(lang);
         });
 
+        $("#button-test-sms").on("click", function () {
+        	$("#test-sms").show();
+		});
+
     });
 
     function activeConfigTag(tag) {
