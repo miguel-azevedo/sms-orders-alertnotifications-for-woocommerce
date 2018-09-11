@@ -67,6 +67,21 @@
         	$("#test-sms").show();
 		});
 
+        var text_el = '';
+        var position = 0;
+        $(".sms_texts_tags_button").on("click", function () {
+			var cod = $(this).data('text-cod');
+			if (text_el !== '') {
+				var text = text_el.val();
+				var new_text = text.substring(0, position) + cod + text.substring(position);
+				text_el.val(new_text);
+			}
+        });
+        $("#form-sms-order-texts textarea").focusout( function () {
+			text_el = $(this);
+            position = $(this).getCursorPosition();
+        });
+
     });
 
     function activeConfigTag(tag) {
@@ -88,11 +103,31 @@
             $("#sms_order_texts_"+lang).hide();
             $("#sms_order_texts_"+lang+" :input").attr("disabled", true);
         });
+		$("#sms_texts_tags").hide();
     }
 
     function enableSmsOrderText(language) {
         $("#sms_order_texts_"+language).show();
         $("#sms_order_texts_"+language+" :input").attr("disabled", false);
+        $("#sms_texts_tags").show();
     }
 
+
 })( jQuery );
+
+(function ($) {
+    $.fn.getCursorPosition = function() {
+        var el = $(this).get(0);
+        var pos = 0;
+        if('selectionStart' in el) {
+            pos = el.selectionStart;
+        } else if('selection' in document) {
+            el.focus();
+            var Sel = document.selection.createRange();
+            var SelLength = document.selection.createRange().text.length;
+            Sel.moveStart('character', -el.value.length);
+            pos = Sel.text.length - SelLength;
+        }
+        return pos;
+    }
+})(jQuery);

@@ -76,7 +76,7 @@ $senders = $this->getSenders();
                                     <?php
                                 }
                             }
-                        ?>q
+                        ?>
                     </select>
                     <table border="0">
                         <tr>
@@ -171,23 +171,33 @@ $senders = $this->getSenders();
 
                 <form action="#" method="post" class="form-sms-order-config" id="form-sms-order-texts">
                     <input name="form_id" type="hidden" value="form-sms-order-texts" />
-                    <select class="e-goi-option-select-admin-forms" name="sms_text_language" id="sms_text_language">
-                        <option value="" disabled selected>
-                            <?php _e('Selected the language', 'addon-sms-order');?>
-                        </option>
-                        <option value="pt_BR" <?php selected($_GET['sms_text_language'], 'pt_BR');?>>
-                            <?php _e('Brazilian Portuguese', 'addon-sms-order');?>
-                        </option>
-                        <option value="en" <?php selected($_GET['sms_text_language'], 'en');?> >
-                            <?php _e('English', 'addon-sms-order');?>
-                        </option>
-                        <option value="pt" <?php selected($_GET['sms_text_language'], 'pt');?>>
-                            <?php _e('Portuguese', 'addon-sms-order');?>
-                        </option>
-                        <option value="es" <?php selected($_GET['sms_text_language'], 'es');?>>
-                            <?php _e('Spanish', 'addon-sms-order');?>
-                        </option>
-                    </select>
+                    <div id="sms_texts_select_lang">
+                        <select class="e-goi-option-select-admin-forms" name="sms_text_language" id="sms_text_language">
+                            <option value="" disabled selected>
+                                <?php _e('Selected the language', 'addon-sms-order');?>
+                            </option>
+                            <option value="pt_BR" <?php selected($_GET['sms_text_language'], 'pt_BR');?>>
+                                <?php _e('Brazilian Portuguese', 'addon-sms-order');?>
+                            </option>
+                            <option value="en" <?php selected($_GET['sms_text_language'], 'en');?> >
+                                <?php _e('English', 'addon-sms-order');?>
+                            </option>
+                            <option value="pt" <?php selected($_GET['sms_text_language'], 'pt');?>>
+                                <?php _e('Portuguese', 'addon-sms-order');?>
+                            </option>
+                            <option value="es" <?php selected($_GET['sms_text_language'], 'es');?>>
+                                <?php _e('Spanish', 'addon-sms-order');?>
+                            </option>
+                        </select>
+                    </div>
+
+                    <div id="sms_texts_tags">
+                        <?php foreach ($this->sms_text_tags as $tag_name => $tag_cod) { ?>
+                            <button type="button" class="button button-default sms_texts_tags_button" data-text-cod="<?=$tag_cod?>">
+                                <?php echo ucwords(str_replace('_', ' ', $tag_name)); ?>
+                            </button>
+                        <?php } ?>
+                    </div>
 
                     <?php foreach ($this->languages as $lang) { ?>
                         <div id="sms_order_texts_<?=$lang?>">
@@ -204,10 +214,10 @@ $senders = $this->getSenders();
                                     <tr>
                                         <td><?php _e($name, 'addon-sms-order');?></td>
                                         <td>
-                                            <textarea name="egoi_sms_order_text_customer_<?=$cod?>"><?=$texts[$lang]["egoi_sms_order_text_customer_".$cod]?></textarea>
+                                            <textarea name="egoi_sms_order_text_customer_<?=$cod?>" id="egoi_sms_order_text_customer_<?=$cod?>"><?=$texts[$lang]["egoi_sms_order_text_customer_".$cod]?></textarea>
                                         </td>
                                         <td>
-                                            <textarea name="egoi_sms_order_text_admin_<?=$cod?>"><?=$texts[$lang]["egoi_sms_order_text_admin_".$cod]?></textarea>
+                                            <textarea name="egoi_sms_order_text_admin_<?=$cod?>" id="egoi_sms_order_text_admin_<?=$cod?>"><?=$texts[$lang]["egoi_sms_order_text_admin_".$cod]?></textarea>
                                         </td>
                                     </tr>
                                 <?php } ?>

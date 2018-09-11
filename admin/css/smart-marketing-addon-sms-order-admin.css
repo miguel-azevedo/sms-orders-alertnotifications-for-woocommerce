@@ -2,3 +2,11 @@
  * All of the CSS for your admin-specific functionality should be
  * included in this file.
  */
+
+#sms_texts_select_lang{
+    margin-bottom: 30px;
+}
+
+#sms_texts_tags{
+    margin-bottom: 10px;
+}
