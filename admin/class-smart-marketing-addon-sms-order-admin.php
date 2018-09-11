@@ -177,7 +177,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
 	    	$sender = json_decode(get_option('egoi_sms_order_sender'), true);
 
-	    	$response = $this->curl('http://www.smart-marketing-addon-sms-order-middleware.local/sms', array(
+	    	$response = $this->sendSms(array(
 			    "apikey" => $this->apikey,
 			    "sender_hash" => $sender['sender_hash'],
 			    "message" => $post['message'],
@@ -209,6 +209,11 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	    $result = $client->getSenders($params);
 
 	    return $result;
+    }
+
+    public function sendSms($sms_params) {
+        $url = 'http://www.smart-marketing-addon-sms-order-middleware.local/sms';
+        return $this->curl($url, $sms_params);
     }
 
 	/**
