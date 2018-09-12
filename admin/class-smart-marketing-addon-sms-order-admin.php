@@ -177,7 +177,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
 	    	$sender = json_decode(get_option('egoi_sms_order_sender'), true);
 
-	    	$response = $this->sendSms(array(
+	    	$response = $this->send_sms(array(
 			    "apikey" => $this->apikey,
 			    "sender_hash" => $sender['sender_hash'],
 			    "message" => $post['message'],
@@ -199,7 +199,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 *
 	 * @return array with senders
 	 */
-    public function getSenders() {
+    public function get_senders() {
 	    $params = array(
 		    'apikey' 		=> $this->apikey,
 		    'channel' 		=> 'telemovel'
@@ -211,7 +211,13 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	    return $result;
     }
 
-    public function sendSms($sms_params) {
+	/**
+     * Method to send SMS
+	 * @param $sms_params
+	 *
+	 * @return mixed
+	 */
+    public function send_sms($sms_params) {
         $url = 'http://www.smart-marketing-addon-sms-order-middleware.local/sms';
         return $this->curl($url, $sms_params);
     }
@@ -253,4 +259,14 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 		</div>
 		<?php
 	}
+
+    public function sms_order_reminder() {
+	    global $wpdb;
+
+	    $table_name = $wpdb->prefix. 'egoi_sms_order_reminders';
+
+        $sql = " INSERT INTO $table_name (time, order_id) VALUES ('". date('Y-m-d H:i:s') ."', '2') ";
+
+        $wpdb->query($sql);
+    }
 }

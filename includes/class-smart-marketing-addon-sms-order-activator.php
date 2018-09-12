@@ -30,6 +30,10 @@ class Smart_Marketing_Addon_Sms_Order_Activator {
 	 * @since    1.0.0
 	 */
 	public static function activate() {
+		if (! wp_next_scheduled ( 'egoi_sms_order_event' )) {
+			wp_schedule_event(time(), 'daily', 'egoi_sms_order_event');
+		}
+
 		static::create_sms_order_reminders_table();
 	}
 

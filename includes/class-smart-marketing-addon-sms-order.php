@@ -158,7 +158,7 @@ class Smart_Marketing_Addon_Sms_Order {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
-
+		$this->loader->add_action('egoi_sms_order_event', $plugin_admin, 'sms_order_reminder');
 	}
 
 	/**
