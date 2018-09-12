@@ -175,16 +175,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
 	    } else if (isset($post['form_id']) && $post['form_id'] == 'form-sms-order-tests') {
 
-	    	$sender = json_decode(get_option('egoi_sms_order_sender'), true);
-
-	    	$response = $this->send_sms(array(
-			    "apikey" => $this->apikey,
-			    "sender_hash" => $sender['sender_hash'],
-			    "message" => $post['message'],
-			    "recipient" => $post['recipient'],
-			    "type" => 'test',
-			    "order_id" => 0
-		    ));
+	    	$response = $this->send_sms($post['recipient'], $post['message'], 'test', 0);
 
 	    	$response = json_decode($response);
 	    	if (isset($response->errorCode)) {
@@ -217,8 +208,19 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 *
 	 * @return mixed
 	 */
-    public function send_sms($sms_params) {
+    public function send_sms($recipient, $message, $type, $order_id) {
         $url = 'http://www.smart-marketing-addon-sms-order-middleware.local/sms';
+
+	    $sender = json_decode(get_option('egoi_sms_order_sender'), true);
+
+	    $sms_params = array(
+		    "apikey" => $this->apikey,
+		    "sender_hash" => $sender['sender_hash'],
+		    "message" => $message,
+		    "recipient" => $recipient,
+		    "type" => $type,
+		    "order_id" => $order_id
+	    );
         return $this->curl($url, $sms_params);
     }
 
@@ -265,13 +267,56 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
 	    $table_name = $wpdb->prefix. 'egoi_sms_order_reminders';
 
-        $sql = " INSERT INTO $table_name (time, order_id) VALUES ('". date('Y-m-d H:i:s') ."', '2') ";
+	    $sql = " SELECT DISTINCT order_id FROM $table_name ";
+	    $order_ids = $wpdb->get_col($sql);
 
-        $wpdb->query($sql);
+	    $orders = $this->get_not_paid_orders();
+
+	    if (isset($orders)) {
+            foreach ( $orders as $order ) {
+                if (!$order->is_paid() && !in_array($order->get_id(), $order_ids)) {
+
+	                $message = $this->get_sms_order_message($order->billing_country, 'customer', $order->get_status());
+
+                    if ($message !== false) {
+                        $this->send_sms('351-'.$order->billing_phone, $message, $order->get_status(), $order->get_id());
+                    }
+
+                    $wpdb->insert($table_name, array(
+                        "time" => date('Y-m-d H:i:s'),
+                        "order_id" => $order->get_id()
+                    ));
+
+                }
+            }
+	    }
+    }
+
+    public function get_not_paid_orders() {
+	    //$two_days_in_sec = 2 * 24 * 60 * 60;
+	    $two_days_in_sec = 60;
+	    $args = array(
+		    "status" => array(
+			    "pending",
+			    "failed",
+			    "on-hold"
+		    ),
+		    "date_created" => '<' . (time() - $two_days_in_sec)
+	    );
+	    return wc_get_orders($args);
+    }
+
+    public function get_sms_order_message($language, $recipient_type, $status) {
+        $lang = strtolower($language);
+	    $texts = json_decode(get_option('egoi_sms_order_texts'), true);
+
+	    if (isset($texts[$lang]['egoi_sms_order_text_' . $recipient_type . '_' . $status])) {
+	        return $texts[$lang]['egoi_sms_order_text_' . $recipient_type . '_' . $status];
+	    }
+	    return false;
     }
 
     public function my_add_every_minute($schedules) {
-	    // add a every minute schedule to the existing set
 	    $schedules['every_minute'] = array(
 		    'interval' => 60,
 		    'display' => __('Every Minute')
