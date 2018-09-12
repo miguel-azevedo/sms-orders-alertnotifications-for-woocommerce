@@ -269,4 +269,13 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
         $wpdb->query($sql);
     }
+
+    public function my_add_every_minute($schedules) {
+	    // add a every minute schedule to the existing set
+	    $schedules['every_minute'] = array(
+		    'interval' => 60,
+		    'display' => __('Every Minute')
+	    );
+	    return $schedules;
+    }
 }
