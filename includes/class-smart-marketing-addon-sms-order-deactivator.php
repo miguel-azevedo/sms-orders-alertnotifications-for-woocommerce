@@ -23,9 +23,10 @@
 class Smart_Marketing_Addon_Sms_Order_Deactivator {
 
 	/**
-	 * Short Description. (use period)
+	 * Unregister hooks on deactivation
 	 *
-	 * Long Description.
+	 * Remove SMS order reminder schedule event
+	 * Drop egoi_sms_order_reminders table
 	 *
 	 * @since    1.0.0
 	 */

@@ -23,9 +23,10 @@
 class Smart_Marketing_Addon_Sms_Order_Activator {
 
 	/**
-	 * Short Description. (use period)
+	 * Register hooks on plugin activation
 	 *
-	 * Long Description.
+	 * Create a schedule event to process SMS order reminder
+	 * Create table egoi_sms_order_reminders
 	 *
 	 * @since    1.0.0
 	 */

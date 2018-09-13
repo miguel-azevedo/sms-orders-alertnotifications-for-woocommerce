@@ -74,7 +74,7 @@
 			if (text_el !== '') {
 				var text = text_el.val();
 				var new_text = text.substring(0, position) + cod + text.substring(position);
-				text_el.val(new_text);
+				text_el.val(new_text).focus();
 			}
         });
         $("#form-sms-order-texts textarea").focusout( function () {

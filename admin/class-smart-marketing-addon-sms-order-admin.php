@@ -52,9 +52,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
     private $apikey;
 
 	/**
-	 * List of order status WooCommerce hooks
-	 *
-	 * @var array
+	 * @var array List of order status WooCommerce hooks
 	 */
     protected $order_statuses = array(
 	    "pending" => "Pending payment",
@@ -67,12 +65,13 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
     );
 
 	/**
-	 * List of sms languages
-	 *
-	 * @var array
+	 * @var array List of sms languages
 	 */
     protected $languages = array( "en", "es", "pt", "pt_BR");
 
+	/**
+	 * @var array List of SMS text tags
+	 */
     protected $sms_text_tags = array(
         "order_id" => '%order_id%',
         "order_status" => '%order_status%',
@@ -159,30 +158,35 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 */
     public function process_config_form($post) {
 
-	    if (isset($post['form_id']) && $post['form_id'] == 'form-sms-order-senders') {
+        try {
+            if (isset($post['form_id']) && $post['form_id'] == 'form-sms-order-senders') {
 
-		    update_option('egoi_sms_order_sender', json_encode($post));
+                update_option('egoi_sms_order_sender', json_encode($post));
 
-	    } else if (isset($post['form_id']) && $post['form_id'] == 'form-sms-order-recipients') {
+            } else if (isset($post['form_id']) && $post['form_id'] == 'form-sms-order-recipients') {
 
-		    update_option('egoi_sms_order_recipients', json_encode($post));
+                update_option('egoi_sms_order_recipients', json_encode($post));
 
-	    } else if (isset($post['form_id']) && $post['form_id'] == 'form-sms-order-texts') {
+            } else if (isset($post['form_id']) && $post['form_id'] == 'form-sms-order-texts') {
 
-		    $texts = json_decode(get_option('egoi_sms_order_texts'), true);
-		    $texts[$post['sms_text_language']] = $post;
-		    update_option('egoi_sms_order_texts', json_encode($texts));
+                $texts = json_decode(get_option('egoi_sms_order_texts'), true);
+                $texts[$post['sms_text_language']] = $post;
+                update_option('egoi_sms_order_texts', json_encode($texts));
 
-	    } else if (isset($post['form_id']) && $post['form_id'] == 'form-sms-order-tests') {
+            } else if (isset($post['form_id']) && $post['form_id'] == 'form-sms-order-tests') {
 
-	    	$response = $this->send_sms($post['recipient'], $post['message'], 'test', 0);
+                $response = $this->send_sms($post['recipient'], $post['message'], 'test', 0);
 
-	    	$response = json_decode($response);
-	    	if (isset($response->errorCode)) {
-				return false;
-		    }
-	    }
-	    return true;
+                $response = json_decode($response);
+                if (isset($response->errorCode)) {
+                    return false;
+                }
+            }
+	        return true;
+        } catch (Exception $e) {
+            $this->save_logs('process_config_form: ' . $e->getMessage());
+        }
+
     }
 
 	/**
@@ -263,33 +267,37 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	}
 
     public function sms_order_reminder() {
-	    global $wpdb;
+        try {
+            global $wpdb;
 
-	    $table_name = $wpdb->prefix. 'egoi_sms_order_reminders';
+            $table_name = $wpdb->prefix. 'egoi_sms_order_reminders';
 
-	    $sql = " SELECT DISTINCT order_id FROM $table_name ";
-	    $order_ids = $wpdb->get_col($sql);
+            $sql = " SELECT DISTINCT order_id FROM $table_name ";
+            $order_ids = $wpdb->get_col($sql);
 
-	    $orders = $this->get_not_paid_orders();
+            $orders = $this->get_not_paid_orders();
 
-	    if (isset($orders)) {
-            foreach ( $orders as $order ) {
-                if (!$order->is_paid() && !in_array($order->get_id(), $order_ids)) {
+            if (isset($orders)) {
+                foreach ($orders as $order) {
+                    if (!$order->is_paid() && !in_array($order->get_id(), $order_ids)) {
 
-	                $message = $this->get_sms_order_message($order->billing_country, 'customer', $order->get_status());
+                        $message = $this->get_sms_order_message($order->billing_country, 'customer', $order->get_status());
 
-                    if ($message !== false) {
-                        $this->send_sms('351-'.$order->billing_phone, $message, $order->get_status(), $order->get_id());
+                        if ($message !== false) {
+                            $this->send_sms('351-'.$order->billing_phone, $message, $order->get_status(), $order->get_id());
+                        }
+
+                        $wpdb->insert($table_name, array(
+                            "time" => date('Y-m-d H:i:s'),
+                            "order_id" => $order->get_id()
+                        ));
+
                     }
-
-                    $wpdb->insert($table_name, array(
-                        "time" => date('Y-m-d H:i:s'),
-                        "order_id" => $order->get_id()
-                    ));
-
                 }
             }
-	    }
+        } catch (Exception $e) {
+	        $this->save_logs('sms_order_reminder: ' . $e->getMessage());
+        }
     }
 
     public function get_not_paid_orders() {
@@ -322,5 +330,13 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 		    'display' => __('Every Minute')
 	    );
 	    return $schedules;
+    }
+
+    public function save_logs($log) {
+	    $path = dirname(__FILE__).'/logs/';
+
+	    $file = fopen($path.'smart-marketing-addon-sms-order.log', 'a+');
+	    fwrite($file, $log."\xA");
+	    fclose($file);
     }
 }
