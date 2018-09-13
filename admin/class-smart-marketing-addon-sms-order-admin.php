@@ -212,7 +212,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 *
 	 * @return mixed
 	 */
-    public function send_sms($recipient, $message, $type, $order_id) {
+    public function send_sms($recipient, $message, $type, $order_id, $gsm = false) {
         $url = 'http://www.smart-marketing-addon-sms-order-middleware.local/sms';
 
 	    $sender = json_decode(get_option('egoi_sms_order_sender'), true);
@@ -223,8 +223,10 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 		    "message" => $message,
 		    "recipient" => $recipient,
 		    "type" => $type,
-		    "order_id" => $order_id
+		    "order_id" => $order_id,
+            "gsm" => $gsm
 	    );
+
         return $this->curl($url, $sms_params);
     }
 
@@ -236,6 +238,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 * @return mixed
 	 */
     public function curl($url, $post) {
+
 	    $ch = curl_init($url);
 	    curl_setopt($ch, CURLOPT_POST, 1);
 	    curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
