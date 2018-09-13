@@ -268,8 +268,10 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
     public function sms_order_reminder() {
         try {
+
             global $wpdb;
 
+	        $sender = json_decode(get_option('egoi_sms_order_sender'), true);
             $table_name = $wpdb->prefix. 'egoi_sms_order_reminders';
 
             $sql = " SELECT DISTINCT order_id FROM $table_name ";
@@ -281,11 +283,16 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
                 foreach ($orders as $order) {
                     if (!$order->is_paid() && !in_array($order->get_id(), $order_ids)) {
 
-                        $message = $this->get_sms_order_message($order->billing_country, 'customer', $order->get_status());
+                        $customer_message = $this->get_sms_order_message('customer', $order->get_data());
+	                    $admin_message = $this->get_sms_order_message('admin', $order->get_data());
 
-                        if ($message !== false) {
-                            $this->send_sms('351-'.$order->billing_phone, $message, $order->get_status(), $order->get_id());
+                        if ($customer_message !== false) {
+                            $this->send_sms('351-'.$order->billing_phone, $customer_message, $order->get_status(), $order->get_id());
                         }
+
+	                    if ($admin_message !== false) {
+		                    $this->send_sms($sender['admin_cellphone'], $admin_message, $order->get_status(), $order->get_id());
+	                    }
 
                         $wpdb->insert($table_name, array(
                             "time" => date('Y-m-d H:i:s'),
@@ -301,7 +308,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
     }
 
     public function get_not_paid_orders() {
-	    //$two_days_in_sec = 2 * 24 * 60 * 60;
+	    // TODO -> $two_days_in_sec = 2 * 24 * 60 * 60;
 	    $two_days_in_sec = 60;
 	    $args = array(
 		    "status" => array(
@@ -314,12 +321,33 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	    return wc_get_orders($args);
     }
 
-    public function get_sms_order_message($language, $recipient_type, $status) {
-        $lang = strtolower($language);
+    public function get_sms_order_message($recipient_type, $order) {
+
+	    $recipients = json_decode(get_option('egoi_sms_order_recipients'), true);
+	    // TODO - get language with order billing country
+        $lang = strtolower($order['billing']['country']);
 	    $texts = json_decode(get_option('egoi_sms_order_texts'), true);
 
-	    if (isset($texts[$lang]['egoi_sms_order_text_' . $recipient_type . '_' . $status])) {
-	        return $texts[$lang]['egoi_sms_order_text_' . $recipient_type . '_' . $status];
+	    if (isset($texts[$lang]['egoi_sms_order_text_' . $recipient_type . '_' . $order['status']]) && isset($recipients['egoi_sms_order_' . $recipient_type . '_' . $order['status']])) {
+
+		    $tags = array(
+			    "%order_id%" => $order['id'],
+			    "%order_status%" => $order['status'], // TODO - Translate status too
+			    "%total%" => $order['total'],
+			    "%currency%" => $order['currency'],
+			    "%payment_method%" => $order['payment_method'],
+			    "%ref%" => '%ref%', // TODO - what is ref?
+			    "%ent%" => '%ent%', // TODO - what is ent?
+			    "%shop_name%" => get_bloginfo('name'),
+			    "%billing_name%" => $order['billing']['first_name'].' '.$order['billing']['last_name']
+		    );
+
+	        $message = $texts[$lang]['egoi_sms_order_text_' . $recipient_type . '_' . $order['status']];
+	        foreach ($tags as $tag => $content) {
+	            $message = str_replace($tag, $content, $message);
+            }
+
+	        return $message;
 	    }
 	    return false;
     }

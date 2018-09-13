@@ -56,28 +56,48 @@ $senders = $this->get_senders();
 <div class="wrap tab wrap-addon" id="tab-sms-senders">
     <div class="wrap egoi4wp-settings" id="tab-forms">
         <div class="row">
-            <div class="main-content col col-12" style="margin:0 0 20px;">
+            <div class="main-content col col-4" style="margin:0 0 20px;">
 
-                <p class="label_span"><?php _e('Select the sender', 'addon-sms-order');?></p>
+                <div style="font-size:14px; margin:10px 0;">
+		            <?php _e('Senders', 'addon-sms-order');?>
+                </div>
 
                 <form action="#" method="post" class="form-sms-order-config" id="form-sms-order-senders">
                     <input name="form_id" type="hidden" value="form-sms-order-senders" />
-                    <select class="e-goi-option-select-admin-forms" name="sender_hash" id="sender_hash">
-                        <option value="" disabled selected>
-							<?php _e('Selected the sender', 'addon-sms-order');?>
-                        </option>
-                        <?php
-                            if (isset($senders) && count($senders) > 0) {
-                                foreach ($senders as $sender) {
-                                    ?>
-                                    <option value="<?=$sender['FROMID']?>" <?php selected($sender['FROMID'], $sender_option['sender_hash']);?> >
-                                        <?=$sender['SENDER']?>
+                    <table class="form-table">
+                        <tr valign="top">
+                            <th scope="row">
+                                <label><?php _e('E-goi Sender', 'addon-sms-order');?></label>
+                            </th>
+                            <td>
+                                <select name="sender_hash" id="sender_hash">
+                                    <option value="" disabled selected>
+                                        <?php _e('Selected the sender', 'addon-sms-order');?>
                                     </option>
                                     <?php
-                                }
-                            }
-                        ?>
-                    </select>
+                                        if (isset($senders) && count($senders) > 0) {
+                                            foreach ($senders as $sender) {
+                                                ?>
+                                                <option value="<?=$sender['FROMID']?>" <?php selected($sender['FROMID'], $sender_option['sender_hash']);?> >
+                                                    <?=$sender['SENDER']?>
+                                                </option>
+                                                <?php
+                                            }
+                                        }
+                                    ?>
+                                </select>
+                            </td>
+                        <tr valign="top">
+                            <th scope="row">
+                                <label><?php _e('Admin Cellphone', 'addon-sms-order');?></label>
+                            </th>
+                            <td>
+                                <input type="text" name="admin_cellphone" class="regular-text"
+                                       value="<?php echo isset($sender_option['admin_cellphone']) ? $sender_option['admin_cellphone'] : null; ?>"
+                                />
+                            </td>
+                        </tr>
+                    </table>
                     <table border="0">
                         <tr>
                             <td><?php submit_button(); ?></td>
@@ -95,7 +115,7 @@ $senders = $this->get_senders();
                                     <label><?php _e('Recipient', 'addon-sms-order');?></label>
                                 </th>
                                 <td>
-                                    <input type="text" name="recipient" class="regular-text">
+                                    <input type="text" name="recipient" class="regular-text" />
                                 </td>
                             </tr>
                             <tr valign="top">
