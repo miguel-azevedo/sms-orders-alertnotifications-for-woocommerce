@@ -213,7 +213,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 * @return mixed
 	 */
     public function send_sms($recipient, $message, $type, $order_id, $gsm = false) {
-        $url = 'http://www.smart-marketing-addon-sms-order-middleware.local/sms';
+        $url = 'http://dev-web-agency.e-team.biz/smaddonsms/sms';
 
 	    $sender = json_decode(get_option('egoi_sms_order_sender'), true);
 
@@ -229,45 +229,6 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
         return $this->curl($url, $sms_params);
     }
-
-	/**
-	 * cURL helper
-	 * @param $url
-	 * @param $post
-	 *
-	 * @return mixed
-	 */
-    public function curl($url, $post) {
-
-	    $ch = curl_init($url);
-	    curl_setopt($ch, CURLOPT_POST, 1);
-	    curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-	    curl_setopt($ch, CURLOPT_HEADER, 0);
-	    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	    curl_setopt($ch, CURLOPT_TIMEOUT, 60);
-
-	    $response = curl_exec($ch);
-
-	    curl_close($ch);
-
-	    return $response;
-    }
-
-	public function admin_notice__success() {
-		?>
-		<div class="notice notice-success is-dismissible">
-			<p><?php _e( 'Done!', 'addon-sms-order' ); ?></p>
-		</div>
-		<?php
-	}
-
-	public function admin_notice__error() {
-		?>
-		<div class="notice notice-error is-dismissible">
-			<p><?php _e( 'Irks! An error has occurred.', 'addon-sms-order' ); ?></p>
-		</div>
-		<?php
-	}
 
     public function sms_order_reminder() {
         try {
@@ -286,6 +247,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
                 foreach ($orders as $order) {
                     if (!$order->is_paid() && !in_array($order->get_id(), $order_ids)) {
 
+                        return $order->get_data();
                         $customer_message = $this->get_sms_order_message('customer', $order->get_data());
 	                    $admin_message = $this->get_sms_order_message('admin', $order->get_data());
 
@@ -325,7 +287,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
     }
 
     public function get_sms_order_message($recipient_type, $order) {
-
+        // TODO - check if the customer want be notified
 	    $recipients = json_decode(get_option('egoi_sms_order_recipients'), true);
 	    // TODO - get language with order billing country
         $lang = strtolower($order['billing']['country']);
@@ -355,19 +317,109 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	    return false;
     }
 
-    public function my_add_every_minute($schedules) {
-	    $schedules['every_minute'] = array(
-		    'interval' => 60,
-		    'display' => __('Every Minute')
-	    );
-	    return $schedules;
-    }
+	/**
+     * Add field to order checkout form
+     *
+	 * @param $checkout
+	 */
+	function notification_checkout_field($checkout) {
+		$recipients = json_decode(get_option('egoi_sms_order_recipients'), true);
+		if (isset($recipients['notification_option'])) {
+            woocommerce_form_field('egoi_notification_option', array(
+                'type'          => 'checkbox',
+                'class'         => array('my-field-class form-row-wide'),
+                'label'         => __('I want to be notified by SMS'),
+            ), $checkout->get_value( 'egoi_notification_option'));
+		}
+	}
 
-    public function save_logs($log) {
-	    $path = dirname(__FILE__).'/logs/';
+	/**
+     * Save notification field from order checkout
+     *
+	 * @param $order_id
+	 */
+	function notification_checkout_field_update_order_meta($order_id) {
+		if (isset( $_POST['egoi_notification_option'])) {
+			update_post_meta($order_id, 'egoi_notification_option', 1);
+		} else {
+			update_post_meta($order_id, 'egoi_notification_option', 0);
+        }
+	}
 
-	    $file = fopen($path.'smart-marketing-addon-sms-order.log', 'a+');
-	    fwrite($file, $log."\xA");
-	    fclose($file);
-    }
+
+
+
+
+
+	/**
+     * Save logs in /logs/smart-marketing-addon-sms-order.log
+     *
+	 * @param $log
+	 */
+	public function save_logs($log) {
+		$path = dirname(__FILE__).'/logs/';
+
+		$file = fopen($path.'smart-marketing-addon-sms-order.log', 'a+');
+		fwrite($file, $log."\xA");
+		fclose($file);
+	}
+
+	/**
+	 * cURL helper
+	 * @param $url
+	 * @param $post
+	 *
+	 * @return mixed
+	 */
+	public function curl($url, $post) {
+
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+		curl_setopt($ch, CURLOPT_HEADER, 0);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+
+		$response = curl_exec($ch);
+
+		curl_close($ch);
+
+		return $response;
+	}
+
+	/**
+     * Add new interval to wordpress cron schedules
+	 * @param $schedules
+	 *
+	 * @return mixed
+	 */
+	public function my_add_every_minute($schedules) {
+		$schedules['every_minute'] = array(
+			'interval' => 60,
+			'display' => __('Every Minute')
+		);
+		return $schedules;
+	}
+
+	/**
+	 * Div to success notices
+	 */
+	public function admin_notice__success() {
+		?>
+        <div class="notice notice-success is-dismissible">
+            <p><?php _e( 'Done!', 'addon-sms-order' ); ?></p>
+        </div>
+		<?php
+	}
+
+	/**
+	 * Div to error notices
+	 */
+	public function admin_notice__error() {
+		?>
+        <div class="notice notice-error is-dismissible">
+            <p><?php _e( 'Irks! An error has occurred.', 'addon-sms-order' ); ?></p>
+        </div>
+		<?php
+	}
 }

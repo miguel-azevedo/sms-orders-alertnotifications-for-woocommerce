@@ -145,6 +145,20 @@ $senders = $this->get_senders();
                 </div>
                 <form action="#" method="post" class="form-sms-order-config" id="form-sms-order-recipients">
                     <input name="form_id" type="hidden" value="form-sms-order-recipients" />
+
+                    <table class="form-table">
+                        <tr valign="top">
+                            <th scope="row">
+                                <label><?php _e('Notification option', 'addon-sms-order');?></label>
+                            </th>
+                            <td>
+                                <input class="input-checkbox" type="checkbox" name="notification_option" value="1"
+                                    <?php checked($recipients['notification_option'], 1);?>
+                                />
+                            </td>
+                        </tr>
+                    </table>
+
                     <table border='0' class="widefat striped">
                         <thead>
                         <tr>
