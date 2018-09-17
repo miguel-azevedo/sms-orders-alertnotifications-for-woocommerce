@@ -84,6 +84,8 @@
 
     });
 
+
+
     function activeConfigTag(tag) {
         $(".nav-tab-addon").each(function () {
             $(this).attr("class", "nav-tab nav-tab-addon");

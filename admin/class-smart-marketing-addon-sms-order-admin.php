@@ -61,7 +61,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	    "processing" => "Processing",
 	    "completed" => "Completed",
 	    "refunded" => "Refunded",
-	    "cancelled" => "Failed",
+	    "cancelled" => "Cancelled",
     );
 
 	/**
@@ -119,6 +119,8 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	public function enqueue_scripts() {
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/smart-marketing-addon-sms-order-admin.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( 'ajax-script', plugin_dir_url( __FILE__ ) . 'js/order_action_sms_meta_box.js', array('jquery') );
+		wp_localize_script( 'ajax-script', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
 
 	}
 
@@ -247,7 +249,6 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
                 foreach ($orders as $order) {
                     if (!$order->is_paid() && !in_array($order->get_id(), $order_ids)) {
 
-                        return $order->get_data();
                         $customer_message = $this->get_sms_order_message('customer', $order->get_data());
 	                    $admin_message = $this->get_sms_order_message('admin', $order->get_data());
 
@@ -328,7 +329,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
             woocommerce_form_field('egoi_notification_option', array(
                 'type'          => 'checkbox',
                 'class'         => array('my-field-class form-row-wide'),
-                'label'         => __('I want to be notified by SMS'),
+                'label'         => __('I want to be notified by SMS', 'addon-sms-order'),
             ), $checkout->get_value( 'egoi_notification_option'));
 		}
 	}
@@ -346,8 +347,58 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
         }
 	}
 
+	/**
+	 * Add SMS meta box to order admin page
+	 */
+	public function order_add_sms_meta_box() {
+		add_meta_box(
+			'woocommerce-order-my-custom',
+			__('Send SMS', 'addon-sms-order'),
+			array( $this, 'order_display_sms_meta_box' ),
+			'shop_order',
+			'side',
+			'core'
+		);
+	}
 
+	/**
+     * The metabox content
+     *
+	 * @param $post
+	 */
+	public function order_display_sms_meta_box($post) {
+        $order = wc_get_order($post->ID)->get_data();
+        $recipient = $order['billing']['phone'];
 
+        ?>
+        <div id="egoi_send_order_sms">
+            <input type="hidden" name="egoi_sms_order_id" id="egoi_send_order_sms_order_id" value="<?php echo $order['id'];?>" />
+            <input type="hidden" name="egoi_sms_recipient" id="egoi_send_order_sms_recipient" value="<?=$recipient?>" />
+            <p>
+                <label for="egoi_send_order_sms_message">Message</label><br>
+                <textarea name="egoi_sms_message" id="egoi_send_order_sms_message" style="width: 100%;"></textarea>
+            </p>
+            <p>
+                <button type="button" class="button" id="egoi_send_order_sms_button">Send</button>
+            </p>
+        </div>
+        <?php
+	}
+
+    public function order_action_sms_meta_box() {
+	    $result = $this->send_sms('351-'.$_POST['recipient'], $_POST['message'], 'test', $_POST['order_id']);
+
+	    if (!isset($result->errorCode)) {
+            $order = wc_get_order($_POST['order_id']);
+            $order->add_order_note('SMS: '.$_POST['message']);
+	    }
+        $note = array(
+            "message" => 'SMS: '.$_POST['message'],
+            "date" => __('added on', 'addon-sms-order').' '.current_time(get_option('date_format').' '.get_option('time_format'))
+        );
+	    echo json_encode($note);
+	    wp_die();
+    }
 
 
 

@@ -163,6 +163,8 @@ class Smart_Marketing_Addon_Sms_Order {
 
 		$this->loader->add_action('woocommerce_after_checkout_billing_form', $plugin_admin, 'notification_checkout_field');
 		$this->loader->add_action('woocommerce_checkout_update_order_meta', $plugin_admin, 'notification_checkout_field_update_order_meta');
+		$this->loader->add_action('add_meta_boxes', $plugin_admin, 'order_add_sms_meta_box');
+		$this->loader->add_action('wp_ajax_order_action_sms_meta_box', $plugin_admin, 'order_action_sms_meta_box');
 
 	}
 
