@@ -85,6 +85,35 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
     );
 
 	/**
+	 * @var array
+	 */
+    protected $payment_map = array(
+	    'eupago_multibanco' => array(
+		    'ent' => '_eupago_multibanco_entidade',
+		    'ref' => '_eupago_multibanco_referencia',
+		    'val' => '_order_total'
+	    ),
+	    'eupago_payshop' => array(
+		    'ref' => '_eupago_payshop_referencia',
+		    'val' => '_order_total'
+	    ),
+	    'eupago_mbway' => array(
+		    'ref' => '_eupago_mbway_referencia',
+		    'val' => '_order_total'
+	    ),
+	    'multibanco_ifthen_for_woocommerce' => array(
+		    'ent' => '_multibanco_ifthen_for_woocommerce_ent',
+		    'ref' => '_multibanco_ifthen_for_woocommerce_ref',
+		    'val' => '_multibanco_ifthen_for_woocommerce_val'
+	    ),
+	    // TODO - confirm fields for ifThenPay MBWay
+	    'mbway_ifthen_for_woocommerce' => array(
+		    'ref' => '_mbway_ifthen_for_woocommerce_ref',
+		    'val' => '_mbway_ifthen_for_woocommerce_val'
+	    )
+    );
+
+	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
@@ -151,6 +180,9 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
         include_once 'partials/smart-marketing-addon-sms-order-admin-config.php';
     }
 
+
+
+
 	/**
 	 * Save sms order configs in wordpress options
 	 *
@@ -191,47 +223,13 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
     }
 
-	/**
-	 * Function to get cellphone senders from E-goi account
-	 *
-	 * @return array with senders
-	 */
-    public function get_senders() {
-	    $params = array(
-		    'apikey' 		=> $this->apikey,
-		    'channel' 		=> 'telemovel'
-	    );
 
-	    $client = new SoapClient('http://api.e-goi.com/v2/soap.php?wsdl');
-	    $result = $client->getSenders($params);
 
-	    return $result;
-    }
+
 
 	/**
-     * Method to send SMS
-	 * @param $sms_params
-	 *
-	 * @return mixed
+	 * Process SMS reminders
 	 */
-    public function send_sms($recipient, $message, $type, $order_id, $gsm = false) {
-        $url = 'http://dev-web-agency.e-team.biz/smaddonsms/sms';
-
-	    $sender = json_decode(get_option('egoi_sms_order_sender'), true);
-
-	    $sms_params = array(
-		    "apikey" => $this->apikey,
-		    "sender_hash" => $sender['sender_hash'],
-		    "message" => $message,
-		    "recipient" => $recipient,
-		    "type" => $type,
-		    "order_id" => $order_id,
-            "gsm" => $gsm
-	    );
-
-        return $this->curl($url, $sms_params);
-    }
-
     public function sms_order_reminder() {
         try {
 
@@ -273,9 +271,13 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
         }
     }
 
+	/**
+     * Get not paid orders over 48 hours
+     *
+	 * @return mixed
+	 */
     public function get_not_paid_orders() {
-	    // TODO -> $two_days_in_sec = 2 * 24 * 60 * 60;
-	    $two_days_in_sec = 60;
+	    $two_days_in_sec = 2 * 24 * 60 * 60;
 	    $args = array(
 		    "status" => array(
 			    "pending",
@@ -287,56 +289,78 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	    return wc_get_orders($args);
     }
 
-    public function get_sms_order_message($recipient_type, $order) {
-        // TODO - check if the customer want to be notified
-	    $recipients = json_decode(get_option('egoi_sms_order_recipients'), true);
-	    // TODO - get language with order billing country
-        $lang = strtolower($order['billing']['country']);
-	    $texts = json_decode(get_option('egoi_sms_order_texts'), true);
 
-	    if (isset($texts[$lang]['egoi_sms_order_text_' . $recipient_type . '_' . $order['status']]) && isset($recipients['egoi_sms_order_' . $recipient_type . '_' . $order['status']])) {
 
-		    $tags = array(
-			    "%order_id%" => $order['id'],
-			    "%order_status%" => $order['status'], // TODO - Translate status too
-			    "%total%" => $order['total'],
-			    "%currency%" => $order['currency'],
-			    "%payment_method%" => $order['payment_method'],
-			    "%ref%" => '%ref%', // TODO - what is ref?
-			    "%ent%" => '%ent%', // TODO - what is ent?
-			    "%shop_name%" => get_bloginfo('name'),
-			    "%billing_name%" => $order['billing']['first_name'].' '.$order['billing']['last_name']
-		    );
 
-	        $message = $texts[$lang]['egoi_sms_order_text_' . $recipient_type . '_' . $order['status']];
-	        foreach ($tags as $tag => $content) {
-	            $message = str_replace($tag, $content, $message);
-            }
-
-	        return $message;
-	    }
-	    return false;
-    }
 
 	/**
-     * Add field to order checkout form
+     * Send SMS when order status changed
      *
+	 * @param $order_id
+	 */
+	public function order_send_sms_new_status($order_id) {
+
+		$order = wc_get_order($order_id)->get_data();
+		$types = array('customer', 'admin');
+
+		foreach ($types as $type) {
+            $message = $this->get_sms_order_message($type, $order);
+            if ($message !== false) {
+                $this->send_sms('351-'.$order['billing']['phone'], $message, $order['status'], $order['id']);
+            }
+		}
+	}
+
+
+
+
+	/**
+     * Send SMS with payment instructions when order is closed
+     *
+	 * @param $order_id
+	 */
+    public function order_send_sms_payment_data($order_id) {
+
+	    $order = wc_get_order($order_id)->get_data();
+
+	    $message = 'Payment instructions:';
+	    $message .= $this->get_payment_data($order, 'ent') ? ' ent -> '.$this->get_payment_data($order, 'ent') : null;
+	    $message .= $this->get_payment_data($order, 'ref') ? ' ref -> '.$this->get_payment_data($order, 'ref') : null;
+	    $message .= $this->get_payment_data($order, 'val') ? ' val -> '.$this->get_payment_data($order, 'val') : null;
+
+	    if (array_key_exists($order['payment_method'], $this->payment_map)) {
+		    $this->send_sms(
+		            '351-'.$order['billing']['phone'],
+                    $message,
+                    'order',
+			        $order_id
+            );
+        }
+    }
+
+
+
+
+
+	/**
+	 * Add field to order checkout form
+	 *
 	 * @param $checkout
 	 */
 	function notification_checkout_field($checkout) {
 		$recipients = json_decode(get_option('egoi_sms_order_recipients'), true);
 		if (isset($recipients['notification_option'])) {
-            woocommerce_form_field('egoi_notification_option', array(
-                'type'          => 'checkbox',
-                'class'         => array('my-field-class form-row-wide'),
-                'label'         => __('I want to be notified by SMS', 'addon-sms-order'),
-            ), $checkout->get_value( 'egoi_notification_option'));
+			woocommerce_form_field('egoi_notification_option', array(
+				'type'          => 'checkbox',
+				'class'         => array('my-field-class form-row-wide'),
+				'label'         => __('I want to be notified by SMS', 'addon-sms-order'),
+			), $checkout->get_value( 'egoi_notification_option'));
 		}
 	}
 
 	/**
-     * Save notification field from order checkout
-     *
+	 * Save notification field from order checkout
+	 *
 	 * @param $order_id
 	 */
 	function notification_checkout_field_update_order_meta($order_id) {
@@ -344,8 +368,12 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 			update_post_meta($order_id, 'egoi_notification_option', 1);
 		} else {
 			update_post_meta($order_id, 'egoi_notification_option', 0);
-        }
+		}
 	}
+
+
+
+
 
 	/**
 	 * Add SMS meta box to order admin page
@@ -362,15 +390,15 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	}
 
 	/**
-     * The metabox content
-     *
+	 * The meta box content
+	 *
 	 * @param $post
 	 */
 	public function order_display_sms_meta_box($post) {
-        $order = wc_get_order($post->ID)->get_data();
-        $recipient = $order['billing']['phone'];
+		$order = wc_get_order($post->ID)->get_data();
+		$recipient = $order['billing']['phone'];
 
-        ?>
+		?>
         <div id="egoi_send_order_sms">
             <input type="hidden" name="egoi_sms_order_id" id="egoi_send_order_sms_order_id" value="<?php echo $order['id'];?>" />
             <input type="hidden" name="egoi_sms_recipient" id="egoi_send_order_sms_recipient" value="<?=$recipient?>" />
@@ -382,71 +410,114 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
                 <button type="button" class="button" id="egoi_send_order_sms_button">Send</button>
             </p>
         </div>
-        <?php
+		<?php
 	}
 
 	/**
 	 * Create SMS meta box in admin order page
 	 */
-    public function order_action_sms_meta_box() {
-	    $result = $this->send_sms('351-'.$_POST['recipient'], $_POST['message'], 'order', $_POST['order_id']);
+	public function order_action_sms_meta_box() {
+		$result = $this->send_sms('351-'.$_POST['recipient'], $_POST['message'], 'order', $_POST['order_id']);
 
-	    if (!isset($result->errorCode)) {
-            $order = wc_get_order($_POST['order_id']);
-            $order->add_order_note('SMS: '.$_POST['message']);
+		if (!isset($result->errorCode)) {
+			$order = wc_get_order($_POST['order_id']);
+			$order->add_order_note('SMS: '.$_POST['message']);
 
-		    $note = array(
-			    "message" => 'SMS: '.$_POST['message'],
-			    "date" => __('added on', 'addon-sms-order').' '.current_time(get_option('date_format').' '.get_option('time_format'))
-		    );
-		    echo json_encode($note);
-	    } else {
-	        echo json_encode($result);
-        }
-	    wp_die();
-    }
+			$note = array(
+				"message" => 'SMS: '.$_POST['message'],
+				"date" => __('added on', 'addon-sms-order').' '.current_time(get_option('date_format').' '.get_option('time_format'))
+			);
+			echo json_encode($note);
+		} else {
+			echo json_encode($result);
+		}
+		wp_die();
+	}
+
+
+
+
+
 
 	/**
-     * Send SMS with payment instructions when order is closed
-     *
-	 * @param $order_id
+	 * Function to get cellphone senders from E-goi account
+	 *
+	 * @return array with senders
 	 */
-    public function order_send_sms_payment_data($order_id) {
+	public function get_senders() {
+		$params = array(
+			'apikey' 		=> $this->apikey,
+			'channel' 		=> 'telemovel'
+		);
 
-	    $order = wc_get_order($order_id)->get_data();
-	    $order_meta = get_post_meta($order_id);
+		$client = new SoapClient('http://api.e-goi.com/v2/soap.php?wsdl');
+		$result = $client->getSenders($params);
 
-	    $payment_methods = array(
-	        'eupago_multibanco' => 'Payment instructions: ent -> '.$order_meta['_eupago_multibanco_entidade'][0].
-                                   ' ref -> '.$order_meta['_eupago_multibanco_referencia'][0].
-                                   ' val -> '.$order_meta['_order_total'][0],
+		return $result;
+	}
 
-            'eupago_payshop' => 'Payment instructions: ref -> '.$order_meta['_eupago_payshop_referencia'][0].
-                                ' val -> '.$order_meta['_order_total'][0],
+	/**
+	 * Method to send SMS
+	 * @param $sms_params
+	 *
+	 * @return mixed
+	 */
+	public function send_sms($recipient, $message, $type, $order_id, $gsm = false) {
+		$url = 'http://dev-web-agency.e-team.biz/smaddonsms/sms';
 
-            'eupago_mbway' => 'Payment instructions: ref -> '.$order_meta['_eupago_mbway_referencia'][0].
-                              ' val -> '.$order_meta['_order_total'][0],
+		$sender = json_decode(get_option('egoi_sms_order_sender'), true);
 
-            'multibanco_ifthen_for_woocommerce' => 'Payment instructions: ent -> '.$order_meta['_multibanco_ifthen_for_woocommerce_ent'][0].
-                                                   ' ref -> '.$order_meta['_multibanco_ifthen_for_woocommerce_ref'][0].
-                                                   ' val -> '.$order_meta['_multibanco_ifthen_for_woocommerce_val'][0],
+		$sms_params = array(
+			"apikey" => $this->apikey,
+			"sender_hash" => $sender['sender_hash'],
+			"message" => $message,
+			"recipient" => $recipient,
+			"type" => $type,
+			"order_id" => $order_id,
+			"gsm" => $gsm
+		);
 
-            // TODO - we need to confirm mbway variables from IfThenPay
-            'mbway_ifthen_for_woocommerce' => 'Payment instructions: ref -> '.$order_meta['_mbway_ifthen_for_woocommerce_ref'][0].
-                                              ' val -> '.$order_meta['_mbway_ifthen_for_woocommerce_val'][0],
-        );
+		return $this->curl($url, $sms_params);
+	}
 
-	    if (array_key_exists($order['payment_method'], $payment_methods)) {
-		    $this->send_sms(
-		            '351-'.$order['billing']['phone'],
-                    $payment_methods[$order['payment_method']],
-                    'order',
-			        $order_id
-            );
-        }
-    }
+	/**
+	 * Get SMS text from configs
+	 *
+	 * @param $recipient_type
+	 * @param $order
+	 *
+	 * @return bool|mixed
+	 */
+	public function get_sms_order_message($recipient_type, $order) {
+		// TODO - check if the customer want to be notified
+		$recipients = json_decode(get_option('egoi_sms_order_recipients'), true);
+		// TODO - get language with order billing country
+		$lang = strtolower($order['billing']['country']);
+		$texts = json_decode(get_option('egoi_sms_order_texts'), true);
 
+		if (isset($texts[$lang]['egoi_sms_order_text_' . $recipient_type . '_' . $order['status']]) && isset($recipients['egoi_sms_order_' . $recipient_type . '_' . $order['status']])) {
 
+			$tags = array(
+				"%order_id%" => $order['id'],
+				"%order_status%" => $order['status'], // TODO - Translate status too
+				"%total%" => $order['total'],
+				"%currency%" => $order['currency'],
+				"%payment_method%" => $order['payment_method'],
+				"%ref%" => $this->get_payment_data($order, 'ref'),
+				"%ent%" => $this->get_payment_data($order, 'ent'),
+				"%shop_name%" => get_bloginfo('name'),
+				"%billing_name%" => $order['billing']['first_name'].' '.$order['billing']['last_name']
+			);
+
+			$message = $texts[$lang]['egoi_sms_order_text_' . $recipient_type . '_' . $order['status']];
+			foreach ($tags as $tag => $content) {
+				$message = str_replace($tag, $content, $message);
+			}
+
+			return $message;
+		}
+		return false;
+	}
 
 	/**
      * Save logs in /logs/smart-marketing-addon-sms-order.log
@@ -519,4 +590,23 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
         </div>
 		<?php
 	}
+
+	/**
+     * Get order payment instructions
+     *
+	 * @param $order
+	 * @param $field
+	 *
+	 * @return bool
+	 */
+	public function get_payment_data($order, $field) {
+		$order_meta = get_post_meta($order['id']);
+
+		if (isset($this->payment_map[$order['payment_method']][$field])) {
+			$payment_field = $this->payment_map[$order['payment_method']][ $field ];
+			return $order_meta[$payment_field][0];
+		}
+		return false;
+    }
+
 }

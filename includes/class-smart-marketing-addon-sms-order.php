@@ -174,7 +174,8 @@ class Smart_Marketing_Addon_Sms_Order {
 		$this->loader->add_action('woocommerce_order_status_on-hold', $plugin_admin, 'order_send_sms_payment_data');
 
 		// When change order status, send SMS
-		// TODO -> create actions for this
+		$this->loader->add_action('woocommerce_order_status_changed', $plugin_admin, 'order_send_sms_new_status');
+
 	}
 
 	/**
