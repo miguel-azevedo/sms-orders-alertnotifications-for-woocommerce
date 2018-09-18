@@ -245,7 +245,9 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
             if (isset($orders)) {
                 foreach ($orders as $order) {
-                    if (!$order->is_paid() && !in_array($order->get_id(), $order_ids)) {
+	                $sms_notification = (bool) get_post_meta($order->get_id(), 'egoi_notification_option')[0];
+
+                    if (!$order->is_paid() && !in_array($order->get_id(), $order_ids) && $sms_notification) {
 
                         $customer_message = $this->get_sms_order_message('customer', $order->get_data());
 	                    $admin_message = $this->get_sms_order_message('admin', $order->get_data());
@@ -258,12 +260,12 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 		                    $this->send_sms($sender['admin_cellphone'], $admin_message, $order->get_status(), $order->get_id());
 	                    }
 
-                        $wpdb->insert($table_name, array(
-                            "time" => date('Y-m-d H:i:s'),
-                            "order_id" => $order->get_id()
-                        ));
-
                     }
+
+	                $wpdb->insert($table_name, array(
+		                "time" => current_time('mysql'),
+		                "order_id" => $order->get_id()
+	                ));
                 }
             }
         } catch (Exception $e) {
@@ -300,13 +302,17 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 */
 	public function order_send_sms_new_status($order_id) {
 
-		$order = wc_get_order($order_id)->get_data();
-		$types = array('customer', 'admin');
+		$sms_notification = (bool) get_post_meta($order_id, 'egoi_notification_option')[0];
 
-		foreach ($types as $type) {
-            $message = $this->get_sms_order_message($type, $order);
-            if ($message !== false) {
-                $this->send_sms('351-'.$order['billing']['phone'], $message, $order['status'], $order['id']);
+		if ($sms_notification) {
+            $order = wc_get_order($order_id)->get_data();
+            $types = array('customer', 'admin');
+
+            foreach ($types as $type) {
+                $message = $this->get_sms_order_message($type, $order);
+                if ($message !== false) {
+                    $this->send_sms('351-'.$order['billing']['phone'], $message, $order['status'], $order['id']);
+                }
             }
 		}
 	}
@@ -322,19 +328,22 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
     public function order_send_sms_payment_data($order_id) {
 
 	    $order = wc_get_order($order_id)->get_data();
+        $sms_notification = (bool) get_post_meta($order_id, 'egoi_notification_option')[0];
 
-	    $message = 'Payment instructions:';
-	    $message .= $this->get_payment_data($order, 'ent') ? ' ent -> '.$this->get_payment_data($order, 'ent') : null;
-	    $message .= $this->get_payment_data($order, 'ref') ? ' ref -> '.$this->get_payment_data($order, 'ref') : null;
-	    $message .= $this->get_payment_data($order, 'val') ? ' val -> '.$this->get_payment_data($order, 'val') : null;
+        if ($sms_notification) {
+            $message = 'Payment instructions:';
+            $message .= $this->get_payment_data($order, 'ent') ? ' ent -> '.$this->get_payment_data($order, 'ent') : null;
+            $message .= $this->get_payment_data($order, 'ref') ? ' ref -> '.$this->get_payment_data($order, 'ref') : null;
+            $message .= $this->get_payment_data($order, 'val') ? ' val -> '.$this->get_payment_data($order, 'val') : null;
 
-	    if (array_key_exists($order['payment_method'], $this->payment_map)) {
-		    $this->send_sms(
-		            '351-'.$order['billing']['phone'],
-                    $message,
-                    'order',
-			        $order_id
-            );
+            if (array_key_exists($order['payment_method'], $this->payment_map)) {
+                $this->send_sms(
+                        '351-'.$order['billing']['phone'],
+                        $message,
+                        'order',
+                        $order_id
+                );
+            }
         }
     }
 
@@ -396,21 +405,28 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 */
 	public function order_display_sms_meta_box($post) {
 		$order = wc_get_order($post->ID)->get_data();
-		$recipient = $order['billing']['phone'];
+		$sms_notification = (bool) get_post_meta($post->ID, 'egoi_notification_option')[0];
 
-		?>
-        <div id="egoi_send_order_sms">
-            <input type="hidden" name="egoi_sms_order_id" id="egoi_send_order_sms_order_id" value="<?php echo $order['id'];?>" />
-            <input type="hidden" name="egoi_sms_recipient" id="egoi_send_order_sms_recipient" value="<?=$recipient?>" />
-            <p>
-                <label for="egoi_send_order_sms_message">Message</label><br>
-                <textarea name="egoi_sms_message" id="egoi_send_order_sms_message" style="width: 100%;"></textarea>
-            </p>
-            <p>
-                <button type="button" class="button" id="egoi_send_order_sms_button">Send</button>
-            </p>
-        </div>
-		<?php
+		if ($sms_notification) {
+			$recipient = $order['billing']['phone'];
+			?>
+            <div id="egoi_send_order_sms">
+                <input type="hidden" name="egoi_sms_order_id" id="egoi_send_order_sms_order_id"
+                       value="<?php echo $order['id']; ?>"/>
+                <input type="hidden" name="egoi_sms_recipient" id="egoi_send_order_sms_recipient"
+                       value="<?= $recipient ?>"/>
+                <p>
+                    <label for="egoi_send_order_sms_message">Message</label><br>
+                    <textarea name="egoi_sms_message" id="egoi_send_order_sms_message" style="width: 100%;"></textarea>
+                </p>
+                <p>
+                    <button type="button" class="button" id="egoi_send_order_sms_button">Send</button>
+                </p>
+            </div>
+			<?php
+		} else {
+		    _e('The customer doesn\'t want to receive sms');
+        }
 	}
 
 	/**
