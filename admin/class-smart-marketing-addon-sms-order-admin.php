@@ -288,7 +288,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
     }
 
     public function get_sms_order_message($recipient_type, $order) {
-        // TODO - check if the customer want be notified
+        // TODO - check if the customer want to be notified
 	    $recipients = json_decode(get_option('egoi_sms_order_recipients'), true);
 	    // TODO - get language with order billing country
         $lang = strtolower($order['billing']['country']);
@@ -385,19 +385,65 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
         <?php
 	}
 
+	/**
+	 * Create SMS meta box in admin order page
+	 */
     public function order_action_sms_meta_box() {
-	    $result = $this->send_sms('351-'.$_POST['recipient'], $_POST['message'], 'test', $_POST['order_id']);
+	    $result = $this->send_sms('351-'.$_POST['recipient'], $_POST['message'], 'order', $_POST['order_id']);
 
 	    if (!isset($result->errorCode)) {
             $order = wc_get_order($_POST['order_id']);
             $order->add_order_note('SMS: '.$_POST['message']);
-	    }
-        $note = array(
-            "message" => 'SMS: '.$_POST['message'],
-            "date" => __('added on', 'addon-sms-order').' '.current_time(get_option('date_format').' '.get_option('time_format'))
-        );
-	    echo json_encode($note);
+
+		    $note = array(
+			    "message" => 'SMS: '.$_POST['message'],
+			    "date" => __('added on', 'addon-sms-order').' '.current_time(get_option('date_format').' '.get_option('time_format'))
+		    );
+		    echo json_encode($note);
+	    } else {
+	        echo json_encode($result);
+        }
 	    wp_die();
+    }
+
+	/**
+     * Send SMS with payment instructions when order is closed
+     *
+	 * @param $order_id
+	 */
+    public function order_send_sms_payment_data($order_id) {
+
+	    $order = wc_get_order($order_id)->get_data();
+	    $order_meta = get_post_meta($order_id);
+
+	    $payment_methods = array(
+	        'eupago_multibanco' => 'Payment instructions: ent -> '.$order_meta['_eupago_multibanco_entidade'][0].
+                                   ' ref -> '.$order_meta['_eupago_multibanco_referencia'][0].
+                                   ' val -> '.$order_meta['_order_total'][0],
+
+            'eupago_payshop' => 'Payment instructions: ref -> '.$order_meta['_eupago_payshop_referencia'][0].
+                                ' val -> '.$order_meta['_order_total'][0],
+
+            'eupago_mbway' => 'Payment instructions: ref -> '.$order_meta['_eupago_mbway_referencia'][0].
+                              ' val -> '.$order_meta['_order_total'][0],
+
+            'multibanco_ifthen_for_woocommerce' => 'Payment instructions: ent -> '.$order_meta['_multibanco_ifthen_for_woocommerce_ent'][0].
+                                                   ' ref -> '.$order_meta['_multibanco_ifthen_for_woocommerce_ref'][0].
+                                                   ' val -> '.$order_meta['_multibanco_ifthen_for_woocommerce_val'][0],
+
+            // TODO - we need to confirm mbway variables from IfThenPay
+            'mbway_ifthen_for_woocommerce' => 'Payment instructions: ref -> '.$order_meta['_mbway_ifthen_for_woocommerce_ref'][0].
+                                              ' val -> '.$order_meta['_mbway_ifthen_for_woocommerce_val'][0],
+        );
+
+	    if (array_key_exists($order['payment_method'], $payment_methods)) {
+		    $this->send_sms(
+		            '351-'.$order['billing']['phone'],
+                    $payment_methods[$order['payment_method']],
+                    'order',
+			        $order_id
+            );
+        }
     }
 
 

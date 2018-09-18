@@ -158,14 +158,23 @@ class Smart_Marketing_Addon_Sms_Order {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
+		// CRON and payment reminder
 		$this->loader->add_action('cron_schedules', $plugin_admin, 'my_add_every_minute');
 		$this->loader->add_action('egoi_sms_order_event', $plugin_admin, 'sms_order_reminder');
 
+		// Checkbox "I want to be notified by SMS" in order checkout form
 		$this->loader->add_action('woocommerce_after_checkout_billing_form', $plugin_admin, 'notification_checkout_field');
 		$this->loader->add_action('woocommerce_checkout_update_order_meta', $plugin_admin, 'notification_checkout_field_update_order_meta');
+
+		// Box send SMS in admin order page
 		$this->loader->add_action('add_meta_boxes', $plugin_admin, 'order_add_sms_meta_box');
 		$this->loader->add_action('wp_ajax_order_action_sms_meta_box', $plugin_admin, 'order_action_sms_meta_box');
 
+		// Check type of payment and send SMS
+		$this->loader->add_action('woocommerce_order_status_on-hold', $plugin_admin, 'order_send_sms_payment_data');
+
+		// When change order status, send SMS
+		// TODO -> create actions for this
 	}
 
 	/**
