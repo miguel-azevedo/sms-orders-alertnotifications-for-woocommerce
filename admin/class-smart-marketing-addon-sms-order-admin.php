@@ -159,16 +159,17 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
      * @since  1.0.0
      */
     public function add_options_page() {
-
-        $this->plugin_screen_hook_suffix = add_submenu_page(
-            $this->parent_plugin_name,
-            __( 'SMS Order Config', 'addon-sms-order' ),
-            __( 'SMS Order Config', 'addon-sms-order' ),
-            'manage_options',
-            'smart-marketing-addon-sms-order-config',
-            array( $this, 'display_plugin_sms_order_config' )
-        );
-
+	    $haslists = get_option('egoi_has_list');
+	    if ($haslists) {
+		    $this->plugin_screen_hook_suffix = add_submenu_page(
+			    $this->parent_plugin_name,
+			    __( 'SMS Order Config', 'addon-sms-order' ),
+			    __( 'SMS Order Config', 'addon-sms-order' ),
+			    'manage_options',
+			    'smart-marketing-addon-sms-order-config',
+			    array( $this, 'display_plugin_sms_order_config' )
+		    );
+	    }
     }
 
     /**
