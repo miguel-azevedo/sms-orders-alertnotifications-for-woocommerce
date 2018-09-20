@@ -95,9 +95,9 @@ $senders = $this->helper->get_senders();
                                 <select name="admin_prefix" style="width:10em; float: left;" required >
 		                            <?php
 		                            foreach (unserialize(COUNTRY_CODES) as $key => $value) {
-			                            $string = ucwords(strtolower($value['name']))." (+".$value['code'].")";
+			                            $string = ucwords(strtolower($value['country_pt']))." (+".$value['prefix'].")";
 			                            ?>
-                                        <option value="<?=$value['code']?>" <?php selected($value['code'], $sender_option['admin_prefix']);?> ><?=$string?></option>
+                                        <option value="<?=$value['prefix']?>" <?php selected($value['prefix'], $sender_option['admin_prefix']);?> ><?=$string?></option>
 			                            <?php
 		                            }
 		                            ?>
@@ -128,9 +128,9 @@ $senders = $this->helper->get_senders();
                                     <select name="recipient_prefix" style="width:10em; float: left;" required >
 		                                <?php
 		                                foreach (unserialize(COUNTRY_CODES) as $key => $value) {
-			                                $string = ucwords(strtolower($value['name']))." (+".$value['code'].")";
+			                                $string = ucwords(strtolower($value['country_pt']))." (+".$value['prefix'].")";
 			                                ?>
-                                            <option value="<?=$value['code']?>" ><?=$string?></option>
+                                            <option value="<?=$value['prefix']?>" ><?=$string?></option>
 			                                <?php
 		                                }
 		                                ?>

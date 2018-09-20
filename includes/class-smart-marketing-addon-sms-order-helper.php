@@ -25,7 +25,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 	/**
 	 * @var array
 	 */
-	protected $payment_map = array(
+	public $payment_map = array(
 		'eupago_multibanco' => array(
 			'ent' => '_eupago_multibanco_entidade',
 			'ref' => '_eupago_multibanco_referencia',
@@ -91,7 +91,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 				"failed",
 				"on-hold"
 			),
-			"date_created" => '<' . (time() - $two_days_in_sec)
+			"date_created" => '<' . (time() - 60)
 		);
 		return wc_get_orders($args);
 	}
@@ -106,15 +106,14 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 	 */
 	public function get_sms_order_message($recipient_type, $order) {
 		$recipients = json_decode(get_option('egoi_sms_order_recipients'), true);
-		// TODO - get language with order billing country
-		$lang = strtolower($order['billing']['country']);
 		$texts = json_decode(get_option('egoi_sms_order_texts'), true);
+		$lang = $this->get_lang($order['billing']['country']);
 
 		if (isset($texts[$lang]['egoi_sms_order_text_' . $recipient_type . '_' . $order['status']]) && isset($recipients['egoi_sms_order_' . $recipient_type . '_' . $order['status']])) {
 
 			$tags = array(
 				"%order_id%" => $order['id'],
-				"%order_status%" => $order['status'], // TODO - Translate status too
+				"%order_status%" => $order['status'],
 				"%total%" => $order['total'],
 				"%currency%" => $order['currency'],
 				"%payment_method%" => $order['payment_method'],
@@ -133,6 +132,23 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 		}
 		return false;
 	}
+
+	/**
+	 * @param $country
+	 *
+	 * @return bool|string
+	 */
+	public function get_lang($country) {
+		$country_codes = unserialize(COUNTRY_CODES);
+		$lang = $country_codes[$country]['language'];
+		$lang_allowed = array('en', 'pt', 'es');
+		if ($lang == 'pt-BR') {
+			return 'pt_BR';
+		} else if (in_array(substr($lang, 0, 2), $lang_allowed)) {
+			return substr($lang, 0, 2);
+		}
+		return 'en';
+    }
 
 	/**
 	 * Get order payment instructions
@@ -161,7 +177,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 			$recipient = substr($recipient, 0, -9).'-'.substr($recipient, -9);
 		} else {
 			$prefixes = unserialize(COUNTRY_CODES);
-			$recipient = $prefixes[$country]['code'].'-'.$recipient;
+			$recipient = $prefixes[$country]['prefix'].'-'.$recipient;
 		}
 		return $recipient;
 	}

@@ -201,9 +201,17 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
             global $wpdb;
 
+
 	        $sender = json_decode(get_option('egoi_sms_order_sender'), true);
             $table_name = $wpdb->prefix. 'egoi_sms_order_reminders';
 
+
+	        $wpdb->insert($table_name, array(
+		        "time" => current_time('mysql'),
+		        "order_id" => '1'
+	        ));
+
+	        /*
             $sql = " SELECT DISTINCT order_id FROM $table_name ";
             $order_ids = $wpdb->get_col($sql);
 
@@ -235,6 +243,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	                ));
                 }
             }
+	        */
         } catch (Exception $e) {
 	        $this->helper->save_logs('sms_order_reminder: ' . $e->getMessage());
         }
@@ -250,13 +259,18 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 		$sms_notification = (bool) get_post_meta($order_id, 'egoi_notification_option')[0];
 
 		if ($sms_notification) {
-            $order = wc_get_order($order_id)->get_data();
-            $types = array('customer', 'admin');
 
-            foreach ($types as $type) {
+			$sender = json_decode(get_option('egoi_sms_order_sender'), true);
+            $order = wc_get_order($order_id)->get_data();
+            $types = array(
+                'customer' => $order['billing']['phone'],
+                'admin' => $sender['admin_prefix'].'-'.$sender['admin_phone']
+            );
+
+            foreach ($types as $type => $phone) {
                 $message = $this->helper->get_sms_order_message($type, $order);
                 if ($message !== false) {
-	                $recipient = $this->helper->get_valid_recipient($order['billing']['phone'], $order['billing']['country']);
+	                $recipient = $this->helper->get_valid_recipient($phone, $order['billing']['country']);
                     $this->helper->send_sms($recipient, $message, $order['status'], $order['id']);
                 }
             }
@@ -279,11 +293,13 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
             $message .= $this->helper->get_payment_data($order, 'ref') ? ' ref -> '.$this->helper->get_payment_data($order, 'ref') : null;
             $message .= $this->helper->get_payment_data($order, 'val') ? ' val -> '.$this->helper->get_payment_data($order, 'val') : null;
 
-            if (array_key_exists($order['payment_method'], $this->payment_map)) {
+            if (array_key_exists($order['payment_method'], $this->helper->payment_map)) {
 	            $recipient = $this->helper->get_valid_recipient($order['billing']['phone'], $order['billing']['country']);
+	            var_dump($recipient);
                 $this->helper->send_sms($recipient, $message,'order', $order_id);
             }
         }
+
     }
 
 	/**
