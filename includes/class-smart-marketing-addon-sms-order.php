@@ -112,6 +112,11 @@ class Smart_Marketing_Addon_Sms_Order {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-smart-marketing-addon-sms-order-i18n.php';
 
 		/**
+		 * The class responsible for defining all helper methods
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-smart-marketing-addon-sms-order-helper.php';
+
+		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-smart-marketing-addon-sms-order-admin.php';

@@ -51,6 +51,8 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
     private $apikey;
 
+    protected $helper;
+
 	/**
 	 * @var array List of order status WooCommerce hooks
 	 */
@@ -85,35 +87,6 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
     );
 
 	/**
-	 * @var array
-	 */
-    protected $payment_map = array(
-	    'eupago_multibanco' => array(
-		    'ent' => '_eupago_multibanco_entidade',
-		    'ref' => '_eupago_multibanco_referencia',
-		    'val' => '_order_total'
-	    ),
-	    'eupago_payshop' => array(
-		    'ref' => '_eupago_payshop_referencia',
-		    'val' => '_order_total'
-	    ),
-	    'eupago_mbway' => array(
-		    'ref' => '_eupago_mbway_referencia',
-		    'val' => '_order_total'
-	    ),
-	    'multibanco_ifthen_for_woocommerce' => array(
-		    'ent' => '_multibanco_ifthen_for_woocommerce_ent',
-		    'ref' => '_multibanco_ifthen_for_woocommerce_ref',
-		    'val' => '_multibanco_ifthen_for_woocommerce_val'
-	    ),
-	    // TODO - confirm fields for ifThenPay MBWay
-	    'mbway_ifthen_for_woocommerce' => array(
-		    'ref' => '_mbway_ifthen_for_woocommerce_ref',
-		    'val' => '_mbway_ifthen_for_woocommerce_val'
-	    )
-    );
-
-	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
@@ -121,6 +94,8 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 * @param      string    $version    The version of this plugin.
 	 */
 	public function __construct( $plugin_name, $version ) {
+
+	    $this->helper = new Smart_Marketing_Addon_Sms_Order_Helper();
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
@@ -181,9 +156,6 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
         include_once 'partials/smart-marketing-addon-sms-order-admin-config.php';
     }
 
-
-
-
 	/**
 	 * Save sms order configs in wordpress options
 	 *
@@ -210,7 +182,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
             } else if (isset($post['form_id']) && $post['form_id'] == 'form-sms-order-tests') {
 
-                $response = $this->send_sms($post['recipient_prefix'].'-'.$post['recipient_phone'], $post['message'], 'test', 0);
+                $response = $this->helper->send_sms($post['recipient_prefix'].'-'.$post['recipient_phone'], $post['message'], 'test', 0);
 
                 $response = json_decode($response);
                 if (isset($response->errorCode)) {
@@ -219,14 +191,10 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
             }
 	        return true;
         } catch (Exception $e) {
-            $this->save_logs('process_config_form: ' . $e->getMessage());
+            $this->helper->save_logs('process_config_form: ' . $e->getMessage());
         }
 
     }
-
-
-
-
 
 	/**
 	 * Process SMS reminders
@@ -242,7 +210,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
             $sql = " SELECT DISTINCT order_id FROM $table_name ";
             $order_ids = $wpdb->get_col($sql);
 
-            $orders = $this->get_not_paid_orders();
+            $orders = $this->helper->get_not_paid_orders();
 
             if (isset($orders)) {
                 foreach ($orders as $order) {
@@ -250,16 +218,16 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
                     if (!$order->is_paid() && !in_array($order->get_id(), $order_ids) && $sms_notification) {
 
-                        $customer_message = $this->get_sms_order_message('customer', $order->get_data());
-	                    $admin_message = $this->get_sms_order_message('admin', $order->get_data());
+                        $customer_message = $this->helper->get_sms_order_message('customer', $order->get_data());
+	                    $admin_message = $this->helper->get_sms_order_message('admin', $order->get_data());
 
                         if ($customer_message !== false) {
                             $recipient = $this->get_valid_recipient($order->billing_phone, $order->billing_country);
-                            $this->send_sms($recipient, $customer_message, $order->get_status(), $order->get_id());
+                            $this->helper->send_sms($recipient, $customer_message, $order->get_status(), $order->get_id());
                         }
 
 	                    if ($admin_message !== false) {
-		                    $this->send_sms($sender['admin_prefix'].'-'.$sender['admin_phone'], $admin_message, $order->get_status(), $order->get_id());
+		                    $this->helper->send_sms($sender['admin_prefix'].'-'.$sender['admin_phone'], $admin_message, $order->get_status(), $order->get_id());
 	                    }
 
                     }
@@ -271,31 +239,9 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
                 }
             }
         } catch (Exception $e) {
-	        $this->save_logs('sms_order_reminder: ' . $e->getMessage());
+	        $this->helper->save_logs('sms_order_reminder: ' . $e->getMessage());
         }
     }
-
-	/**
-     * Get not paid orders over 48 hours
-     *
-	 * @return mixed
-	 */
-    public function get_not_paid_orders() {
-	    $two_days_in_sec = 2 * 24 * 60 * 60;
-	    $args = array(
-		    "status" => array(
-			    "pending",
-			    "failed",
-			    "on-hold"
-		    ),
-		    "date_created" => '<' . (time() - $two_days_in_sec)
-	    );
-	    return wc_get_orders($args);
-    }
-
-
-
-
 
 	/**
      * Send SMS when order status changed
@@ -311,17 +257,14 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
             $types = array('customer', 'admin');
 
             foreach ($types as $type) {
-                $message = $this->get_sms_order_message($type, $order);
+                $message = $this->helper->get_sms_order_message($type, $order);
                 if ($message !== false) {
-	                $recipient = $this->get_valid_recipient($order['billing']['phone'], $order['billing']['country']);
-                    $this->send_sms($recipient, $message, $order['status'], $order['id']);
+	                $recipient = $this->helper->get_valid_recipient($order['billing']['phone'], $order['billing']['country']);
+                    $this->helper->send_sms($recipient, $message, $order['status'], $order['id']);
                 }
             }
 		}
 	}
-
-
-
 
 	/**
      * Send SMS with payment instructions when order is closed
@@ -335,19 +278,16 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
         if ($sms_notification) {
             $message = 'Payment instructions:';
-            $message .= $this->get_payment_data($order, 'ent') ? ' ent -> '.$this->get_payment_data($order, 'ent') : null;
-            $message .= $this->get_payment_data($order, 'ref') ? ' ref -> '.$this->get_payment_data($order, 'ref') : null;
-            $message .= $this->get_payment_data($order, 'val') ? ' val -> '.$this->get_payment_data($order, 'val') : null;
+            $message .= $this->helper->get_payment_data($order, 'ent') ? ' ent -> '.$this->helper->get_payment_data($order, 'ent') : null;
+            $message .= $this->helper->get_payment_data($order, 'ref') ? ' ref -> '.$this->helper->get_payment_data($order, 'ref') : null;
+            $message .= $this->helper->get_payment_data($order, 'val') ? ' val -> '.$this->helper->get_payment_data($order, 'val') : null;
 
             if (array_key_exists($order['payment_method'], $this->payment_map)) {
-	            $recipient = $this->get_valid_recipient($order['billing']['phone'], $order['billing']['country']);
-                $this->send_sms($recipient, $message,'order', $order_id);
+	            $recipient = $this->helper->get_valid_recipient($order['billing']['phone'], $order['billing']['country']);
+                $this->helper->send_sms($recipient, $message,'order', $order_id);
             }
         }
     }
-
-
-
 
 	/**
 	 * Add SMS meta box to order admin page
@@ -397,12 +337,12 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	}
 
 	/**
-	 * Create SMS meta box in admin order page
+	 * Send SMS and add note to admin order page
 	 */
 	public function order_action_sms_meta_box() {
-		$recipient = $this->get_valid_recipient($_POST['recipient'], $_POST['country']);
+		$recipient = $this->helper->get_valid_recipient($_POST['recipient'], $_POST['country']);
 
-		$result = $this->send_sms($recipient, $_POST['message'], 'order', $_POST['order_id']);
+		$result = $this->helper->send_sms($recipient, $_POST['message'], 'order', $_POST['order_id']);
 
 		if (!isset($result->errorCode)) {
 			$order = wc_get_order($_POST['order_id']);
@@ -419,129 +359,8 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 		wp_die();
 	}
 
-
-
-
-
-
 	/**
-	 * Function to get cellphone senders from E-goi account
-	 *
-	 * @return array with senders
-	 */
-	public function get_senders() {
-		$params = array(
-			'apikey' 		=> $this->apikey,
-			'channel' 		=> 'telemovel'
-		);
-
-		$client = new SoapClient('http://api.e-goi.com/v2/soap.php?wsdl');
-		$result = $client->getSenders($params);
-
-		return $result;
-	}
-
-	/**
-	 * Method to send SMS
-	 * @param $sms_params
-	 *
-	 * @return mixed
-	 */
-	public function send_sms($recipient, $message, $type, $order_id, $gsm = false) {
-		$url = 'http://dev-web-agency.e-team.biz/smaddonsms/sms';
-
-		$sender = json_decode(get_option('egoi_sms_order_sender'), true);
-
-		$sms_params = array(
-			"apikey" => $this->apikey,
-			"sender_hash" => $sender['sender_hash'],
-			"message" => $message,
-			"recipient" => $recipient,
-			"type" => $type,
-			"order_id" => $order_id,
-			"gsm" => $gsm
-		);
-
-		return $this->curl($url, $sms_params);
-	}
-
-	/**
-	 * Get SMS text from configs
-	 *
-	 * @param $recipient_type
-	 * @param $order
-	 *
-	 * @return bool|mixed
-	 */
-	public function get_sms_order_message($recipient_type, $order) {
-		// TODO - check if the customer want to be notified
-		$recipients = json_decode(get_option('egoi_sms_order_recipients'), true);
-		// TODO - get language with order billing country
-		$lang = strtolower($order['billing']['country']);
-		$texts = json_decode(get_option('egoi_sms_order_texts'), true);
-
-		if (isset($texts[$lang]['egoi_sms_order_text_' . $recipient_type . '_' . $order['status']]) && isset($recipients['egoi_sms_order_' . $recipient_type . '_' . $order['status']])) {
-
-			$tags = array(
-				"%order_id%" => $order['id'],
-				"%order_status%" => $order['status'], // TODO - Translate status too
-				"%total%" => $order['total'],
-				"%currency%" => $order['currency'],
-				"%payment_method%" => $order['payment_method'],
-				"%ref%" => $this->get_payment_data($order, 'ref'),
-				"%ent%" => $this->get_payment_data($order, 'ent'),
-				"%shop_name%" => get_bloginfo('name'),
-				"%billing_name%" => $order['billing']['first_name'].' '.$order['billing']['last_name']
-			);
-
-			$message = $texts[$lang]['egoi_sms_order_text_' . $recipient_type . '_' . $order['status']];
-			foreach ($tags as $tag => $content) {
-				$message = str_replace($tag, $content, $message);
-			}
-
-			return $message;
-		}
-		return false;
-	}
-
-	/**
-     * Save logs in /logs/smart-marketing-addon-sms-order.log
-     *
-	 * @param $log
-	 */
-	public function save_logs($log) {
-		$path = dirname(__FILE__).'/logs/';
-
-		$file = fopen($path.'smart-marketing-addon-sms-order.log', 'a+');
-		fwrite($file, $log."\xA");
-		fclose($file);
-	}
-
-	/**
-	 * cURL helper
-	 * @param $url
-	 * @param $post
-	 *
-	 * @return mixed
-	 */
-	public function curl($url, $post) {
-
-		$ch = curl_init($url);
-		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-		curl_setopt($ch, CURLOPT_HEADER, 0);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 60);
-
-		$response = curl_exec($ch);
-
-		curl_close($ch);
-
-		return $response;
-	}
-
-	/**
-     * Add new interval to wordpress cron schedules
+	 * Add new interval to wordpress cron schedules
 	 * @param $schedules
 	 *
 	 * @return mixed
@@ -554,57 +373,4 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 		return $schedules;
 	}
 
-	/**
-	 * Div to success notices
-	 */
-	public function admin_notice__success() {
-		?>
-        <div class="notice notice-success is-dismissible">
-            <p><?php _e( 'Done!', 'addon-sms-order' ); ?></p>
-        </div>
-		<?php
-	}
-
-	/**
-	 * Div to error notices
-	 */
-	public function admin_notice__error() {
-		?>
-        <div class="notice notice-error is-dismissible">
-            <p><?php _e( 'Irks! An error has occurred.', 'addon-sms-order' ); ?></p>
-        </div>
-		<?php
-	}
-
-	/**
-     * Get order payment instructions
-     *
-	 * @param $order
-	 * @param $field
-	 *
-	 * @return bool
-	 */
-	public function get_payment_data($order, $field) {
-		$order_meta = get_post_meta($order['id']);
-
-		if (isset($this->payment_map[$order['payment_method']][$field])) {
-			$payment_field = $this->payment_map[$order['payment_method']][ $field ];
-			return $order_meta[$payment_field][0];
-		}
-		return false;
-    }
-
-    /**
-     * Prepare recipient to E-goi
-     */
-    public function get_valid_recipient($phone, $country) {
-        $recipient = preg_replace('/[^0-9]/', '', $phone);
-        if (strlen($recipient) > 9) {
-            $recipient = substr($recipient, 0, -9).'-'.substr($recipient, -9);
-        } else {
-	        $prefixes = unserialize(COUNTRY_CODES);
-	        $recipient = $prefixes[$country]['code'].'-'.$recipient;
-        }
-        return $recipient;
-    }
 }
