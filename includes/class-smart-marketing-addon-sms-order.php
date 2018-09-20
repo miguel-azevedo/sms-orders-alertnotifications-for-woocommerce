@@ -76,8 +76,12 @@ class Smart_Marketing_Addon_Sms_Order {
 
 		$this->load_dependencies();
 		$this->set_locale();
-		$this->define_admin_hooks();
-		$this->define_public_hooks();
+
+		$haslists = get_option('egoi_has_list');
+		if ($haslists) {
+			$this->define_admin_hooks();
+			$this->define_public_hooks();
+		}
 
 	}
 

@@ -3,6 +3,13 @@
 
     $( document ).ready(function() {
         $("#egoi_send_order_sms_button").on("click", function () {
+            if ($("#egoi_send_order_sms_message").val() == '') {
+                $("#egoi_send_order_sms_notice").hide();
+                $("#egoi_send_order_sms_error").show();
+                return false;
+            }
+            $("#egoi_send_order_sms_error").hide();
+            $("#egoi_send_order_sms_notice").show();
             var data = {
                 'action': 'order_action_sms_meta_box',
                 'order_id': $("#egoi_send_order_sms_order_id").val(),
@@ -11,7 +18,6 @@
                 'message': $("#egoi_send_order_sms_message").val()
             };
             $.post(ajax_object.ajax_url, data, function(response) {
-                console.log(response);
                 var note = jQuery.parseJSON(response);
                 $(".order_notes").prepend(
                     "<li class='note system-note'>" +
@@ -19,6 +25,7 @@
                     "<p class='meta'>" +
                     "<abbr class='exact-date'>" + note.date + "</abbr>" +
                     "</li>");
+                $("#egoi_send_order_sms_notice").hide();
             });
         });
     });

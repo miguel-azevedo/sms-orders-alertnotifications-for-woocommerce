@@ -134,17 +134,14 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
      * @since  1.0.0
      */
     public function add_options_page() {
-	    $haslists = get_option('egoi_has_list');
-	    if ($haslists) {
-		    $this->plugin_screen_hook_suffix = add_submenu_page(
-			    $this->parent_plugin_name,
-			    __( 'SMS Order Config', 'addon-sms-order' ),
-			    __( 'SMS Order Config', 'addon-sms-order' ),
-			    'manage_options',
-			    'smart-marketing-addon-sms-order-config',
-			    array( $this, 'display_plugin_sms_order_config' )
-		    );
-	    }
+        $this->plugin_screen_hook_suffix = add_submenu_page(
+            $this->parent_plugin_name,
+            __( 'SMS Order Config', 'addon-sms-order' ),
+            __( 'SMS Order Config', 'addon-sms-order' ),
+            'manage_options',
+            'smart-marketing-addon-sms-order-config',
+            array( $this, 'display_plugin_sms_order_config' )
+        );
     }
 
     /**
@@ -328,6 +325,8 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
                 </p>
                 <p>
                     <button type="button" class="button" id="egoi_send_order_sms_button">Send</button>
+                    <span id="egoi_send_order_sms_error" style="display: none; color: red;"><?php _e('You can\'t send a empty SMS', 'addon-sms-order');?></span>
+                    <span id="egoi_send_order_sms_notice" style="display: none;"><?php _e('Sending... Wait please', 'addon-sms-order');?></span>
                 </p>
             </div>
 			<?php
