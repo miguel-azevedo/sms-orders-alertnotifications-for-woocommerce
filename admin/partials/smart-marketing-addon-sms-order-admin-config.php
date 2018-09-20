@@ -92,8 +92,18 @@ $senders = $this->get_senders();
                                 <label><?php _e('Admin Cellphone', 'addon-sms-order');?></label>
                             </th>
                             <td>
-                                <input type="text" name="admin_cellphone" class="regular-text"
-                                       value="<?php echo isset($sender_option['admin_cellphone']) ? $sender_option['admin_cellphone'] : null; ?>"
+                                <select name="admin_prefix" style="width:10em; float: left;" required >
+		                            <?php
+		                            foreach (unserialize(COUNTRY_CODES) as $key => $value) {
+			                            $string = ucwords(strtolower($value['name']))." (+".$value['code'].")";
+			                            ?>
+                                        <option value="<?=$value['code']?>" <?php selected($value['code'], $sender_option['admin_prefix']);?> ><?=$string?></option>
+			                            <?php
+		                            }
+		                            ?>
+                                </select>
+                                <input type="text" name="admin_phone" class="regular-text" maxlength="9"
+                                       value="<?php echo isset($sender_option['admin_phone']) ? $sender_option['admin_phone'] : null; ?>"
                                 />
                             </td>
                         </tr>
@@ -115,7 +125,17 @@ $senders = $this->get_senders();
                                     <label><?php _e('Recipient', 'addon-sms-order');?></label>
                                 </th>
                                 <td>
-                                    <input type="text" name="recipient" class="regular-text" />
+                                    <select name="recipient_prefix" style="width:10em; float: left;" required >
+		                                <?php
+		                                foreach (unserialize(COUNTRY_CODES) as $key => $value) {
+			                                $string = ucwords(strtolower($value['name']))." (+".$value['code'].")";
+			                                ?>
+                                            <option value="<?=$value['code']?>" ><?=$string?></option>
+			                                <?php
+		                                }
+		                                ?>
+                                    </select>
+                                    <input type="text" name="recipient_phone" class="regular-text" maxlength="9" />
                                 </td>
                             </tr>
                             <tr valign="top">
@@ -123,7 +143,7 @@ $senders = $this->get_senders();
                                     <label><?php _e('Message', 'addon-sms-order');?></label>
                                 </th>
                                 <td>
-                                    <textarea name="message" style="width: 25em;"></textarea>
+                                    <textarea name="message" style="width: 35em;"></textarea>
                                 </td>
                             </tr>
                         </table>

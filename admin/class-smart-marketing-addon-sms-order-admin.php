@@ -210,7 +210,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
             } else if (isset($post['form_id']) && $post['form_id'] == 'form-sms-order-tests') {
 
-                $response = $this->send_sms($post['recipient'], $post['message'], 'test', 0);
+                $response = $this->send_sms($post['recipient_prefix'].'-'.$post['recipient_phone'], $post['message'], 'test', 0);
 
                 $response = json_decode($response);
                 if (isset($response->errorCode)) {
@@ -254,11 +254,12 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	                    $admin_message = $this->get_sms_order_message('admin', $order->get_data());
 
                         if ($customer_message !== false) {
-                            $this->send_sms('351-'.$order->billing_phone, $customer_message, $order->get_status(), $order->get_id());
+                            $recipient = $this->get_valid_recipient($order->billing_phone, $order->billing_country);
+                            $this->send_sms($recipient, $customer_message, $order->get_status(), $order->get_id());
                         }
 
 	                    if ($admin_message !== false) {
-		                    $this->send_sms($sender['admin_cellphone'], $admin_message, $order->get_status(), $order->get_id());
+		                    $this->send_sms($sender['admin_prefix'].'-'.$sender['admin_phone'], $admin_message, $order->get_status(), $order->get_id());
 	                    }
 
                     }
@@ -312,7 +313,8 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
             foreach ($types as $type) {
                 $message = $this->get_sms_order_message($type, $order);
                 if ($message !== false) {
-                    $this->send_sms('351-'.$order['billing']['phone'], $message, $order['status'], $order['id']);
+	                $recipient = $this->get_valid_recipient($order['billing']['phone'], $order['billing']['country']);
+                    $this->send_sms($recipient, $message, $order['status'], $order['id']);
                 }
             }
 		}
@@ -338,12 +340,8 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
             $message .= $this->get_payment_data($order, 'val') ? ' val -> '.$this->get_payment_data($order, 'val') : null;
 
             if (array_key_exists($order['payment_method'], $this->payment_map)) {
-                $this->send_sms(
-                        '351-'.$order['billing']['phone'],
-                        $message,
-                        'order',
-                        $order_id
-                );
+	            $recipient = $this->get_valid_recipient($order['billing']['phone'], $order['billing']['country']);
+                $this->send_sms($recipient, $message,'order', $order_id);
             }
         }
     }
@@ -380,6 +378,8 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
             <div id="egoi_send_order_sms">
                 <input type="hidden" name="egoi_sms_order_id" id="egoi_send_order_sms_order_id"
                        value="<?php echo $order['id']; ?>"/>
+                <input type="hidden" name="egoi_sms_order_country" id="egoi_send_order_sms_order_country"
+                       value="<?php echo $order['billing']['country']; ?>"/>
                 <input type="hidden" name="egoi_sms_recipient" id="egoi_send_order_sms_recipient"
                        value="<?= $recipient ?>"/>
                 <p>
@@ -400,7 +400,9 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 * Create SMS meta box in admin order page
 	 */
 	public function order_action_sms_meta_box() {
-		$result = $this->send_sms('351-'.$_POST['recipient'], $_POST['message'], 'order', $_POST['order_id']);
+		$recipient = $this->get_valid_recipient($_POST['recipient'], $_POST['country']);
+
+		$result = $this->send_sms($recipient, $_POST['message'], 'order', $_POST['order_id']);
 
 		if (!isset($result->errorCode)) {
 			$order = wc_get_order($_POST['order_id']);
@@ -592,4 +594,17 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 		return false;
     }
 
+    /**
+     * Prepare recipient to E-goi
+     */
+    public function get_valid_recipient($phone, $country) {
+        $recipient = preg_replace('/[^0-9]/', '', $phone);
+        if (strlen($recipient) > 9) {
+            $recipient = substr($recipient, 0, -9).'-'.substr($recipient, -9);
+        } else {
+	        $prefixes = unserialize(COUNTRY_CODES);
+	        $recipient = $prefixes[$country]['code'].'-'.$recipient;
+        }
+        return $recipient;
+    }
 }
