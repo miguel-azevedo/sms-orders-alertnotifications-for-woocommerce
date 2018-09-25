@@ -201,17 +201,9 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
             global $wpdb;
 
-
 	        $sender = json_decode(get_option('egoi_sms_order_sender'), true);
             $table_name = $wpdb->prefix. 'egoi_sms_order_reminders';
 
-
-	        $wpdb->insert($table_name, array(
-		        "time" => current_time('mysql'),
-		        "order_id" => '1'
-	        ));
-
-	        /*
             $sql = " SELECT DISTINCT order_id FROM $table_name ";
             $order_ids = $wpdb->get_col($sql);
 
@@ -227,7 +219,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	                    $admin_message = $this->helper->get_sms_order_message('admin', $order->get_data());
 
                         if ($customer_message !== false) {
-                            $recipient = $this->get_valid_recipient($order->billing_phone, $order->billing_country);
+                            $recipient = $this->helper->get_valid_recipient($order->billing_phone, $order->billing_country);
                             $this->helper->send_sms($recipient, $customer_message, $order->get_status(), $order->get_id());
                         }
 
@@ -243,7 +235,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	                ));
                 }
             }
-	        */
+
         } catch (Exception $e) {
 	        $this->helper->save_logs('sms_order_reminder: ' . $e->getMessage());
         }
@@ -380,10 +372,10 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 *
 	 * @return mixed
 	 */
-	public function my_add_every_minute($schedules) {
-		$schedules['every_minute'] = array(
-			'interval' => 60,
-			'display' => __('Every Minute')
+	public function my_add_every_five_minutes($schedules) {
+		$schedules['every_five_minutes'] = array(
+			'interval' => 300,
+			'display' => __('Every Five Minutes')
 		);
 		return $schedules;
 	}
