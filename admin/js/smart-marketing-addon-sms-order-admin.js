@@ -82,6 +82,15 @@
             position = $(this).getCursorPosition();
         });
 
+        var sender = $("#sender_hash");
+        if (sender.val() == null) {
+            $("#form-sms-order-senders :input").prop("disabled", true);
+            sender.prop("disabled", false);
+        }
+        sender.on("change", function () {
+            $("#form-sms-order-senders :input").prop("disabled", false);
+        });
+
     });
 
 

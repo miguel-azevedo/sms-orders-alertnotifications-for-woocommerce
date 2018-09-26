@@ -10,3 +10,10 @@
 #sms_texts_tags{
     margin-bottom: 10px;
 }
+
+.label_text{
+    font-size: 16px;
+    font-weight: 300;
+    margin-bottom: 5px;
+    margin-top: 20px;
+}

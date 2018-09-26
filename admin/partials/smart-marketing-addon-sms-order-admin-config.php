@@ -40,11 +40,7 @@ $senders = $this->helper->get_senders();
 
 <h2 class="nav-tab-wrapper">
     <a class="nav-tab nav-tab-addon nav-tab-active" id="nav-tab-sms-senders">
-		<?php _e('Senders', 'addon-sms-order'); ?>
-    </a>
-
-    <a class="nav-tab nav-tab-addon" id="nav-tab-sms-recipients">
-        <?php _e('Recipients', 'addon-sms-order'); ?>
+		<?php _e('Senders/Recipients', 'addon-sms-order'); ?>
     </a>
 
     <a class="nav-tab nav-tab-addon" id="nav-tab-sms-texts">
@@ -52,134 +48,54 @@ $senders = $this->helper->get_senders();
     </a>
 </h2>
 
-<!-- wrap SMS Senders -->
+<!-- wrap SMS Senders/Recipients -->
 <div class="wrap tab wrap-addon" id="tab-sms-senders">
     <div class="wrap egoi4wp-settings" id="tab-forms">
         <div class="row">
-            <div class="main-content col col-4" style="margin:0 0 20px;">
-
-                <div style="font-size:14px; margin:10px 0;">
-		            <?php _e('Senders', 'addon-sms-order');?>
-                </div>
+            <div class="main-content col col-12" style="margin:0 0 20px;">
 
                 <form action="#" method="post" class="form-sms-order-config" id="form-sms-order-senders">
                     <input name="form_id" type="hidden" value="form-sms-order-senders" />
-                    <table class="form-table">
-                        <tr valign="top">
-                            <th scope="row">
-                                <label><?php _e('E-goi Sender', 'addon-sms-order');?></label>
-                            </th>
-                            <td>
-                                <select name="sender_hash" id="sender_hash">
-                                    <option value="" disabled selected>
-                                        <?php _e('Selected the sender', 'addon-sms-order');?>
-                                    </option>
-                                    <?php
-                                        if (isset($senders) && count($senders) > 0) {
-                                            foreach ($senders as $sender) {
-                                                ?>
-                                                <option value="<?=$sender['FROMID']?>" <?php selected($sender['FROMID'], $sender_option['sender_hash']);?> >
-                                                    <?=$sender['SENDER']?>
-                                                </option>
-                                                <?php
-                                            }
-                                        }
-                                    ?>
-                                </select>
-                            </td>
-                        <tr valign="top">
-                            <th scope="row">
-                                <label><?php _e('Admin Cellphone', 'addon-sms-order');?></label>
-                            </th>
-                            <td>
-                                <select name="admin_prefix" style="width:10em; float: left;" required >
-		                            <?php
-		                            foreach (unserialize(COUNTRY_CODES) as $key => $value) {
-			                            $string = ucwords(strtolower($value['country_pt']))." (+".$value['prefix'].")";
-			                            ?>
-                                        <option value="<?=$value['prefix']?>" <?php selected($value['prefix'], $sender_option['admin_prefix']);?> ><?=$string?></option>
-			                            <?php
-		                            }
-		                            ?>
-                                </select>
-                                <input type="text" name="admin_phone" class="regular-text" maxlength="9"
-                                       value="<?php echo isset($sender_option['admin_phone']) ? $sender_option['admin_phone'] : null; ?>"
-                                />
-                            </td>
-                        </tr>
-                    </table>
-                    <table border="0">
-                        <tr>
-                            <td><?php submit_button(); ?></td>
-                            <td><a id="button-test-sms">Send a test SMS</a></td>
-                        </tr>
-                    </table>
-                </form>
 
-                <div id="test-sms" style="display: none;">
-                    <form action="#" method="post">
-                        <input name="form_id" type="hidden" value="form-sms-order-tests" />
-                        <table class="form-table">
-                            <tr valign="top">
-                                <th scope="row">
-                                    <label><?php _e('Recipient', 'addon-sms-order');?></label>
-                                </th>
-                                <td>
-                                    <select name="recipient_prefix" style="width:10em; float: left;" required >
-		                                <?php
-		                                foreach (unserialize(COUNTRY_CODES) as $key => $value) {
-			                                $string = ucwords(strtolower($value['country_pt']))." (+".$value['prefix'].")";
-			                                ?>
-                                            <option value="<?=$value['prefix']?>" ><?=$string?></option>
-			                                <?php
-		                                }
-		                                ?>
-                                    </select>
-                                    <input type="text" name="recipient_phone" class="regular-text" maxlength="9" />
-                                </td>
-                            </tr>
-                            <tr valign="top">
-                                <th scope="row">
-                                    <label><?php _e('Message', 'addon-sms-order');?></label>
-                                </th>
-                                <td>
-                                    <textarea name="message" style="width: 35em;"></textarea>
-                                </td>
-                            </tr>
-                        </table>
-	                    <?php submit_button('Send SMS', 'secondary'); ?>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+                    <p class="label_text"><?php _e('E-goi Sender', 'addon-sms-order');?></p>
 
-<!-- wrap SMS Recipients -->
-<div class="wrap tab wrap-addon" id="tab-sms-recipients">
-    <div class="wrap egoi4wp-settings" id="tab-forms">
-        <div class="row">
-            <div class="main-content col col-4" style="margin:0 0 20px;">
-                <div style="font-size:14px; margin:10px 0;">
-                    <?php _e('Recipients', 'addon-sms-order');?>
-                </div>
-                <form action="#" method="post" class="form-sms-order-config" id="form-sms-order-recipients">
-                    <input name="form_id" type="hidden" value="form-sms-order-recipients" />
+                    <select class="e-goi-option-select-admin-forms" style="width: 400px;" name="sender_hash" id="sender_hash" required>
+                        <option value="" disabled selected>
+			                <?php _e('Selected the sender', 'addon-sms-order');?>
+                        </option>
+		                <?php
+		                if (isset($senders) && count($senders) > 0) {
+			                foreach ($senders as $sender) {
+				                ?>
+                                <option value="<?=$sender['FROMID']?>" <?php selected($sender['FROMID'], $sender_option['sender_hash']);?> >
+					                <?=$sender['SENDER']?>
+                                </option>
+				                <?php
+			                }
+		                }
+		                ?>
+                    </select>
 
-                    <table class="form-table">
-                        <tr valign="top">
-                            <th scope="row">
-                                <label><?php _e('Notification option', 'addon-sms-order');?></label>
-                            </th>
-                            <td>
-                                <input class="input-checkbox" type="checkbox" name="notification_option" value="1"
-                                    <?php checked($recipients['notification_option'], 1);?>
-                                />
-                            </td>
-                        </tr>
-                    </table>
+                    <p class="label_text"><?php _e('Admin Cellphone', 'addon-sms-order');?></p>
 
-                    <table border='0' class="widefat striped">
+                    <select name="admin_prefix" class="e-goi-option-select-admin-forms" style="width: 175px; float: left;" required >
+		                <?php
+		                foreach (unserialize(COUNTRY_CODES) as $key => $value) {
+			                $string = ucwords(strtolower($value['country_pt']))." (+".$value['prefix'].")";
+			                ?>
+                            <option value="<?=$value['prefix']?>" <?php selected($value['prefix'], $sender_option['admin_prefix']);?> ><?=$string?></option>
+			                <?php
+		                }
+		                ?>
+                    </select>
+                    <input type="text" name="admin_phone" class="regular-text" maxlength="9" style="width: 222px; height: 38px;"
+                           value="<?php echo isset($sender_option['admin_phone']) ? $sender_option['admin_phone'] : null; ?>"
+                    />
+
+
+                    <p class="label_text"><?php _e('Select the SMS type that you want to sent', 'addon-sms-order');?></p>
+
+                    <table border='0' class="widefat striped" style="max-width: 800px;">
                         <thead>
                         <tr>
                             <th><?php _e('Order Status', 'addon-sms-order');?></th>
@@ -189,31 +105,76 @@ $senders = $this->helper->get_senders();
                         </thead>
 
                         <tbody>
-                            <?php foreach ($this->order_statuses as $cod => $name) { ?>
+			            <?php foreach ($this->order_statuses as $cod => $name) { ?>
                             <tr>
                                 <td>
-                                    <?php _e($name, 'addon-sms-order');?>
+						            <?php _e($name, 'addon-sms-order');?>
                                 </td>
                                 <td>
                                     <input class="input-checkbox" type="checkbox" name="egoi_sms_order_customer_<?=$cod?>" value="1"
-                                        <?php checked($recipients['egoi_sms_order_customer_'.$cod], 1);?>
+							            <?php checked($recipients['egoi_sms_order_customer_'.$cod], 1);?>
                                     />
                                 </td>
                                 <td>
                                     <input class="input-checkbox" type="checkbox" name="egoi_sms_order_admin_<?=$cod?>" value="1"
-	                                    <?php checked($recipients['egoi_sms_order_admin_'.$cod], 1);?>
+							            <?php checked($recipients['egoi_sms_order_admin_'.$cod], 1);?>
                                     />
                                 </td>
                             </tr>
-                        <?php } ?>
+			            <?php } ?>
                         </tbody>
                     </table>
-                    <?php submit_button(); ?>
+
+                    <p class="label_text">
+                        <input class="input-checkbox" type="checkbox" name="notification_option" value="1" id="notification_option"
+                            <?php checked($recipients['notification_option'], 1);?>
+                        />
+                        <label for="notification_option"><?php _e('Enable option on order checkout to receive SMS', 'addon-sms-order');?></label>
+                    </p>
+
+		            <?php submit_button(); ?>
                 </form>
+
+                <hr>
+
+                <div id="test-sms" >
+                    <form action="#" method="post">
+	                    <?php
+	                    if ($sender_option['sender_hash']) {
+		                    $disabled = null;
+	                    } else {
+		                    $disabled = array('disabled' => 1);
+	                    }
+	                    ?>
+                        <input name="form_id" type="hidden" value="form-sms-order-tests" />
+
+                        <p class="label_text"><?php _e('Send a TEST SMS', 'addon-sms-order');?></p>
+
+                        <select name="recipient_prefix" class="e-goi-option-select-admin-forms" style="width: 175px; float: left;" required <?php echo $disabled ? 'disabled' : null;?> >
+		                    <?php
+		                    foreach (unserialize(COUNTRY_CODES) as $key => $value) {
+			                    $string = ucwords(strtolower($value['country_pt']))." (+".$value['prefix'].")";
+			                    ?>
+                                <option value="<?=$value['prefix']?>" ><?=$string?></option>
+			                    <?php
+		                    }
+		                    ?>
+                        </select>
+                        <input type="text" name="recipient_phone" class="regular-text" maxlength="9" style="width: 222px; height: 38px;" required <?php echo $disabled ? 'disabled' : null;?> />
+
+                        <br>
+
+                        <textarea name="message" style="width: 400px;" rows="5" required <?php echo $disabled ? 'disabled' : null;?>></textarea>
+
+	                    <?php submit_button('Send SMS', 'secondary', 'submit', true, $disabled); ?>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+
 
 <!-- wrap SMS Texts -->
 <div class="wrap tab wrap-addon" id="tab-sms-texts">
@@ -221,12 +182,12 @@ $senders = $this->helper->get_senders();
         <div class="row">
             <div class="main-content col col-12" style="margin:0 0 20px;">
 
-                <p class="label_span"><?php _e('Select the language', 'addon-sms-order');?></p>
+                <p class="label_text"><?php _e('Select the language', 'addon-sms-order');?></p>
 
                 <form action="#" method="post" class="form-sms-order-config" id="form-sms-order-texts">
                     <input name="form_id" type="hidden" value="form-sms-order-texts" />
                     <div id="sms_texts_select_lang">
-                        <select class="e-goi-option-select-admin-forms" name="sms_text_language" id="sms_text_language">
+                        <select class="e-goi-option-select-admin-forms" style="width: 400px;" name="sms_text_language" id="sms_text_language">
                             <option value="" disabled selected>
                                 <?php _e('Selected the language', 'addon-sms-order');?>
                             </option>
@@ -255,7 +216,7 @@ $senders = $this->helper->get_senders();
 
                     <?php foreach ($this->languages as $lang) { ?>
                         <div id="sms_order_texts_<?=$lang?>">
-                            <table border="0" class="widefat striped">
+                            <table border="0" class="widefat striped" style="max-width: 900px;">
                                 <thead>
                                     <tr>
                                         <th><?php _e('Order Status', 'addon-sms-order');?></th>
@@ -268,10 +229,10 @@ $senders = $this->helper->get_senders();
                                     <tr>
                                         <td><?php _e($name, 'addon-sms-order');?></td>
                                         <td>
-                                            <textarea name="egoi_sms_order_text_customer_<?=$cod?>" id="egoi_sms_order_text_customer_<?=$cod?>"><?=$texts[$lang]["egoi_sms_order_text_customer_".$cod]?></textarea>
+                                            <textarea name="egoi_sms_order_text_customer_<?=$cod?>" cols="40" rows="4" id="egoi_sms_order_text_customer_<?=$cod?>"><?=$texts[$lang]["egoi_sms_order_text_customer_".$cod]?></textarea>
                                         </td>
                                         <td>
-                                            <textarea name="egoi_sms_order_text_admin_<?=$cod?>" id="egoi_sms_order_text_admin_<?=$cod?>"><?=$texts[$lang]["egoi_sms_order_text_admin_".$cod]?></textarea>
+                                            <textarea name="egoi_sms_order_text_admin_<?=$cod?>" cols="40" rows="4" id="egoi_sms_order_text_admin_<?=$cod?>"><?=$texts[$lang]["egoi_sms_order_text_admin_".$cod]?></textarea>
                                         </td>
                                     </tr>
                                 <?php } ?>

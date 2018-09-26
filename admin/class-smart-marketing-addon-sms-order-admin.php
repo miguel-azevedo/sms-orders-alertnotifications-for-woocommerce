@@ -165,11 +165,18 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
         try {
             if (isset($post['form_id']) && $post['form_id'] == 'form-sms-order-senders') {
 
-                update_option('egoi_sms_order_sender', json_encode($post));
+                $sender_atributes = array ('sender_hash', 'admin_prefix', 'admin_phone');
 
-            } else if (isset($post['form_id']) && $post['form_id'] == 'form-sms-order-recipients') {
+	            foreach ($post as $name => $input) {
+		            if (in_array($name, $sender_atributes)) {
+		                $sender[$name] = $input;
+                    } else {
+		                $recipients[$name] = $input;
+                    }
+                }
 
-                update_option('egoi_sms_order_recipients', json_encode($post));
+                update_option('egoi_sms_order_sender', json_encode($sender));
+                update_option('egoi_sms_order_recipients', json_encode($recipients));
 
             } else if (isset($post['form_id']) && $post['form_id'] == 'form-sms-order-texts') {
 
