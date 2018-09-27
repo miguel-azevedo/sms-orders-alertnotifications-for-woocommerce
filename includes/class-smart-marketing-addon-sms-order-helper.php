@@ -91,7 +91,8 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 				"failed",
 				"on-hold"
 			),
-			"date_created" => '<' . (time() - 60)
+			"date_created" => '<' . (time() - 60*15),
+			'limit' => -1
 		);
 		return wc_get_orders($args);
 	}

@@ -217,7 +217,13 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
             $orders = $this->helper->get_not_paid_orders();
 
             if (isset($orders)) {
+                $count = 0;
                 foreach ($orders as $order) {
+
+                    if ($count >= 20) {
+                        break;
+                    }
+
 	                $sms_notification = (bool) get_post_meta($order->get_id(), 'egoi_notification_option')[0];
 
                     if (!$order->is_paid() && !in_array($order->get_id(), $order_ids) && $sms_notification) {
@@ -228,18 +234,19 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
                         if ($customer_message !== false) {
                             $recipient = $this->helper->get_valid_recipient($order->billing_phone, $order->billing_country);
                             $this->helper->send_sms($recipient, $customer_message, $order->get_status(), $order->get_id());
+                            $count++;
                         }
 
 	                    if ($admin_message !== false) {
 		                    $this->helper->send_sms($sender['admin_prefix'].'-'.$sender['admin_phone'], $admin_message, $order->get_status(), $order->get_id());
+		                    $count++;
 	                    }
 
+	                    $wpdb->insert($table_name, array(
+		                    "time" => current_time('mysql'),
+		                    "order_id" => $order->get_id()
+	                    ));
                     }
-
-	                $wpdb->insert($table_name, array(
-		                "time" => current_time('mysql'),
-		                "order_id" => $order->get_id()
-	                ));
                 }
             }
 
