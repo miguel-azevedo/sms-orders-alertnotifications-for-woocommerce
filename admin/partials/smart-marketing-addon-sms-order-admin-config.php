@@ -88,7 +88,7 @@ $senders = $this->helper->get_senders();
 		                }
 		                ?>
                     </select>
-                    <input type="text" name="admin_phone" class="regular-text" maxlength="9" style="width: 222px; height: 38px;"
+                    <input type="text" id="admin_phone" name="admin_phone" class="regular-text" style="width: 222px; height: 38px;"
                            value="<?php echo isset($sender_option['admin_phone']) ? $sender_option['admin_phone'] : null; ?>"
                     />
 
@@ -116,7 +116,7 @@ $senders = $this->helper->get_senders();
                                     />
                                 </td>
                                 <td>
-                                    <input class="input-checkbox" type="checkbox" name="egoi_sms_order_admin_<?=$cod?>" value="1"
+                                    <input class="input-checkbox admin-order-status" type="checkbox" name="egoi_sms_order_admin_<?=$cod?>" value="1"
 							            <?php checked($recipients['egoi_sms_order_admin_'.$cod], 1);?>
                                     />
                                 </td>

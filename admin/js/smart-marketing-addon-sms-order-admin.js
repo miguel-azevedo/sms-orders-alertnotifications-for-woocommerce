@@ -89,6 +89,12 @@
         }
         sender.on("change", function () {
             $("#form-sms-order-senders :input").prop("disabled", false);
+            $(".admin-order-status").prop("disabled", true);
+        });
+
+        toggleAdminOrders();
+        $("#admin_phone").on("input", function () {
+            toggleAdminOrders();
         });
 
     });
@@ -121,6 +127,15 @@
         $("#sms_order_texts_"+language).show();
         $("#sms_order_texts_"+language+" :input").attr("disabled", false);
         $("#sms_texts_tags").show();
+    }
+
+    function toggleAdminOrders() {
+        var admin_phone = $("#admin_phone").val();
+        if (admin_phone.length >= 6) {
+            $(".admin-order-status").prop("disabled", false);
+        } else {
+            $(".admin-order-status").prop("disabled", true);
+        }
     }
 
 
