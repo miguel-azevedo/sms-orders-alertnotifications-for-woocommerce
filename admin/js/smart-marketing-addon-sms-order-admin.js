@@ -92,10 +92,12 @@
             $(".admin-order-status").prop("disabled", true);
         });
 
-        toggleAdminOrders();
-        $("#admin_phone").on("input", function () {
+        if ( $( "#admin_phone" ).length ) {
             toggleAdminOrders();
-        });
+            $("#admin_phone").on("input", function () {
+                toggleAdminOrders();
+            });
+        }
 
     });
 

@@ -160,7 +160,7 @@ $senders = $this->helper->get_senders();
 		                    }
 		                    ?>
                         </select>
-                        <input type="text" name="recipient_phone" class="regular-text" maxlength="9" style="width: 222px; height: 38px;" required <?php echo $disabled ? 'disabled' : null;?> />
+                        <input type="text" name="recipient_phone" class="regular-text" style="width: 222px; height: 38px;" required <?php echo $disabled ? 'disabled' : null;?> />
 
                         <br>
 

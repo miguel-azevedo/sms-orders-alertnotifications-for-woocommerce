@@ -172,15 +172,25 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 	/**
 	 * Prepare recipient to E-goi
 	 */
-	public function get_valid_recipient($phone, $country) {
+	public function get_valid_recipient($phone, $country, $prefix = null) {
+		$prefix = preg_replace('/[^0-9]/', '', $prefix);
 		$recipient = preg_replace('/[^0-9]/', '', $phone);
-		if (strlen($recipient) > 9) {
-			$recipient = substr($recipient, 0, -9).'-'.substr($recipient, -9);
-		} else {
-			$prefixes = unserialize(COUNTRY_CODES);
-			$recipient = $prefixes[$country]['prefix'].'-'.$recipient;
+
+		if ($prefix) {
+			return $prefix.'-'.$recipient;
+		} else if ($country) {
+
+			$prefixes = unserialize( COUNTRY_CODES );
+			$len = strlen($prefixes[$country]['prefix']);
+		    if ($prefixes[$country]['prefix'] != substr($recipient, 0, $len)) {
+			    return $prefixes[ $country ]['prefix'] . '-' . $recipient;
+		    } else {
+		        return substr($recipient, 0, $len) . '-' . substr($recipient, $len);
+            }
+
 		}
-		return $recipient;
+
+		return $phone;
 	}
 
 	/**

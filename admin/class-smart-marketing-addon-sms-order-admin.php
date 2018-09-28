@@ -186,7 +186,8 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
             } else if (isset($post['form_id']) && $post['form_id'] == 'form-sms-order-tests') {
 
-                $response = $this->helper->send_sms($post['recipient_prefix'].'-'.$post['recipient_phone'], $post['message'], 'test', 0);
+	            $recipient = $this->helper->get_valid_recipient($post['recipient_phone'], null, $post['recipient_prefix']);
+                $response = $this->helper->send_sms($recipient, $post['message'], 'test', 0);
 
                 $response = json_decode($response);
                 if (isset($response->errorCode)) {
@@ -363,7 +364,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	public function order_action_sms_meta_box() {
 		$recipient = $this->helper->get_valid_recipient($_POST['recipient'], $_POST['country']);
 
-		$result = $this->helper->send_sms($recipient, $_POST['message'], 'order', $_POST['order_id']);
+		$result = json_decode($this->helper->send_sms($recipient, $_POST['message'], 'order', $_POST['order_id']));
 
 		if (!isset($result->errorCode)) {
 			$order = wc_get_order($_POST['order_id']);

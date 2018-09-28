@@ -19,13 +19,18 @@
             };
             $.post(ajax_object.ajax_url, data, function(response) {
                 var note = jQuery.parseJSON(response);
-                $(".order_notes").prepend(
-                    "<li class='note system-note'>" +
-                    "<div class='note_content'><p>" + note.message + "</p></div>" +
-                    "<p class='meta'>" +
-                    "<abbr class='exact-date'>" + note.date + "</abbr>" +
-                    "</li>");
-                $("#egoi_send_order_sms_notice").hide();
+                if (note.message) {
+                    $(".order_notes").prepend(
+                        "<li class='note system-note'>" +
+                        "<div class='note_content'><p>" + note.message + "</p></div>" +
+                        "<p class='meta'>" +
+                        "<abbr class='exact-date'>" + note.date + "</abbr>" +
+                        "</li>");
+                    $("#egoi_send_order_sms_notice").hide();
+                } else if (note.errorCode) {
+                    $("#egoi_send_order_sms_notice").hide();
+                    $("#egoi_send_order_sms_error").show().text(note.errors[0]);
+                }
             });
         });
     });
