@@ -107,7 +107,7 @@ class Smart_Marketing_Addon_Sms_Order_Public {
 	 */
 	function notification_checkout_field($checkout) {
 		$recipients = json_decode(get_option('egoi_sms_order_recipients'), true);
-		if (isset($recipients['notification_option'])) {
+		if (isset($recipients['notification_option']) && $recipients['notification_option']) {
 			woocommerce_form_field('egoi_notification_option', array(
 				'type'          => 'checkbox',
 				'class'         => array('my-field-class form-row-wide'),

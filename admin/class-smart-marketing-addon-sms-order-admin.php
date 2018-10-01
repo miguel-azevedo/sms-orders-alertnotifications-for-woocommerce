@@ -209,7 +209,6 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
             global $wpdb;
 
-	        $sender = json_decode(get_option('egoi_sms_order_sender'), true);
             $table_name = $wpdb->prefix. 'egoi_sms_order_reminders';
 
             $sql = " SELECT DISTINCT order_id FROM $table_name ";
@@ -218,14 +217,22 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
             $orders = $this->helper->get_not_paid_orders();
 
             if (isset($orders)) {
+
+	            $sender = json_decode(get_option('egoi_sms_order_sender'), true);
+	            $recipent_options = json_decode(get_option('egoi_sms_order_recipients'), true);
                 $count = 0;
+
                 foreach ($orders as $order) {
 
                     if ($count >= 20) {
                         break;
                     }
 
-	                $sms_notification = (bool) get_post_meta($order->get_id(), 'egoi_notification_option')[0];
+                    if ($recipent_options['notification_option']) {
+	                    $sms_notification = (bool) get_post_meta( $order->get_id(), 'egoi_notification_option' )[0];
+                    } else {
+                        $sms_notification = 1;
+                    }
 
                     if (!$order->is_paid() && !in_array($order->get_id(), $order_ids) && $sms_notification) {
 
@@ -263,7 +270,13 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 */
 	public function order_send_sms_new_status($order_id) {
 
-		$sms_notification = (bool) get_post_meta($order_id, 'egoi_notification_option')[0];
+		$recipent_options = json_decode(get_option('egoi_sms_order_recipients'), true);
+
+		if ($recipent_options['notification_option']) {
+			$sms_notification = (bool) get_post_meta($order_id, 'egoi_notification_option')[0];
+		} else {
+			$sms_notification = 1;
+		}
 
 		if ($sms_notification) {
 
@@ -291,8 +304,15 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 */
     public function order_send_sms_payment_data($order_id) {
 
+	    $recipent_options = json_decode(get_option('egoi_sms_order_recipients'), true);
+
 	    $order = wc_get_order($order_id)->get_data();
-        $sms_notification = (bool) get_post_meta($order_id, 'egoi_notification_option')[0];
+
+	    if ($recipent_options['notification_option']) {
+		    $sms_notification = (bool) get_post_meta($order_id, 'egoi_notification_option')[0];
+	    } else {
+		    $sms_notification = 1;
+	    }
 
         if ($sms_notification) {
             $message = 'Payment instructions:';
@@ -329,8 +349,15 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 * @param $post
 	 */
 	public function order_display_sms_meta_box($post) {
+
+		$recipent_options = json_decode(get_option('egoi_sms_order_recipients'), true);
 		$order = wc_get_order($post->ID)->get_data();
-		$sms_notification = (bool) get_post_meta($post->ID, 'egoi_notification_option')[0];
+
+		if ($recipent_options['notification_option']) {
+			$sms_notification = (bool) get_post_meta($post->ID, 'egoi_notification_option')[0];
+		} else {
+			$sms_notification = 1;
+		}
 
 		if ($sms_notification) {
 			$recipient = $order['billing']['phone'];

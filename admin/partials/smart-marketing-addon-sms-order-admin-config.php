@@ -125,12 +125,14 @@ $senders = $this->helper->get_senders();
                         </tbody>
                     </table>
 
-                    <p class="label_text">
-                        <input class="input-checkbox" type="checkbox" name="notification_option" value="1" id="notification_option"
-                            <?php checked($recipients['notification_option'], 1);?>
-                        />
-                        <label for="notification_option"><?php _e('Enable option on order checkout to receive SMS', 'addon-sms-order');?></label>
-                    </p>
+                    <p class="label_text"><?php _e('Send SMS notifications to customers', 'addon-sms-order');?></p>
+
+                    <input type="radio" name="notification_option" id="notification_option_0" value="0" <?php checked($recipients['notification_option'], 0);?> required>
+                    <label for="notification_option_0"><?php _e('All customers', 'addon-sms-order');?></label>
+                    <br>
+                    <input type="radio" name="notification_option" id="notification_option_1" value="1" <?php checked($recipients['notification_option'], 1);?>>
+                    <label for="notification_option_1"><?php _e('Only customers who ask for it in checkout', 'addon-sms-order');?></label>
+
 
 		            <?php submit_button(); ?>
                 </form>
