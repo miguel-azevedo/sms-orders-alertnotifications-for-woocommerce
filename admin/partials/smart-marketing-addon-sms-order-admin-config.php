@@ -30,11 +30,11 @@ $senders = $this->helper->get_senders();
 ?>
 <span id="form_info" data-form-id="<?=$_POST['form_id']?>" data-form-lang="<?=$_POST['sms_text_language']?>"></span>
 <!-- head -->
-<h1 class="logo">Smart Marketing - <?php _e( 'SMS Order Config', 'addon-sms-order' ); ?></h1>
+<h1 class="logo">Smart Marketing - <?php _e( 'SMS Notifications', 'addon-sms-order' ); ?></h1>
 <p class="breadcrumbs">
     <span class="prefix"><?php _e( 'You are here: ', 'addon-sms-order' ); ?></span>
     <strong>Smart Marketing</a> &rsaquo;
-        <span class="current-crumb"><?php _e( 'SMS Order Config', 'addon-sms-order' ); ?></strong></span>
+        <span class="current-crumb"><?php _e( 'SMS Notifications', 'addon-sms-order' ); ?></strong></span>
 </p>
 <hr/>
 
