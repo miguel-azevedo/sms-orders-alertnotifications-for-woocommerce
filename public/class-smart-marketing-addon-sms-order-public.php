@@ -111,7 +111,7 @@ class Smart_Marketing_Addon_Sms_Order_Public {
 			woocommerce_form_field('egoi_notification_option', array(
 				'type'          => 'checkbox',
 				'class'         => array('my-field-class form-row-wide'),
-				'label'         => __('I want to be notified by SMS', 'addon-sms-order'),
+				'label'         => __('I want to be notified by SMS (Order Status)', 'smart-marketing-addon-sms-order'),
 			), $checkout->get_value( 'egoi_notification_option'));
 		}
 	}

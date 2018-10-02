@@ -13,7 +13,7 @@
  * @package           Smart_Marketing_Addon_Sms_Order
  *
  * @wordpress-plugin
- * Plugin Name:       Smart Marketing Addon SMS Order
+ * Plugin Name:       SMS Orders Alert/Notifications for WooCommerce
  * Plugin URI:        https://wordpress.org/plugins/smart-marketing-addon-sms-order/
  * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
  * Version:           1.0.0

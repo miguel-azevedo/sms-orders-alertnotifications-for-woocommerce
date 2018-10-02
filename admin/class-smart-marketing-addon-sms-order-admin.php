@@ -56,15 +56,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	/**
 	 * @var array List of order status WooCommerce hooks
 	 */
-    protected $order_statuses = array(
-	    "pending" => "Pending payment",
-	    "failed" => "Failed",
-	    "on-hold" => "On Hold",
-	    "processing" => "Processing",
-	    "completed" => "Completed",
-	    "refunded" => "Refunded",
-	    "cancelled" => "Cancelled",
-    );
+    protected $order_statuses;
 
 	/**
 	 * @var array List of sms languages
@@ -102,6 +94,16 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
 		$apikey = get_option('egoi_api_key');
 		$this->apikey = $apikey['api_key'];
+
+		$this->order_statuses = array(
+			"pending" => __("Pending payment", 'smart-marketing-addon-sms-order'),
+			"failed" => __("Failed", 'smart-marketing-addon-sms-order'),
+			"on-hold" => __("On Hold", 'smart-marketing-addon-sms-order'),
+			"processing" => __("Processing", 'smart-marketing-addon-sms-order'),
+			"completed" => __("Completed", 'smart-marketing-addon-sms-order'),
+			"refunded" => __("Refunded", 'smart-marketing-addon-sms-order'),
+			"cancelled" => __("Cancelled", 'smart-marketing-addon-sms-order'),
+		);
 	}
 
 	/**
@@ -136,8 +138,8 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
     public function add_options_page() {
         $this->plugin_screen_hook_suffix = add_submenu_page(
             $this->parent_plugin_name,
-            __( 'SMS Notifications', 'addon-sms-order' ),
-            __( 'SMS Notifications', 'addon-sms-order' ),
+            __( 'SMS Notifications', 'smart-marketing-addon-sms-order' ),
+            __( 'SMS Notifications', 'smart-marketing-addon-sms-order' ),
             'manage_options',
             'smart-marketing-addon-sms-order-config',
             array( $this, 'display_plugin_sms_order_config' )
@@ -335,7 +337,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	public function order_add_sms_meta_box() {
 		add_meta_box(
 			'woocommerce-order-my-custom',
-			__('Send SMS', 'addon-sms-order'),
+			__('Send SMS to buyer', 'smart-marketing-addon-sms-order'),
 			array( $this, 'order_display_sms_meta_box' ),
 			'shop_order',
 			'side',
@@ -375,8 +377,8 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
                 </p>
                 <p>
                     <button type="button" class="button" id="egoi_send_order_sms_button">Send</button>
-                    <span id="egoi_send_order_sms_error" style="display: none; color: red;"><?php _e('You can\'t send a empty SMS', 'addon-sms-order');?></span>
-                    <span id="egoi_send_order_sms_notice" style="display: none;"><?php _e('Sending... Wait please', 'addon-sms-order');?></span>
+                    <span id="egoi_send_order_sms_error" style="display: none; color: red;"><?php _e('You can\'t send a empty SMS', 'smart-marketing-addon-sms-order');?></span>
+                    <span id="egoi_send_order_sms_notice" style="display: none;"><?php _e('Sending... Wait please', 'smart-marketing-addon-sms-order');?></span>
                 </p>
             </div>
 			<?php
@@ -399,7 +401,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
 			$note = array(
 				"message" => 'SMS: '.$_POST['message'],
-				"date" => __('added on', 'addon-sms-order').' '.current_time(get_option('date_format').' '.get_option('time_format'))
+				"date" => __('added on', 'smart-marketing-addon-sms-order').' '.current_time(get_option('date_format').' '.get_option('time_format'))
 			);
 			echo json_encode($note);
 		} else {
