@@ -92,12 +92,17 @@
             $(".admin-order-status").prop("disabled", true);
         });
 
-        if ( $( "#admin_phone" ).length ) {
+        if ($("#admin_phone").length) {
             toggleAdminOrders();
             $("#admin_phone").on("input", function () {
                 toggleAdminOrders();
             });
         }
+
+        $("#button_view_help").on("click", function () {
+            activeConfigTag("#nav-tab-sms-help");
+            showConfigWrap("#tab-sms-help");
+        });
 
     });
 

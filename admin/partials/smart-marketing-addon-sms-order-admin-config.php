@@ -46,6 +46,10 @@ $senders = $this->helper->get_senders();
     <a class="nav-tab nav-tab-addon" id="nav-tab-sms-texts">
         <?php _e('SMS Messages', 'smart-marketing-addon-sms-order'); ?>
     </a>
+
+    <a class="nav-tab nav-tab-addon" id="nav-tab-sms-help">
+        <?php _e('Help', 'smart-marketing-addon-sms-order'); ?>
+    </a>
 </h2>
 
 <!-- wrap SMS Senders/Recipients -->
@@ -54,13 +58,13 @@ $senders = $this->helper->get_senders();
         <div class="row">
             <div class="main-content col col-12" style="margin:0 0 20px;<?php echo empty($senders) ? "display: none;" : null;?>">
 
-                <?php if (empty($senders)) { ?>
+                <?php if (!empty($senders)) { ?>
 
                 <div class="notice notice-error" style="max-width: 800px;">
                     <p>
                         <?php _e( 'To use this plugin you need to add a sender and activate the SMS transactional within your E-goi account.', 'sample-text-domain' ); ?>
                         <br>
-                        <a href="" target="_blank"><?php _e('View help','smart-marketing-addon-sms-order');?></a>
+                        <a id="button_view_help" target="_blank"><?php _e('View help','smart-marketing-addon-sms-order');?></a>
                     </p>
                 </div>
 
@@ -269,6 +273,21 @@ $senders = $this->helper->get_senders();
                         </div>
                     <?php } ?>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- wrap SMS Texts -->
+<div class="wrap tab wrap-addon" id="tab-sms-help">
+    <div class="wrap egoi4wp-settings" id="tab-forms">
+        <div class="row">
+            <div class="main-content col col-12" style="margin:0 0 20px;">
+
+                <p class="label_text"><?php _e('Help', 'smart-marketing-addon-sms-order');?></p>
+
             </div>
         </div>
     </div>
