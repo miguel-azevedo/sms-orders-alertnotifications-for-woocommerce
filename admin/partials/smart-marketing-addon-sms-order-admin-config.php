@@ -58,11 +58,11 @@ $senders = $this->helper->get_senders();
         <div class="row">
             <div class="main-content col col-12" style="margin:0 0 20px;<?php echo empty($senders) ? "display: none;" : null;?>">
 
-                <?php if (!empty($senders)) { ?>
+                <?php if (empty($senders)) { ?>
 
                 <div class="notice notice-error" style="max-width: 800px;">
                     <p>
-                        <?php _e( 'To use this plugin you need to add a sender and activate the SMS transactional within your E-goi account.', 'sample-text-domain' ); ?>
+                        <?php _e( 'To use this plugin you need to add a sender and activate the SMS transactional within your E-goi account.', 'smart-marketing-addon-sms-order' ); ?>
                         <br>
                         <a id="button_view_help" target="_blank"><?php _e('View help','smart-marketing-addon-sms-order');?></a>
                     </p>
@@ -125,7 +125,7 @@ $senders = $this->helper->get_senders();
                         </thead>
 
                         <tbody>
-			            <?php foreach ($this->order_statuses as $cod => $name) { ?>
+			            <?php foreach ($this->get_order_statuses() as $cod => $name) { ?>
                             <tr>
                                 <td><?=$name?></td>
                                 <td>

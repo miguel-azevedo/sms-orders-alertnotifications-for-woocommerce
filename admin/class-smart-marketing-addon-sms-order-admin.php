@@ -54,11 +54,6 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
     protected $helper;
 
 	/**
-	 * @var array List of order status WooCommerce hooks
-	 */
-    protected $order_statuses;
-
-	/**
 	 * @var array List of sms languages
 	 */
     protected $languages = array( "en", "es", "pt", "pt_BR");
@@ -95,15 +90,6 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 		$apikey = get_option('egoi_api_key');
 		$this->apikey = $apikey['api_key'];
 
-		$this->order_statuses = array(
-			"pending" => __("Pending payment", 'smart-marketing-addon-sms-order'),
-			"failed" => __("Failed", 'smart-marketing-addon-sms-order'),
-			"on-hold" => __("On Hold", 'smart-marketing-addon-sms-order'),
-			"processing" => __("Processing", 'smart-marketing-addon-sms-order'),
-			"completed" => __("Completed", 'smart-marketing-addon-sms-order'),
-			"refunded" => __("Refunded", 'smart-marketing-addon-sms-order'),
-			"cancelled" => __("Cancelled", 'smart-marketing-addon-sms-order'),
-		);
 	}
 
 	/**
@@ -423,5 +409,17 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 		);
 		return $schedules;
 	}
+
+	public function get_order_statuses() {
+        return array(
+            "pending" => __("Pending payment", 'smart-marketing-addon-sms-order'),
+            "failed" => __("Failed", 'smart-marketing-addon-sms-order'),
+            "on-hold" => __("On Hold", 'smart-marketing-addon-sms-order'),
+            "processing" => __("Processing", 'smart-marketing-addon-sms-order'),
+            "completed" => __("Completed", 'smart-marketing-addon-sms-order'),
+            "refunded" => __("Refunded", 'smart-marketing-addon-sms-order'),
+            "cancelled" => __("Cancelled", 'smart-marketing-addon-sms-order'),
+        );
+    }
 
 }
