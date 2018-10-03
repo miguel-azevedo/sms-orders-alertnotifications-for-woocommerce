@@ -52,7 +52,19 @@ $senders = $this->helper->get_senders();
 <div class="wrap tab wrap-addon" id="tab-sms-senders">
     <div class="wrap egoi4wp-settings" id="tab-forms">
         <div class="row">
-            <div class="main-content col col-12" style="margin:0 0 20px;">
+            <div class="main-content col col-12" style="margin:0 0 20px;<?php echo empty($senders) ? "display: none;" : null;?>">
+
+                <?php if (empty($senders)) { ?>
+
+                <div class="notice notice-error" style="max-width: 800px;">
+                    <p>
+                        <?php _e( 'To use this plugin you need to add a sender and activate the SMS transactional within your E-goi account.', 'sample-text-domain' ); ?>
+                        <br>
+                        <a href="" target="_blank"><?php _e('View help','smart-marketing-addon-sms-order');?></a>
+                    </p>
+                </div>
+
+                <?php } else { ?>
 
                 <form action="#" method="post" class="form-sms-order-config" id="form-sms-order-senders">
                     <input name="form_id" type="hidden" value="form-sms-order-senders" />
@@ -177,6 +189,8 @@ $senders = $this->helper->get_senders();
 	                    <?php submit_button('Send SMS', 'secondary', 'submit', true, $disabled); ?>
                     </form>
                 </div>
+
+                <?php } ?>
             </div>
         </div>
     </div>
