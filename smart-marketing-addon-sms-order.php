@@ -44,7 +44,9 @@ function child_plugin_has_parent_plugin() {
 }
 
 function child_plugin_notice(){
-    ?><div class="notice notice-error is-dismissible"><p>Sorry, but Child Plugin requires the Parent plugin to be installed and active.</p></div><?php
+    ?><div class="notice notice-error is-dismissible">
+        <p><?php _e('By removing this plugin, you will no longer be able to use the SMS plugin', 'smart-marketing-addon'); ?></p>
+    </div><?php
 }
 
 /**
