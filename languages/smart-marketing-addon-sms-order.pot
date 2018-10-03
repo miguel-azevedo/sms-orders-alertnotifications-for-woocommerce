@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-02 17:29+0000\n"
+"POT-Creation-Date: 2018-10-03 11:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -13,6 +13,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/"
+
+#: smart-marketing-addon-sms-order.php:57
+msgid "To use this plugin, you first need to install"
+msgstr ""
+
+#: smart-marketing-addon-sms-order.php:65
+msgid ""
+"By removing this plugin, you will no longer be able to use the SMS plugin"
+msgstr ""
 
 #: includes/class-smart-marketing-addon-sms-order-helper.php:267
 msgid "Done!"
