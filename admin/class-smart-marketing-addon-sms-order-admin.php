@@ -386,7 +386,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
             </div>
 			<?php
 		} else {
-		    _e('The customer doesn\'t want to receive sms');
+		    _e('The customer doesn\'t want to receive sms', 'smart-marketing-addon-sms-order');
         }
 	}
 

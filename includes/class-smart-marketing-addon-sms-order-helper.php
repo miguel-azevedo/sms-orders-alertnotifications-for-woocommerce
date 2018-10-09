@@ -250,7 +250,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 	public function admin_notice__success() {
 		?>
 		<div class="notice notice-success is-dismissible">
-			<p><?php _e( 'Done!', 'smart-marketing-addon-sms-order' ); ?></p>
+			<p><?php _e( 'Changes saved successfully', 'smart-marketing-addon-sms-order' ); ?></p>
 		</div>
 		<?php
 	}

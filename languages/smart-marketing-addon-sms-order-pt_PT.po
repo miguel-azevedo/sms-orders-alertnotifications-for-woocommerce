@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SMS Orders Alert/Notifications for WooCommerce\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-09 14:27+0000\n"
-"PO-Revision-Date: 2018-10-09 14:30+0000\n"
+"POT-Creation-Date: 2018-10-09 15:22+0000\n"
+"PO-Revision-Date: 2018-10-09 16:00+0000\n"
 "Last-Translator: Paulo <procha@e-goi.com>\n"
 "Language-Team: Português\n"
 "Language: pt_PT\n"
@@ -23,12 +23,12 @@ msgid ""
 msgstr "Ao remover este plugin, deixará de conseguir usar o plugin SMS"
 
 #: includes/class-smart-marketing-addon-sms-order-helper.php:253
-msgid "Done!"
-msgstr ""
+msgid "Changes saved successfully"
+msgstr "Alterações gravadas com sucesso"
 
 #: includes/class-smart-marketing-addon-sms-order-helper.php:264
 msgid "Irks! An error has occurred."
-msgstr ""
+msgstr "Ups! Aconteceu um erro"
 
 #: admin/class-smart-marketing-addon-sms-order-admin.php:131
 #: admin/class-smart-marketing-addon-sms-order-admin.php:132
@@ -82,6 +82,10 @@ msgstr "Não pode enviar uma SMS vazia"
 #: admin/class-smart-marketing-addon-sms-order-admin.php:384
 msgid "Sending... Wait please"
 msgstr "A enviar... Espere por favor"
+
+#: admin/class-smart-marketing-addon-sms-order-admin.php:389
+msgid "The customer doesn't want to receive sms"
+msgstr "O cliente não quer receber sms"
 
 #: admin/class-smart-marketing-addon-sms-order-admin.php:407
 msgid "added on"

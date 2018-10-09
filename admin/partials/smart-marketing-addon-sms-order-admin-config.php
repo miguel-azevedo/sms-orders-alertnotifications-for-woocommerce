@@ -86,7 +86,7 @@ $balance = $credits[1].$currency[$credits[0]];
                                 <form action="#" method="post" class="form-sms-order-config" id="form-sms-order-senders">
                                     <input name="form_id" type="hidden" value="form-sms-order-senders" />
 
-                                    <p class="label_text"><?php _e('E-goi SMS Sender', 'smart-marketing-addon-sms-order');?></p>
+                                    <p class="label_text" style="margin-top: 8px;"><?php _e('E-goi SMS Sender', 'smart-marketing-addon-sms-order');?></p>
 
                                     <select class="e-goi-option-select-admin-forms" style="width: 100%;" name="sender_hash" id="sender_hash" required>
                                         <option value="" disabled selected>
@@ -133,8 +133,8 @@ $balance = $credits[1].$currency[$credits[0]];
                                         <thead>
                                         <tr>
                                             <th><?php _e('Order Status', 'smart-marketing-addon-sms-order');?></th>
-                                            <th><?php _e('Customer', 'smart-marketing-addon-sms-order');?></th>
-                                            <th><?php _e('Admin', 'smart-marketing-addon-sms-order');?></th>
+                                            <th style="text-align: center;"><?php _e('Customer', 'smart-marketing-addon-sms-order');?></th>
+                                            <th style="text-align: center;"><?php _e('Admin', 'smart-marketing-addon-sms-order');?></th>
                                         </tr>
                                         </thead>
 
@@ -142,12 +142,12 @@ $balance = $credits[1].$currency[$credits[0]];
                                         <?php foreach ($this->get_order_statuses() as $cod => $name) { ?>
                                             <tr>
                                                 <td><?=$name?></td>
-                                                <td>
+                                                <td align="center">
                                                     <input class="input-checkbox" type="checkbox" name="egoi_sms_order_customer_<?=$cod?>" value="1"
                                                         <?php checked($recipients['egoi_sms_order_customer_'.$cod], 1);?>
                                                     />
                                                 </td>
-                                                <td>
+                                                <td align="center">
                                                     <input class="input-checkbox admin-order-status" type="checkbox" name="egoi_sms_order_admin_<?=$cod?>" value="1"
                                                         <?php checked($recipients['egoi_sms_order_admin_'.$cod], 1);?>
                                                     />
@@ -173,12 +173,12 @@ $balance = $credits[1].$currency[$credits[0]];
                                     <p class="label_text"><?php _e('SMS Multibanco (Portuguese payment method)', 'smart-marketing-addon-sms-order');?></p>
 
                                     <p class="label_text_mini">
-                                        <input type="checkbox" name="egoi_payment_info" value="1" <?php echo !isset($recipients['egoi_payment_info']) || $recipients['egoi_payment_info'] == 1 ? 'checked' : null;?> >
-                                        <?php _e('Send SMS to your customers with Multibanco payment information', 'smart-marketing-addon-sms-order');?>
+                                        <input type="checkbox" name="egoi_payment_info" id="egoi_payment_info" value="1" <?php echo !isset($recipients['egoi_payment_info']) || $recipients['egoi_payment_info'] == 1 ? 'checked' : null;?> >
+                                        <label for="egoi_payment_info"><?php _e('Send SMS to your customers with Multibanco payment information', 'smart-marketing-addon-sms-order');?></label>
                                     </p>
                                     <p class="label_text_mini">
-                                        <input type="checkbox" name="egoi_reminders" value="1" <?php echo !isset($recipients['egoi_reminders']) || $recipients['egoi_reminders'] == 1 ? 'checked' : null;?> >
-                                        <?php _e('Send SMS to remind the information for payment Multibanco (after 48h)', 'smart-marketing-addon-sms-order');?>
+                                        <input type="checkbox" name="egoi_reminders" id="egoi_reminders" value="1" <?php echo !isset($recipients['egoi_reminders']) || $recipients['egoi_reminders'] == 1 ? 'checked' : null;?> >
+                                        <label for="egoi_reminders"><?php _e('Send SMS to remind the information for payment Multibanco (after 48h)', 'smart-marketing-addon-sms-order');?></label>
                                     </p>
 
                                     <?php submit_button(); ?>
@@ -228,7 +228,7 @@ $balance = $credits[1].$currency[$credits[0]];
 
                                         <textarea name="message" style="width: 100%;" rows="5" required <?php echo $disabled ? 'disabled' : null;?>></textarea>
 
-                                        <?php submit_button(__('Send SMS', 'smart-marketing-addon-sms-order'), 'secondary', 'submit', true, $disabled); ?>
+                                        <button type="submit" class="button send-sms-button"><?php _e('Send SMS', 'smart-marketing-addon-sms-order');?></button>
                                     </form>
                                 </div>
                             </td>
