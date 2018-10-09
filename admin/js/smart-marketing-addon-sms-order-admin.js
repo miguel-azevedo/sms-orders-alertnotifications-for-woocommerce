@@ -89,7 +89,7 @@
         }
         sender.on("change", function () {
             $("#form-sms-order-senders :input").prop("disabled", false);
-            $(".admin-order-status").prop("disabled", true);
+            toggleAdminOrders();
         });
 
         if ($("#admin_phone").length) {
