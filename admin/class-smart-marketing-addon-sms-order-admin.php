@@ -375,11 +375,11 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
                 <input type="hidden" name="egoi_sms_recipient" id="egoi_send_order_sms_recipient"
                        value="<?= $recipient ?>"/>
                 <p>
-                    <label for="egoi_send_order_sms_message">Message</label><br>
+                    <label for="egoi_send_order_sms_message"><?php _e('Message', 'smart-marketing-addon-sms-order');?></label><br>
                     <textarea name="egoi_sms_message" id="egoi_send_order_sms_message" style="width: 100%;"></textarea>
                 </p>
                 <p>
-                    <button type="button" class="button" id="egoi_send_order_sms_button">Send</button>
+                    <button type="button" class="button" id="egoi_send_order_sms_button"><?php _e('Send', 'smart-marketing-addon-sms-order'); ?></button>
                     <span id="egoi_send_order_sms_error" style="display: none; color: red;"><?php _e('You can\'t send a empty SMS', 'smart-marketing-addon-sms-order');?></span>
                     <span id="egoi_send_order_sms_notice" style="display: none;"><?php _e('Sending... Wait please', 'smart-marketing-addon-sms-order');?></span>
                 </p>

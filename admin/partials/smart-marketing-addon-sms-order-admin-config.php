@@ -228,7 +228,7 @@ $balance = $credits[1].$currency[$credits[0]];
 
                                         <textarea name="message" style="width: 100%;" rows="5" required <?php echo $disabled ? 'disabled' : null;?>></textarea>
 
-                                        <?php submit_button('Send SMS', 'secondary', 'submit', true, $disabled); ?>
+                                        <?php submit_button(__('Send SMS', 'smart-marketing-addon-sms-order'), 'secondary', 'submit', true, $disabled); ?>
                                     </form>
                                 </div>
                             </td>
