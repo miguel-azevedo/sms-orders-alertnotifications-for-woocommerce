@@ -12,6 +12,8 @@
  * @subpackage Smart_Marketing_Addon_Sms_Order/admin/partials
  */
 
+$this->woocommerce_dependency_notice();
+
 if (isset($_POST['form_id'])) {
     $result = $this->process_config_form($_POST);
     if ($result) {
@@ -27,6 +29,14 @@ $texts = json_decode(get_option('egoi_sms_order_texts'), true);
 
 $senders = $this->helper->get_senders();
 
+$currency = array(
+    'EUR' => '€',
+    'USD' => '$',
+    'GBP' => '£',
+    'BRL' => 'R$'
+);
+$credits = explode(' ',$this->egoi_api_client->getClientData(array('apikey' => $this->apikey))['CREDITS']);
+$balance = $credits[1].$currency[$credits[0]];
 ?>
 <span id="form_info" data-form-id="<?=$_POST['form_id']?>" data-form-lang="<?=$_POST['sms_text_language']?>"></span>
 <!-- head -->
@@ -70,129 +80,161 @@ $senders = $this->helper->get_senders();
 
                 <?php } else { ?>
 
-                <form action="#" method="post" class="form-sms-order-config" id="form-sms-order-senders">
-                    <input name="form_id" type="hidden" value="form-sms-order-senders" />
-
-                    <p class="label_text"><?php _e('E-goi SMS Sender', 'smart-marketing-addon-sms-order');?></p>
-
-                    <select class="e-goi-option-select-admin-forms" style="width: 400px;" name="sender_hash" id="sender_hash" required>
-                        <option value="" disabled selected>
-			                <?php _e('Select sender', 'smart-marketing-addon-sms-order');?>
-                        </option>
-		                <?php
-		                if (isset($senders) && count($senders) > 0) {
-			                foreach ($senders as $sender) {
-				                ?>
-                                <option value="<?=$sender['FROMID']?>" <?php selected($sender['FROMID'], $sender_option['sender_hash']);?> >
-					                <?=$sender['SENDER']?>
-                                </option>
-				                <?php
-			                }
-		                }
-		                ?>
-                    </select>
-
-                    <p class="label_text"><?php _e('Admin Cellphone', 'smart-marketing-addon-sms-order');?></p>
-
-                    <select name="admin_prefix" class="e-goi-option-select-admin-forms" style="width: 175px; float: left;" required >
-		                <?php
-		                foreach (unserialize(COUNTRY_CODES) as $key => $value) {
-			                $string = ucwords(strtolower($value['country_pt']))." (+".$value['prefix'].")";
-			                ?>
-                            <option value="<?=$value['prefix']?>" <?php selected($value['prefix'], $sender_option['admin_prefix']);?> ><?=$string?></option>
-			                <?php
-		                }
-		                ?>
-                    </select>
-                    <input type="text" id="admin_phone" name="admin_phone" class="regular-text" style="width: 222px; height: 38px;"
-                           value="<?php echo isset($sender_option['admin_phone']) ? $sender_option['admin_phone'] : null; ?>"
-                    />
-
-
-                    <p class="label_text">
-                        <?php _e('Order SMS notifications', 'smart-marketing-addon-sms-order');?>
-                        <br>
-	                    <span style="font-size: 13px;"><?php _e('Select to which order status SMS will be sent', 'smart-marketing-addon-sms-order');?></span>
-                    </p>
-
-                    <table border='0' class="widefat striped" style="max-width: 800px;">
-                        <thead>
+                    <table style="max-width: 900px;">
                         <tr>
-                            <th><?php _e('Order Status', 'smart-marketing-addon-sms-order');?></th>
-                            <th><?php _e('Customer', 'smart-marketing-addon-sms-order');?></th>
-                            <th><?php _e('Admin', 'smart-marketing-addon-sms-order');?></th>
-                        </tr>
-                        </thead>
+                            <td width="50%" valign="top" style="padding-right: 20px;">
+                                <form action="#" method="post" class="form-sms-order-config" id="form-sms-order-senders">
+                                    <input name="form_id" type="hidden" value="form-sms-order-senders" />
 
-                        <tbody>
-			            <?php foreach ($this->get_order_statuses() as $cod => $name) { ?>
-                            <tr>
-                                <td><?=$name?></td>
-                                <td>
-                                    <input class="input-checkbox" type="checkbox" name="egoi_sms_order_customer_<?=$cod?>" value="1"
-							            <?php checked($recipients['egoi_sms_order_customer_'.$cod], 1);?>
+                                    <p class="label_text"><?php _e('E-goi SMS Sender', 'smart-marketing-addon-sms-order');?></p>
+
+                                    <select class="e-goi-option-select-admin-forms" style="width: 100%;" name="sender_hash" id="sender_hash" required>
+                                        <option value="" disabled selected>
+                                            <?php _e('Select sender', 'smart-marketing-addon-sms-order');?>
+                                        </option>
+                                        <?php
+                                        if (isset($senders) && count($senders) > 0) {
+                                            foreach ($senders as $sender) {
+                                                ?>
+                                                <option value="<?=$sender['FROMID']?>" <?php selected($sender['FROMID'], $sender_option['sender_hash']);?> >
+                                                    <?=$sender['SENDER']?>
+                                                </option>
+                                                <?php
+                                            }
+                                        }
+                                        ?>
+                                    </select>
+
+                                    <p class="label_text"><?php _e('Admin Cellphone', 'smart-marketing-addon-sms-order');?></p>
+
+                                    <select name="admin_prefix" class="e-goi-option-select-admin-forms" style="width: 49%; float: left;" required >
+                                        <?php
+                                        foreach (unserialize(COUNTRY_CODES) as $key => $value) {
+                                            $string = ucwords(strtolower($value['country_pt']))." (+".$value['prefix'].")";
+                                            ?>
+                                            <option value="<?=$value['prefix']?>" <?php selected($value['prefix'], $sender_option['admin_prefix']);?> ><?=$string?></option>
+                                            <?php
+                                        }
+                                        ?>
+                                    </select>
+                                    <input type="text" id="admin_phone" name="admin_phone" class="regular-text" style="width: 50%; height: 38px;"
+                                           value="<?php echo isset($sender_option['admin_phone']) ? $sender_option['admin_phone'] : null; ?>"
                                     />
-                                </td>
-                                <td>
-                                    <input class="input-checkbox admin-order-status" type="checkbox" name="egoi_sms_order_admin_<?=$cod?>" value="1"
-							            <?php checked($recipients['egoi_sms_order_admin_'.$cod], 1);?>
-                                    />
-                                </td>
-                            </tr>
-			            <?php } ?>
-                        </tbody>
+
+
+                                    <p class="label_text">
+                                        <?php _e('Order SMS notifications', 'smart-marketing-addon-sms-order');?>
+                                    </p>
+                                    <p class="label_text_mini">
+                                        <?php _e('Select to which order status SMS will be sent', 'smart-marketing-addon-sms-order');?>
+                                    </p>
+
+                                    <table border='0' class="widefat striped" style="width: 100%;">
+                                        <thead>
+                                        <tr>
+                                            <th><?php _e('Order Status', 'smart-marketing-addon-sms-order');?></th>
+                                            <th><?php _e('Customer', 'smart-marketing-addon-sms-order');?></th>
+                                            <th><?php _e('Admin', 'smart-marketing-addon-sms-order');?></th>
+                                        </tr>
+                                        </thead>
+
+                                        <tbody>
+                                        <?php foreach ($this->get_order_statuses() as $cod => $name) { ?>
+                                            <tr>
+                                                <td><?=$name?></td>
+                                                <td>
+                                                    <input class="input-checkbox" type="checkbox" name="egoi_sms_order_customer_<?=$cod?>" value="1"
+                                                        <?php checked($recipients['egoi_sms_order_customer_'.$cod], 1);?>
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <input class="input-checkbox admin-order-status" type="checkbox" name="egoi_sms_order_admin_<?=$cod?>" value="1"
+                                                        <?php checked($recipients['egoi_sms_order_admin_'.$cod], 1);?>
+                                                    />
+                                                </td>
+                                            </tr>
+                                        <?php } ?>
+                                        </tbody>
+                                    </table>
+
+                                    <p class="label_text"><?php _e('Send SMS notifications to customers', 'smart-marketing-addon-sms-order');?></p>
+
+                                    <p class="label_text_mini">
+                                        <input type="radio" name="notification_option" id="notification_option_0" value="0" <?php checked($recipients['notification_option'], 0);?> required>
+                                        <label class="label_text_mini" for="notification_option_0"><?php _e('All customers', 'smart-marketing-addon-sms-order');?></label>
+                                    </p>
+                                    <p class="label_text_mini" style="margin-bottom: 20px;">
+                                        <input type="radio" name="notification_option" id="notification_option_1" value="1" <?php checked($recipients['notification_option'], 1);?>>
+                                        <label class="label_text_mini" for="notification_option_1"><?php _e('Only customers who ask for it in checkout', 'smart-marketing-addon-sms-order');?></label>
+                                    </p>
+
+                                    <hr>
+
+                                    <p class="label_text"><?php _e('SMS Multibanco (Portuguese payment method)', 'smart-marketing-addon-sms-order');?></p>
+
+                                    <p class="label_text_mini">
+                                        <input type="checkbox" name="egoi_payment_info" value="1" <?php echo !isset($recipients['egoi_payment_info']) || $recipients['egoi_payment_info'] == 1 ? 'checked' : null;?> >
+                                        <?php _e('Send SMS to your customers with Multibanco payment information', 'smart-marketing-addon-sms-order');?>
+                                    </p>
+                                    <p class="label_text_mini">
+                                        <input type="checkbox" name="egoi_reminders" value="1" <?php echo !isset($recipients['egoi_reminders']) || $recipients['egoi_reminders'] == 1 ? 'checked' : null;?> >
+                                        <?php _e('Send SMS to remind the information for payment Multibanco (after 48h)', 'smart-marketing-addon-sms-order');?>
+                                    </p>
+
+                                    <?php submit_button(); ?>
+                                </form>
+                            </td>
+                            <td valign="top">
+                                <div id="egoi-account-info" style="background-color: #ffffff; padding: 1px 20px 15px 20px; border: 1px solid #dddddd">
+                                    <p class="label_text_mini" style="font-size: 16px;">
+                                        <?php _e('E-goi account information', 'smart-marketing-addon-sms-order');?>
+                                    </p>
+                                    <p class="label_text_mini">
+                                        <?php echo __('Current balance of your E-goi account', 'smart-marketing-addon-sms-order').': ';?>
+                                        <span style="background-color: #00aeda; color: white; padding: 5px; border-radius: 2px; margin-left: 5px; font-size: 14px;"><?=$balance?></span>
+                                    </p>
+                                </div>
+                                <div id="test-sms">
+                                    <form action="#" method="post">
+                                        <?php
+                                        if ($sender_option['sender_hash']) {
+                                            $disabled = null;
+                                        } else {
+                                            $disabled = array('disabled' => 1);
+                                        }
+                                        ?>
+                                        <input name="form_id" type="hidden" value="form-sms-order-tests" />
+
+                                        <p class="label_text">
+                                            <?php _e('Send a test SMS', 'smart-marketing-addon-sms-order');?>
+                                        </p>
+                                        <p class="label_text_mini">
+                                            <?php _e('Send a test SMS to verify that your service is active. This test will have the cost of a normal SMS. You need to have balance on your E-goi account to perform this test. ', 'smart-marketing-addon-sms-order');?>
+                                        </p>
+
+                                        <select name="recipient_prefix" class="e-goi-option-select-admin-forms" style="width: 49%; float: left;" required <?php echo $disabled ? 'disabled' : null;?> >
+                                            <?php
+                                            foreach (unserialize(COUNTRY_CODES) as $key => $value) {
+                                                $string = ucwords(strtolower($value['country_pt']))." (+".$value['prefix'].")";
+                                                ?>
+                                                <option value="<?=$value['prefix']?>" ><?=$string?></option>
+                                                <?php
+                                            }
+                                            ?>
+                                        </select>
+                                        <input type="text" name="recipient_phone" class="regular-text" style="width: 50%; height: 38px;" required <?php echo $disabled ? 'disabled' : null;?> />
+
+                                        <br>
+
+                                        <textarea name="message" style="width: 100%;" rows="5" required <?php echo $disabled ? 'disabled' : null;?>></textarea>
+
+                                        <?php submit_button('Send SMS', 'secondary', 'submit', true, $disabled); ?>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
                     </table>
 
-                    <p class="label_text"><?php _e('Send SMS notifications to customers', 'smart-marketing-addon-sms-order');?></p>
-
-                    <input type="radio" name="notification_option" id="notification_option_0" value="0" <?php checked($recipients['notification_option'], 0);?> required>
-                    <label for="notification_option_0"><?php _e('All customers', 'smart-marketing-addon-sms-order');?></label>
-                    <br>
-                    <input type="radio" name="notification_option" id="notification_option_1" value="1" <?php checked($recipients['notification_option'], 1);?>>
-                    <label for="notification_option_1"><?php _e('Only customers who ask for it in checkout', 'smart-marketing-addon-sms-order');?></label>
-
-
-		            <?php submit_button(); ?>
-                </form>
-
-                <hr>
-
-                <div id="test-sms" >
-                    <form action="#" method="post">
-	                    <?php
-	                    if ($sender_option['sender_hash']) {
-		                    $disabled = null;
-	                    } else {
-		                    $disabled = array('disabled' => 1);
-	                    }
-	                    ?>
-                        <input name="form_id" type="hidden" value="form-sms-order-tests" />
-
-                        <p class="label_text">
-                            <?php _e('Send a test SMS', 'smart-marketing-addon-sms-order');?>
-                            <br>
-	                        <span style="font-size: 13px;"><?php _e('Send a test SMS to verify that your service is active. This test will have the cost of a normal SMS. You need to have balance on your E-goi account to perform this test. ', 'smart-marketing-addon-sms-order');?></span>
-                        </p>
-
-                        <select name="recipient_prefix" class="e-goi-option-select-admin-forms" style="width: 175px; float: left;" required <?php echo $disabled ? 'disabled' : null;?> >
-		                    <?php
-		                    foreach (unserialize(COUNTRY_CODES) as $key => $value) {
-			                    $string = ucwords(strtolower($value['country_pt']))." (+".$value['prefix'].")";
-			                    ?>
-                                <option value="<?=$value['prefix']?>" ><?=$string?></option>
-			                    <?php
-		                    }
-		                    ?>
-                        </select>
-                        <input type="text" name="recipient_phone" class="regular-text" style="width: 222px; height: 38px;" required <?php echo $disabled ? 'disabled' : null;?> />
-
-                        <br>
-
-                        <textarea name="message" style="width: 400px;" rows="5" required <?php echo $disabled ? 'disabled' : null;?>></textarea>
-
-	                    <?php submit_button('Send SMS', 'secondary', 'submit', true, $disabled); ?>
-                    </form>
-                </div>
 
                 <?php } ?>
             </div>
@@ -256,7 +298,7 @@ $senders = $this->helper->get_senders();
                                     </tr>
                                 </thead>
                                 <tbody>
-                                <?php foreach ($this->order_statuses as $cod => $name) { ?>
+                                <?php foreach ($this->get_order_statuses() as $cod => $name) { ?>
                                     <tr>
                                         <td><?php _e($name, 'smart-marketing-addon-sms-order');?></td>
                                         <td>

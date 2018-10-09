@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SMS Orders Alert/Notifications for WooCommerce\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-03 15:19+0000\n"
-"PO-Revision-Date: 2018-10-03 15:20+0000\n"
+"POT-Creation-Date: 2018-10-09 11:47+0000\n"
+"PO-Revision-Date: 2018-10-09 11:48+0000\n"
 "Last-Translator: Paulo <procha@e-goi.com>\n"
 "Language-Team: Spanish (Spain)\n"
 "Language: es_ES\n"
@@ -22,87 +22,117 @@ msgid ""
 "By removing this plugin, you will no longer be able to use the SMS plugin"
 msgstr "Al quitar este plugin, ya no podrá utilizar el plugin de SMS"
 
-#: includes/class-smart-marketing-addon-sms-order-helper.php:267
+#: includes/class-smart-marketing-addon-sms-order-helper.php:253
 msgid "Done!"
 msgstr ""
 
-#: includes/class-smart-marketing-addon-sms-order-helper.php:278
+#: includes/class-smart-marketing-addon-sms-order-helper.php:264
 msgid "Irks! An error has occurred."
 msgstr ""
 
-#: admin/class-smart-marketing-addon-sms-order-admin.php:99
-msgid "Pending payment"
-msgstr "Pendiente de pago"
-
-#: admin/class-smart-marketing-addon-sms-order-admin.php:100
-msgid "Failed"
-msgstr "Fallido"
-
-#: admin/class-smart-marketing-addon-sms-order-admin.php:101
-msgid "On Hold"
-msgstr "En espera"
-
-#: admin/class-smart-marketing-addon-sms-order-admin.php:102
-msgid "Processing"
-msgstr "Processando"
-
-#: admin/class-smart-marketing-addon-sms-order-admin.php:103
-msgid "Completed"
-msgstr "Completado"
-
-#: admin/class-smart-marketing-addon-sms-order-admin.php:104
-msgid "Refunded"
-msgstr "Reembolsado"
-
-#: admin/class-smart-marketing-addon-sms-order-admin.php:105
-msgid "Cancelled"
-msgstr "Cancelado"
-
-#: admin/class-smart-marketing-addon-sms-order-admin.php:141
-#: admin/class-smart-marketing-addon-sms-order-admin.php:142
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:33
+#: admin/class-smart-marketing-addon-sms-order-admin.php:131
+#: admin/class-smart-marketing-addon-sms-order-admin.php:132
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:37
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:41
 msgid "SMS Notifications"
 msgstr "Notificaciones SMS"
 
-#: admin/class-smart-marketing-addon-sms-order-admin.php:340
+#: admin/class-smart-marketing-addon-sms-order-admin.php:243
+msgid "Hello, we remind you that your order at"
+msgstr "Hola, recordamos que su pedido en"
+
+#: admin/class-smart-marketing-addon-sms-order-admin.php:245
+msgid "is waiting for MB. Use"
+msgstr "está esperando el pago MB -"
+
+#: admin/class-smart-marketing-addon-sms-order-admin.php:248
+#: admin/class-smart-marketing-addon-sms-order-admin.php:325
+msgid "Value"
+msgstr "Valor"
+
+#: admin/class-smart-marketing-addon-sms-order-admin.php:249
+#: admin/class-smart-marketing-addon-sms-order-admin.php:326
+msgid "Thank you"
+msgstr "Gracias"
+
+#: admin/class-smart-marketing-addon-sms-order-admin.php:320
+msgid "Hello, your order at"
+msgstr "Hola, su pedido en"
+
+#: admin/class-smart-marketing-addon-sms-order-admin.php:322
+msgid "is waiting for MB payment. Use"
+msgstr "está esperando el pago MB -"
+
+#: admin/class-smart-marketing-addon-sms-order-admin.php:343
 msgid "Send SMS to buyer"
 msgstr "Enviar SMS al cliente"
 
-#: admin/class-smart-marketing-addon-sms-order-admin.php:380
+#: admin/class-smart-marketing-addon-sms-order-admin.php:383
 msgid "You can't send a empty SMS"
 msgstr "No puedes enviar un SMS vacío"
 
-#: admin/class-smart-marketing-addon-sms-order-admin.php:381
+#: admin/class-smart-marketing-addon-sms-order-admin.php:384
 msgid "Sending... Wait please"
 msgstr "Enviando ... espera por favor"
 
-#: admin/class-smart-marketing-addon-sms-order-admin.php:404
+#: admin/class-smart-marketing-addon-sms-order-admin.php:407
 msgid "added on"
 msgstr ""
+
+#: admin/class-smart-marketing-addon-sms-order-admin.php:432
+msgid "Pending payment"
+msgstr "Pendiente de pago"
+
+#: admin/class-smart-marketing-addon-sms-order-admin.php:433
+msgid "Failed"
+msgstr "Fallido"
+
+#: admin/class-smart-marketing-addon-sms-order-admin.php:434
+msgid "On Hold"
+msgstr "En espera"
+
+#: admin/class-smart-marketing-addon-sms-order-admin.php:435
+msgid "Processing"
+msgstr "Processando"
+
+#: admin/class-smart-marketing-addon-sms-order-admin.php:436
+msgid "Completed"
+msgstr "Completado"
+
+#: admin/class-smart-marketing-addon-sms-order-admin.php:437
+msgid "Refunded"
+msgstr "Reembolsado"
+
+#: admin/class-smart-marketing-addon-sms-order-admin.php:438
+msgid "Cancelled"
+msgstr "Cancelado"
+
+#: admin/class-smart-marketing-addon-sms-order-admin.php:446
+msgid "To use this plugin, you first need to install WooCommerce"
+msgstr "Para utilizar este plugin, necesita tener instalado o WooCommerce"
 
 #: public/class-smart-marketing-addon-sms-order-public.php:114
 msgid "I want to be notified by SMS (Order Status)"
 msgstr "Quiero ser notificado por SMS (Estado del pedido)"
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:35
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:39
 msgid "You are here: "
 msgstr "Estás aquí:"
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:43
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:47
 msgid "General settings"
 msgstr "Configuración"
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:47
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:51
 msgid "SMS Messages"
 msgstr "Mensajes de SMS"
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:51
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:289
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:55
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:324
 msgid "Help"
 msgstr "Ayuda"
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:65
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:69
 msgid ""
 "To use this plugin you need to add a sender and activate the SMS "
 "transactional within your E-goi account."
@@ -110,62 +140,83 @@ msgstr ""
 "Para utilizar este plugin necesita agregar un remitente y activar el "
 "transaccional SMS dentro de su cuenta E-goi."
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:67
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:71
 msgid "View help"
 msgstr "Ver ayuda"
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:76
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:83
 msgid "E-goi SMS Sender"
 msgstr "Remitente SMS E-goi"
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:80
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:87
 msgid "Select sender"
 msgstr "Seleccione el remitente"
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:95
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:102
 msgid "Admin Cellphone"
 msgstr "Teléfono móvil administrador"
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:113
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:120
 msgid "Order SMS notifications"
 msgstr "Notificaciones por SMS"
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:115
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:123
 msgid "Select to which order status SMS will be sent"
 msgstr "Seleccione para qué estados de pedido se enviará SMS"
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:121
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:253
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:129
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:288
 msgid "Order Status"
 msgstr "Estado del pedido"
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:122
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:254
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:130
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:289
 msgid "Customer"
 msgstr "Cliente"
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:123
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:255
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:131
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:290
 msgid "Admin"
 msgstr "Administrador"
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:146
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:154
 msgid "Send SMS notifications to customers"
 msgstr "Enviar notificaciones por SMS a los clientes"
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:149
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:158
 msgid "All customers"
 msgstr "Todos los clientes"
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:152
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:162
 msgid "Only customers who ask for it in checkout"
 msgstr "Somente clientes que pedem no checkout"
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:172
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:167
+msgid "SMS Multibanco (Portuguese payment method)"
+msgstr "SMS Multibanco (método de pago Portugués)"
+
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:171
+msgid "Send SMS to your customers with Multibanco payment information"
+msgstr "Envíe SMS a sus clientes con la información de pago Multibanco"
+
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:175
+msgid "Send SMS to remind the information for payment Multibanco (after 48h)"
+msgstr ""
+"Enviar SMS a recordar la información para pago Multibanco (después de 48h)"
+
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:184
+msgid "E-goi account information"
+msgstr "Información de cuenta de E-goi"
+
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:187
+msgid "Current balance of your E-goi account"
+msgstr "Saldo actual de tu cuenta E-goi"
+
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:202
 msgid "Send a test SMS"
 msgstr "Enviar un SMS de prueba"
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:174
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:205
 msgid ""
 "Send a test SMS to verify that your service is active. This test will have "
 "the cost of a normal SMS. You need to have balance on your E-goi account to "
@@ -175,36 +226,36 @@ msgstr ""
 "de prueba tendrá el costo de un envío normal. Necesita tener saldo en su "
 "cuenta E-goi para realizar esta prueba."
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:211
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:246
 msgid "Select the language"
 msgstr "Selecciona el idioma"
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:218
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:253
 msgid "Selected the language"
 msgstr "Seleccionado el idioma"
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:221
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:256
 msgid "Brazilian Portuguese"
 msgstr ""
 "Portugués Brasileño\n"
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:224
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:259
 msgid "English"
 msgstr "Inglés"
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:227
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:262
 msgid "Portuguese"
 msgstr "Portugués"
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:230
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:265
 msgid "Spanish"
 msgstr "Español"
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:237
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:272
 msgid "You can edit the SMS messages of each order status"
 msgstr "Puede editar los mensajes SMS de cada estado de pedido"
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:239
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:274
 msgid ""
 "If you want to include custom information in your SMS, use the following tags"
 msgstr ""

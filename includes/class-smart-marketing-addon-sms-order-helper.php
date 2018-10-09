@@ -35,20 +35,24 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 			'ref' => '_eupago_payshop_referencia',
 			'val' => '_order_total'
 		),
+		/*
 		'eupago_mbway' => array(
 			'ref' => '_eupago_mbway_referencia',
 			'val' => '_order_total'
 		),
+		*/
 		'multibanco_ifthen_for_woocommerce' => array(
 			'ent' => '_multibanco_ifthen_for_woocommerce_ent',
 			'ref' => '_multibanco_ifthen_for_woocommerce_ref',
 			'val' => '_multibanco_ifthen_for_woocommerce_val'
 		),
+		/*
 		// TODO - confirm fields for ifThenPay MBWay
 		'mbway_ifthen_for_woocommerce' => array(
 			'ref' => '_mbway_ifthen_for_woocommerce_ref',
 			'val' => '_mbway_ifthen_for_woocommerce_val'
 		)
+		*/
 	);
 
 	/**
@@ -91,7 +95,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 				"failed",
 				"on-hold"
 			),
-			"date_created" => '<' . (time() - 60*15), // TODO - change time
+			"date_created" => '<' . (time() - 60*5), // TODO - change time
 			'limit' => -1
 		);
 		return wc_get_orders($args);
@@ -111,25 +115,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 		$lang = $this->get_lang($order['billing']['country']);
 
 		if (isset($texts[$lang]['egoi_sms_order_text_' . $recipient_type . '_' . $order['status']]) && isset($recipients['egoi_sms_order_' . $recipient_type . '_' . $order['status']])) {
-
-			$tags = array(
-				"%order_id%" => $order['id'],
-				"%order_status%" => $order['status'],
-				"%total%" => $order['total'],
-				"%currency%" => $order['currency'],
-				"%payment_method%" => $order['payment_method'],
-				"%ref%" => $this->get_payment_data($order, 'ref'),
-				"%ent%" => $this->get_payment_data($order, 'ent'),
-				"%shop_name%" => get_bloginfo('name'),
-				"%billing_name%" => $order['billing']['first_name'].' '.$order['billing']['last_name']
-			);
-
-			$message = $texts[$lang]['egoi_sms_order_text_' . $recipient_type . '_' . $order['status']];
-			foreach ($tags as $tag => $content) {
-				$message = str_replace($tag, $content, $message);
-			}
-
-			return $message;
+            return $this->get_tags_content($order, $texts[$lang]['egoi_sms_order_text_' . $recipient_type . '_' . $order['status']]);
 		}
 		return false;
 	}
@@ -279,5 +265,30 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 		</div>
 		<?php
 	}
+
+    /**
+     * @param $order
+     * @return array
+     */
+    public function get_tags_content($order, $message)
+    {
+        $tags = array(
+            "%order_id%" => $order['id'],
+            "%order_status%" => $order['status'],
+            "%total%" => $order['total'],
+            "%currency%" => $order['currency'],
+            "%payment_method%" => $order['payment_method'],
+            "%ref%" => $this->get_payment_data($order, 'ref'),
+            "%ent%" => $this->get_payment_data($order, 'ent'),
+            "%shop_name%" => get_bloginfo('name'),
+            "%billing_name%" => $order['billing']['first_name'] . ' ' . $order['billing']['last_name']
+        );
+
+        foreach ($tags as $tag => $content) {
+            $message = str_replace($tag, $content, $message);
+        }
+
+        return $message;
+    }
 
 }
