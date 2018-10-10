@@ -53,28 +53,6 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
     protected $helper;
 
-    protected $egoi_api_client;
-
-	/**
-	 * @var array List of sms languages
-	 */
-    protected $languages = array( "en", "es", "pt", "pt_BR");
-
-	/**
-	 * @var array List of SMS text tags
-	 */
-    protected $sms_text_tags = array(
-        "order_id" => '%order_id%',
-        "order_status" => '%order_status%',
-        "total" => '%total%',
-        "currency" => '%currency%',
-        "payment_method" => '%payment_method%',
-        "reference" => '%ref%',
-        "entity" => '%ent%',
-        "shop_name" => '%shop_name%',
-        "billing_name" => '%billing_name%'
-    );
-
 	/**
 	 * Initialize the class and set its properties.
 	 *
@@ -85,8 +63,6 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	public function __construct( $plugin_name, $version ) {
 
 	    $this->helper = new Smart_Marketing_Addon_Sms_Order_Helper();
-
-        $this->egoi_api_client = new SoapClient('http://api.e-goi.com/v2/soap.php?wsdl');
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
@@ -220,7 +196,6 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
             if (isset($orders)) {
 
-	            $sender = json_decode(get_option('egoi_sms_order_sender'), true);
 	            $recipient_options = json_decode(get_option('egoi_sms_order_recipients'), true);
                 $count = 0;
 
@@ -240,14 +215,8 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
                     if (!$order->is_paid() && !in_array($order->get_id(), $order_ids) && $sms_notification && $recipient_options['egoi_reminders']  && array_key_exists($order_data['payment_method'], $this->helper->payment_map)) {
 
-                        $message = __('Hello, we remind you that your order at', 'smart-marketing-addon-sms-order').' ';
-                        $message .= '%shop_name% ';
-                        $message .= __('is waiting for MB. Use', 'smart-marketing-addon-sms-order').' ';
-                        $message .= $this->helper->get_payment_data($order_data, 'ent') ? 'Ent. %ent% ' : null;
-                        $message .= $this->helper->get_payment_data($order_data, 'ref') ? 'Ref. %ref% ' : null;
-                        $message .= $this->helper->get_payment_data($order_data, 'val') ? __('Value', 'smart-marketing-addon-sms-order').' %total%%currency% ' : null;
-                        $message .= __('Thank you', 'smart-marketing-addon-sms-order');
-                        $message = $this->helper->get_tags_content($order_data, $message);
+                        $lang = $this->helper->get_lang($order_data['billing']['country']);
+                        $message = $this->helper->get_tags_content($order_data, $this->helper->sms_payment_info['reminder'][$lang]);
 
                         $recipient = $this->helper->get_valid_recipient($order->billing_phone, $order->billing_country);
                         $this->helper->send_sms($recipient, $message, $order->get_status(), $order->get_id(), true);
@@ -317,14 +286,8 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	    }
 
         if ($sms_notification && $recipient_options['egoi_payment_info'] && array_key_exists($order['payment_method'], $this->helper->payment_map)) {
-            $message = __('Hello, your order at', 'smart-marketing-addon-sms-order').' ';
-            $message .= '%shop_name% ';
-            $message .= __('is waiting for MB payment. Use', 'smart-marketing-addon-sms-order').' ';
-            $message .= $this->helper->get_payment_data($order, 'ent') ? 'Ent. %ent% ' : null;
-            $message .= $this->helper->get_payment_data($order, 'ref') ? 'Ref. %ref% ' : null;
-            $message .= $this->helper->get_payment_data($order, 'val') ? __('Value', 'smart-marketing-addon-sms-order').' %total%%currency% ' : null;
-            $message .= __('Thank you', 'smart-marketing-addon-sms-order');
-            $message = $this->helper->get_tags_content($order, $message);
+            $lang = $this->helper->get_lang($order['billing']['country']);
+            $message = $this->helper->get_tags_content($order, $this->helper->sms_payment_info['first'][$lang]);
 
             if (array_key_exists($order['payment_method'], $this->helper->payment_map)) {
 	            $recipient = $this->helper->get_valid_recipient($order['billing']['phone'], $order['billing']['country']);
@@ -427,18 +390,9 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 		return $schedules;
 	}
 
-	public function get_order_statuses() {
-        return array(
-            "pending" => __("Pending payment", 'smart-marketing-addon-sms-order'),
-            "failed" => __("Failed", 'smart-marketing-addon-sms-order'),
-            "on-hold" => __("On Hold", 'smart-marketing-addon-sms-order'),
-            "processing" => __("Processing", 'smart-marketing-addon-sms-order'),
-            "completed" => __("Completed", 'smart-marketing-addon-sms-order'),
-            "refunded" => __("Refunded", 'smart-marketing-addon-sms-order'),
-            "cancelled" => __("Cancelled", 'smart-marketing-addon-sms-order'),
-        );
-    }
-
+    /**
+     * Show a error notice if don't have WooCommerce
+     */
     public function woocommerce_dependency_notice(){
         if ( !class_exists( 'WooCommerce' ) ) {
             ?>

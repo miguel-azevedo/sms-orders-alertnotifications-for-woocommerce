@@ -55,15 +55,85 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 		*/
 	);
 
+    /**
+     * @var array
+     */
+	public $sms_payment_info = array(
+	    'first' => array(
+	        'en' => 'Hello, your order at %shop_name% is waiting for MB payment. Use Ent. %ent% Ref. %ref% Value %total%%currency% Thank you',
+            'es' => 'Hola, su pedido en %shop_name% está esperando el pago MB - Ent. %ent% Ref. %ref% Valor %total%%currency% Gracias',
+            'pt' => 'Olá, a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado',
+            'pt_BR' => 'Olá, a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado'
+        ),
+        'reminder' => array(
+            'en' => 'Hello, we remind you that your order at %shop_name% is waiting for MB. Use Ent. %ent% Ref. %ref% Value %total%%currency% Thank you',
+            'es' => 'Hola, recordamos que su pedido en %shop_name% está esperando el pago MB - Ent. %ent% Ref. %ref% Valor %total%%currency% Gracias',
+            'pt' => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado',
+            'pt_BR' => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado'
+        ),
+    );
+
+    /**
+     * @var array
+     */
+    public $currency = array(
+        'EUR' => '€',
+        'USD' => '$',
+        'GBP' => '£',
+        'BRL' => 'R$'
+    );
+
+    /**
+     * @var array List of sms languages
+     */
+    public $languages = array( "en", "es", "pt", "pt_BR");
+
+    /**
+     * @var array List of SMS text tags
+     */
+    public $sms_text_tags = array(
+        "order_id" => '%order_id%',
+        "order_status" => '%order_status%',
+        "total" => '%total%',
+        "currency" => '%currency%',
+        "payment_method" => '%payment_method%',
+        "reference" => '%ref%',
+        "entity" => '%ent%',
+        "shop_name" => '%shop_name%',
+        "billing_name" => '%billing_name%'
+    );
+
+    /**
+     * @var SoapClient
+     */
+    protected $egoi_api_client;
+
 	/**
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
 	 */
 	public function __construct() {
+        $this->egoi_api_client = new SoapClient('http://api.e-goi.com/v2/soap.php?wsdl');
+
 		$apikey = get_option('egoi_api_key');
 		$this->apikey = $apikey['api_key'];
 	}
+
+    /**
+     * @return array
+     */
+    public function get_order_statuses() {
+        return array(
+            "pending" => __("Pending payment", 'smart-marketing-addon-sms-order'),
+            "failed" => __("Failed", 'smart-marketing-addon-sms-order'),
+            "on-hold" => __("On Hold", 'smart-marketing-addon-sms-order'),
+            "processing" => __("Processing", 'smart-marketing-addon-sms-order'),
+            "completed" => __("Completed", 'smart-marketing-addon-sms-order'),
+            "refunded" => __("Refunded", 'smart-marketing-addon-sms-order'),
+            "cancelled" => __("Cancelled", 'smart-marketing-addon-sms-order'),
+        );
+    }
 
 	/**
 	 * Function to get cellphone senders from E-goi account
@@ -81,6 +151,14 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 
 		return $result;
 	}
+
+    /**
+     * @return string
+     */
+	public function get_balance() {
+        $credits = explode(' ',$this->egoi_api_client->getClientData(array('apikey' => $this->apikey))['CREDITS']);
+        return $credits[1].$this->currency[$credits[0]];
+    }
 
 	/**
 	 * Get not paid orders over 48 hours
@@ -179,6 +257,42 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 		return $phone;
 	}
 
+    /**
+     * replace tags with order data
+     *
+     * @param $order
+     * @param $message
+     * @return string
+     */
+    public function get_tags_content($order, $message)
+    {
+        $tags = array(
+            '%order_id%' => $order['id'],
+            '%order_status%' => $order['status'],
+            '%total%' => $order['total'],
+            '%currency%' => $order['currency'],
+            '%payment_method%' => $order['payment_method'],
+            '%ref%' => $this->get_payment_data($order, 'ref'),
+            '%ent%' => $this->get_payment_data($order, 'ent'),
+            '%shop_name%' => get_bloginfo('name'),
+            '%billing_name%' => $order['billing']['first_name'] . ' ' . $order['billing']['last_name']
+        );
+
+        foreach ($tags as $tag => $content) {
+            if ($tag == '%ref%' && $this->get_payment_data($order, 'ref') == false) {
+                $message = str_replace('Ref. %ref%', '', $message);
+                continue;
+            }
+            if ($tag == '%ent%' && $this->get_payment_data($order, 'ent') == false) {
+                $message = str_replace('Ent. %ent%', '', $message);
+                continue;
+            }
+            $message = str_replace($tag, $content, $message);
+        }
+
+        return $message;
+    }
+
 	/**
 	 * Method to send SMS
 	 *
@@ -265,30 +379,5 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 		</div>
 		<?php
 	}
-
-    /**
-     * @param $order
-     * @return array
-     */
-    public function get_tags_content($order, $message)
-    {
-        $tags = array(
-            "%order_id%" => $order['id'],
-            "%order_status%" => $order['status'],
-            "%total%" => $order['total'],
-            "%currency%" => $order['currency'],
-            "%payment_method%" => $order['payment_method'],
-            "%ref%" => $this->get_payment_data($order, 'ref'),
-            "%ent%" => $this->get_payment_data($order, 'ent'),
-            "%shop_name%" => get_bloginfo('name'),
-            "%billing_name%" => $order['billing']['first_name'] . ' ' . $order['billing']['last_name']
-        );
-
-        foreach ($tags as $tag => $content) {
-            $message = str_replace($tag, $content, $message);
-        }
-
-        return $message;
-    }
 
 }

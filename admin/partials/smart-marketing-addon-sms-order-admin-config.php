@@ -26,17 +26,9 @@ if (isset($_POST['form_id'])) {
 $sender_option = json_decode(get_option('egoi_sms_order_sender'), true);
 $recipients = json_decode(get_option('egoi_sms_order_recipients'), true);
 $texts = json_decode(get_option('egoi_sms_order_texts'), true);
-
 $senders = $this->helper->get_senders();
+$balance = $this->helper->get_balance();
 
-$currency = array(
-    'EUR' => '€',
-    'USD' => '$',
-    'GBP' => '£',
-    'BRL' => 'R$'
-);
-$credits = explode(' ',$this->egoi_api_client->getClientData(array('apikey' => $this->apikey))['CREDITS']);
-$balance = $credits[1].$currency[$credits[0]];
 ?>
 <span id="form_info" data-form-id="<?=$_POST['form_id']?>" data-form-lang="<?=$_POST['sms_text_language']?>"></span>
 <!-- head -->
@@ -139,7 +131,7 @@ $balance = $credits[1].$currency[$credits[0]];
                                         </thead>
 
                                         <tbody>
-                                        <?php foreach ($this->get_order_statuses() as $cod => $name) { ?>
+                                        <?php foreach ($this->helper->get_order_statuses() as $cod => $name) { ?>
                                             <tr>
                                                 <td><?=$name?></td>
                                                 <td align="center">
@@ -280,14 +272,14 @@ $balance = $credits[1].$currency[$credits[0]];
                             <br>
                             <span style="font-size: 13px;"><?php _e('If you want to include custom information in your SMS, use the following tags', 'smart-marketing-addon-sms-order');?></span>
                         </p>
-                        <?php foreach ($this->sms_text_tags as $tag_name => $tag_cod) { ?>
+                        <?php foreach ($this->helper->sms_text_tags as $tag_name => $tag_cod) { ?>
                             <button type="button" class="button button-default sms_texts_tags_button" data-text-cod="<?=$tag_cod?>">
                                 <?php echo ucwords(str_replace('_', ' ', $tag_name)); ?>
                             </button>
                         <?php } ?>
                     </div>
 
-                    <?php foreach ($this->languages as $lang) { ?>
+                    <?php foreach ($this->helper->languages as $lang) { ?>
                         <div id="sms_order_texts_<?=$lang?>">
                             <table border="0" class="widefat striped" style="max-width: 900px;">
                                 <thead>
@@ -298,7 +290,7 @@ $balance = $credits[1].$currency[$credits[0]];
                                     </tr>
                                 </thead>
                                 <tbody>
-                                <?php foreach ($this->get_order_statuses() as $cod => $name) { ?>
+                                <?php foreach ($this->helper->get_order_statuses() as $cod => $name) { ?>
                                     <tr>
                                         <td><?php _e($name, 'smart-marketing-addon-sms-order');?></td>
                                         <td>
