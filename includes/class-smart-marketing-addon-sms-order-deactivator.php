@@ -32,18 +32,6 @@ class Smart_Marketing_Addon_Sms_Order_Deactivator {
 	 */
 	public static function deactivate() {
 		wp_clear_scheduled_hook('egoi_sms_order_event');
-
-		static::drop_sms_order_reminders_table();
-	}
-
-	public static function drop_sms_order_reminders_table() {
-		global $wpdb;
-
-		$table_name = $wpdb->prefix. 'egoi_sms_order_reminders';
-
-		$sql = " DROP TABLE IF EXISTS $table_name ";
-
-		$wpdb->query($sql);
 	}
 
 }

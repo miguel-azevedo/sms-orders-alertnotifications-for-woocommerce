@@ -44,7 +44,7 @@ class Smart_Marketing_Addon_Sms_Order_Activator {
 		$table_name = $wpdb->prefix. 'egoi_sms_order_reminders';
 		$charset_collate = $wpdb->get_charset_collate();
 
-		$sql = "CREATE TABLE $table_name (
+		$sql = "CREATE TABLE IF NOT EXISTS $table_name (
 		  id mediumint(9) NOT NULL AUTO_INCREMENT,
 		  time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
 		  order_id int NOT NULL,
