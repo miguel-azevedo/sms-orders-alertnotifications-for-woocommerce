@@ -326,7 +326,83 @@ $balance = $this->helper->get_balance();
         <div class="row">
             <div class="main-content col col-12" style="margin:0 0 20px;">
 
-                <p class="label_text"><?php _e('Help', 'smart-marketing-addon-sms-order');?></p>
+                <h1><?php _e('Help', 'smart-marketing-addon-sms-order');?></h1>
+
+
+                <h2><?php _e('First steps', 'smart-marketing-addon-sms-order');?></h2>
+                <p><?php _e('Help information to start sending SMS notifications to your customers.', 'smart-marketing-addon-sms-order');?></p>
+
+
+                <h2><?php _e('1. Transactional Activation', 'smart-marketing-addon-sms-order');?></h2>
+                <p><?php _e('In order to send SMS notifications, you must first activate Transactional in your E-goi account.', 'smart-marketing-addon-sms-order');?></p>
+                <p>
+                    <?php _e('To activate Transactional in your E-goi account, go to the Apps menu and choose to activate Slingshot.', 'smart-marketing-addon-sms-order');?>
+                    <a href="<?php _e('https://helpdesk.e-goi.com/index.php?type=page&urlcode=708772&title=Sending-transactional-messages-with-E-gois-Slingshot', 'smart-marketing-addon-sms-order');?>" target="_blank">
+                        <?php _e('See more help', 'smart-marketing-addon-sms-order');?>
+                    </a>
+                </p>
+
+
+                <h2><?php _e('2. Adding a sender', 'smart-marketing-addon-sms-order');?></h2>
+                <p>
+                    <?php _e('In your E-goi account you must add a Sender to send sms,', 'smart-marketing-addon-sms-order');?>
+                    <a href="<?php _e('https://helpdesk.e-goi.com/index.php?type=page&urlcode=694373&title=Adding-a-sender', 'smart-marketing-addon-sms-order');?>" target="_blank">
+                        <?php _e('See how!', 'smart-marketing-addon-sms-order');?>
+                    </a>
+                    <br>
+                    <?php
+                        _e('(You can add a sender with the number that will appear in the sms sent and allows you to receive replies or text,
+                            such as the name of your company or website, 
+                            but not allowing you to receive replies)', 'smart-marketing-addon-sms-order');
+                    ?>
+                </p>
+
+
+                <h2><?php _e('3. Add balance', 'smart-marketing-addon-sms-order');?></h2>
+                <p>
+                    <?php
+                        _e('If you do not have enough balance available, log in to your E-goi Account, go to the menu related to your account (top, right) 
+                            and the Balance information choose Top Up. (you must have at least € 20 balance to be able to send sms, 
+                            for this reason you should add a higher value)', 'smart-marketing-addon-sms-order');
+                    ?>
+                </p>
+
+
+                <h2><?php _e('4. Select SMS Sender E-goi', 'smart-marketing-addon-sms-order');?></h2>
+                <p>
+                    <?php
+                        _e('If you have already done the above steps, you can go back to the SMS plugin to select the E-goi SMS 
+                            Sender previously entered into the E-goi account and complete the setup process. 
+                            This sender will be the one used to send your SMS notifications.', 'smart-marketing-addon-sms-order');
+                    ?>
+                </p>
+
+
+                <h2><?php _e('More information', 'smart-marketing-addon-sms-order');?></h2>
+                <p>
+                    <?php
+                        _e('The option of sending SMS notification with the Multibanco (Entity, Reference, Value) 
+                            for instant cash payment is only compatible with Eupago and 
+                            Ifthenpay portuguese payment gateways.', 'smart-marketing-addon-sms-order');
+                    ?>
+                    <br>
+                    <?php
+                        _e('The balance amount displayed in the plugin may temporarily show differences, 
+                            relative to the balance within your E-goi account.', 'smart-marketing-addon-sms-order');
+                    ?>
+                </p>
+                <p>
+                    <?php _e('You can consult the article of our blog about this plugin.', 'smart-marketing-addon-sms-order'); ?>
+                    <a href="<?php _e('https://blog.e-goi.com/alerts-by-sms-for-your-ecommerce-orders/', 'smart-marketing-addon-sms-order');?>" target="_blank">
+                        <?php _e('View blog post', 'smart-marketing-addon-sms-order');?>
+                    </a>
+                    <br>
+                    <?php _e('You can check at this link the cost of each sms and E-goi account plans.', 'smart-marketing-addon-sms-order'); ?>
+                    <a href="<?php _e('https://www.e-goi.com/pricing/', 'smart-marketing-addon-sms-order');?>" target="_blank">
+                        <?php _e('Check Rates', 'smart-marketing-addon-sms-order');?>
+                    </a>
+                </p>
+
 
             </div>
         </div>
