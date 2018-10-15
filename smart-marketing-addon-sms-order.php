@@ -30,6 +30,10 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
+if (!defined(ALTERNATE_WP_CRON)) {
+    define('ALTERNATE_WP_CRON', true);
+}
+
 add_action( 'admin_init', 'child_plugin_has_parent_plugin' );
 function child_plugin_has_parent_plugin() {
     $parant_plugin = plugin_dir_path( __DIR__ ).'smart-marketing-for-wp';
