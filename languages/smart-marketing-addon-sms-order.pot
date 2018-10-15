@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-15 15:39+0000\n"
+"POT-Creation-Date: 2018-10-15 17:06+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -115,7 +115,7 @@ msgid "SMS Messages"
 msgstr ""
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:53
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:329
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:338
 msgid "Help"
 msgstr ""
 
@@ -150,17 +150,17 @@ msgid "Select to which order status SMS will be sent"
 msgstr ""
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:128
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:293
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:302
 msgid "Order Status"
 msgstr ""
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:129
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:294
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:303
 msgid "Customer"
 msgstr ""
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:130
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:295
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:304
 msgid "Admin"
 msgstr ""
 
@@ -184,119 +184,124 @@ msgstr ""
 msgid "Send SMS to your customers with Multibanco payment information"
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:180
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:181
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:184
 msgid "Send SMS to remind the information for payment Multibanco (after 48h)"
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:189
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:186
+msgid "You need to enable wp_cron in wp-config, use:"
+msgstr ""
+
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:198
 msgid "E-goi account information"
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:192
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:201
 msgid "Current balance of your E-goi account"
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:208
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:217
 msgid "Send a test SMS"
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:211
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:220
 msgid ""
 "Send a test SMS to verify that your service is active. This test will have "
 "the cost of a normal SMS. You need to have balance on your E-goi account to "
 "perform this test. "
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:232
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:241
 msgid "Send SMS"
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:251
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:260
 msgid "Select the language"
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:258
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:267
 msgid "Selected the language"
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:261
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:270
 msgid "Brazilian Portuguese"
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:264
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:273
 msgid "English"
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:267
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:276
 msgid "Portuguese"
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:270
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:279
 msgid "Spanish"
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:277
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:286
 msgid "You can edit the SMS messages of each order status"
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:279
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:288
 msgid ""
 "If you want to include custom information in your SMS, use the following tags"
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:332
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:341
 msgid "First steps"
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:333
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:342
 msgid "Help information to start sending SMS notifications to your customers."
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:336
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:345
 msgid "1. Transactional Activation"
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:337
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:346
 msgid ""
 "In order to send SMS notifications, you must first activate Transactional in "
 "your E-goi account."
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:339
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:348
 msgid ""
 "To activate Transactional in your E-goi account, go to the Apps menu and "
 "choose to activate Slingshot."
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:340
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:349
 msgid ""
 "https://helpdesk.e-goi.com/index.php?type=page&urlcode=708772&title=Sending-"
 "transactional-messages-with-E-gois-Slingshot"
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:341
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:350
 msgid "See more help"
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:346
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:355
 msgid "2. Adding a sender"
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:348
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:357
 msgid "In your E-goi account you must add a Sender to send sms,"
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:349
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:358
 msgid ""
 "https://helpdesk.e-goi.com/index.php?type=page&urlcode=694373&title=Adding-a-"
 "sender"
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:350
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:359
 msgid "See how!"
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:354
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:363
 msgid ""
 "(You can add a sender with the number that will appear in the sms sent and "
 "allows you to receive replies or text,\n"
@@ -304,11 +309,11 @@ msgid ""
 "                            but not allowing you to receive replies)"
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:361
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:370
 msgid "3. Add balance"
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:364
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:373
 msgid ""
 "If you do not have enough balance available, log in to your E-goi Account, "
 "go to the menu related to your account (top, right) \n"
@@ -317,11 +322,11 @@ msgid ""
 "                            for this reason you should add a higher value)"
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:371
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:380
 msgid "4. Select SMS Sender E-goi"
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:374
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:383
 msgid ""
 "If you have already done the above steps, you can go back to the SMS plugin "
 "to select the E-goi SMS \n"
@@ -331,11 +336,11 @@ msgid ""
 "SMS notifications."
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:381
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:390
 msgid "More information"
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:384
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:393
 msgid ""
 "The option of sending SMS notification with the Multibanco (Entity, "
 "Reference, Value) \n"
@@ -344,7 +349,7 @@ msgid ""
 "                            Ifthenpay portuguese payment gateways."
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:390
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:399
 msgid ""
 "The balance amount displayed in the plugin may temporarily show differences, "
 "\n"
@@ -352,28 +357,28 @@ msgid ""
 "account."
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:395
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:404
 msgid "You can consult the article of our blog about this plugin."
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:396
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:405
 msgid "https://blog.e-goi.com/alerts-by-sms-for-your-ecommerce-orders/"
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:397
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:406
 msgid "View blog post"
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:400
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:409
 msgid ""
 "You can check at this link the cost of each sms and E-goi account plans."
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:401
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:410
 msgid "https://www.e-goi.com/pricing/"
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:402
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:411
 msgid "Check Rates"
 msgstr ""
 

@@ -174,10 +174,19 @@ $balance = $this->helper->get_balance();
                                     <label for="egoi_payment_info"><?php _e('Send SMS to your customers with Multibanco payment information', 'smart-marketing-addon-sms-order');?></label>
                                 </p>
                                 <p class="label_text_mini">
-                                    <input type="checkbox" name="egoi_reminders" id="egoi_reminders" value="1"
-                                        <?php checked($recipients['egoi_reminders'], 1);?>
-                                    />
-                                    <label for="egoi_reminders"><?php _e('Send SMS to remind the information for payment Multibanco (after 48h)', 'smart-marketing-addon-sms-order');?></label>
+                                    <?php if (constant("ALTERNATE_WP_CRON")) { ?>
+                                        <input type="checkbox" name="egoi_reminders" id="egoi_reminders" value="1"
+                                            <?php checked($recipients['egoi_reminders'], 1);?>
+                                        />
+                                        <label for="egoi_reminders"><?php _e('Send SMS to remind the information for payment Multibanco (after 48h)', 'smart-marketing-addon-sms-order');?></label>
+                                    <?php } else { ?>
+                                        <input type="checkbox" disabled />
+                                        <?php _e('Send SMS to remind the information for payment Multibanco (after 48h)', 'smart-marketing-addon-sms-order');?>
+                                        <div style="width: 100%; background-color: white; text-align: center; border: 1px solid #dddddd; margin-top: 10px;">
+                                            <p class="label_text_mini"><?php _e('You need to enable wp_cron in wp-config, use:', 'smart-marketing-addon-sms-order');?></p>
+                                            <pre>define ('ALTERNATE_WP_CRON', true);</pre>
+                                        </div>
+                                    <?php } ?>
                                 </p>
 
                                 <?php submit_button(); ?>

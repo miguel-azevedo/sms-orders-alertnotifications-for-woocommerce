@@ -30,7 +30,7 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-if (!defined(ALTERNATE_WP_CRON)) {
+if (!defined('ALTERNATE_WP_CRON')) {
     define('ALTERNATE_WP_CRON', true);
 }
 
