@@ -153,11 +153,13 @@ $balance = $this->helper->get_balance();
                                 <p class="label_text"><?php _e('Send SMS notifications to customers', 'smart-marketing-addon-sms-order');?></p>
 
                                 <p class="label_text_mini">
-                                    <input type="radio" name="notification_option" id="notification_option_0" value="0" <?php checked($recipients['notification_option'], 0);?> required>
+                                    <input type="radio" name="notification_option" id="notification_option_0" value="0" required
+                                        <?php echo !isset($recipients['notification_option']) || $recipients['notification_option'] == 0 ? 'checked' : null ; ?>
+                                    />
                                     <label class="label_text_mini" for="notification_option_0"><?php _e('All customers', 'smart-marketing-addon-sms-order');?></label>
                                 </p>
                                 <p class="label_text_mini" style="margin-bottom: 20px;">
-                                    <input type="radio" name="notification_option" id="notification_option_1" value="1" <?php checked($recipients['notification_option'], 1);?>>
+                                    <input type="radio" name="notification_option" id="notification_option_1" value="1" <?php checked($recipients['notification_option'], 1);?> />
                                     <label class="label_text_mini" for="notification_option_1"><?php _e('Only customers who ask for it in checkout', 'smart-marketing-addon-sms-order');?></label>
                                 </p>
 
@@ -166,11 +168,15 @@ $balance = $this->helper->get_balance();
                                 <p class="label_text"><?php _e('SMS Multibanco (Portuguese payment method)', 'smart-marketing-addon-sms-order');?></p>
 
                                 <p class="label_text_mini">
-                                    <input type="checkbox" name="egoi_payment_info" id="egoi_payment_info" value="1" <?php echo !isset($recipients['egoi_payment_info']) || $recipients['egoi_payment_info'] == 1 ? 'checked' : null;?> >
+                                    <input type="checkbox" name="egoi_payment_info" id="egoi_payment_info" value="1"
+                                        <?php echo !isset($recipients['egoi_payment_info']) || $recipients['egoi_payment_info'] == 1 ? 'checked' : null;?>
+                                    />
                                     <label for="egoi_payment_info"><?php _e('Send SMS to your customers with Multibanco payment information', 'smart-marketing-addon-sms-order');?></label>
                                 </p>
                                 <p class="label_text_mini">
-                                    <input type="checkbox" name="egoi_reminders" id="egoi_reminders" value="1" <?php echo !isset($recipients['egoi_reminders']) || $recipients['egoi_reminders'] == 1 ? 'checked' : null;?> >
+                                    <input type="checkbox" name="egoi_reminders" id="egoi_reminders" value="1"
+                                        <?php checked($recipients['egoi_reminders'], 1);?>
+                                    />
                                     <label for="egoi_reminders"><?php _e('Send SMS to remind the information for payment Multibanco (after 48h)', 'smart-marketing-addon-sms-order');?></label>
                                 </p>
 
@@ -215,7 +221,9 @@ $balance = $this->helper->get_balance();
                                         }
                                         ?>
                                     </select>
-                                    <input type="text" name="recipient_phone" class="regular-text" style="width: 50%; height: 38px;" required <?php echo $disabled ? 'disabled' : null;?> />
+                                    <input type="text" name="recipient_phone" class="regular-text" style="width: 50%; height: 38px;" required
+                                        <?php echo $disabled ? 'disabled' : null;?>
+                                    />
 
                                     <br>
 
