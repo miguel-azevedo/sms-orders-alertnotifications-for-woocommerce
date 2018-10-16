@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: SMS Orders Alert/Notifications for WooCommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-15 17:06+0000\n"
-"PO-Revision-Date: 2018-10-15 17:07+0000\n"
+"PO-Revision-Date: 2018-10-15 17:44+0000\n"
 "Last-Translator: Admin <procha@e-goi.com>\n"
 "Language-Team: Português\n"
 "Language: pt_PT\n"
@@ -327,7 +327,7 @@ msgstr ""
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:370
 msgid "3. Add balance"
-msgstr "3.Carregamento de saldo"
+msgstr "3. Carregamento de saldo"
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:373
 msgid ""
@@ -344,7 +344,7 @@ msgstr ""
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:380
 msgid "4. Select SMS Sender E-goi"
-msgstr "4.Selecionar Remetente SMS E-goi"
+msgstr "4. Selecionar Remetente SMS E-goi"
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:383
 msgid ""
@@ -408,7 +408,7 @@ msgstr "https://www.e-goi.pt/precos/"
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:411
 msgid "Check Rates"
-msgstr "Check Rates"
+msgstr "Ver preços"
 
 #. Name of the plugin
 msgid "SMS Orders Alert/Notifications for WooCommerce"

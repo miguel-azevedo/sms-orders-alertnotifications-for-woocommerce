@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: SMS Orders Alert/Notifications for WooCommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-15 17:06+0000\n"
-"PO-Revision-Date: 2018-10-15 17:08+0000\n"
+"PO-Revision-Date: 2018-10-15 17:44+0000\n"
 "Last-Translator: Admin <procha@e-goi.com>\n"
 "Language-Team: Português do Brasil\n"
 "Language: pt_BR\n"
@@ -411,7 +411,7 @@ msgstr "https://www.e-goi.pt/precos/"
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:411
 msgid "Check Rates"
-msgstr "Check Rates"
+msgstr "Ver preços"
 
 #. Name of the plugin
 msgid "SMS Orders Alert/Notifications for WooCommerce"
