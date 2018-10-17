@@ -167,7 +167,8 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	            $recipient = $this->helper->get_valid_recipient($post['recipient_phone'], null, $post['recipient_prefix']);
                 $response = $this->helper->send_sms($recipient, $post['message'], 'test', 0);
 
-                $response = json_decode($response);
+                $response = json_decode($response['body']);
+
                 if (isset($response->errorCode)) {
                     return false;
                 }
@@ -359,8 +360,8 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	public function order_action_sms_meta_box() {
 		$recipient = $this->helper->get_valid_recipient($_POST['recipient'], $_POST['country']);
 
-		$result = json_decode($this->helper->send_sms($recipient, $_POST['message'], 'order', $_POST['order_id']));
-
+		$result = $this->helper->send_sms($recipient, $_POST['message'], 'order', $_POST['order_id']);
+        $result = json_decode($result['body']);
 		if (!isset($result->errorCode)) {
 			$order = wc_get_order($_POST['order_id']);
 			$order->add_order_note('SMS: '.$_POST['message']);

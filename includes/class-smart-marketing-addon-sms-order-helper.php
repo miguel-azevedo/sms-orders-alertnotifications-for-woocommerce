@@ -319,7 +319,10 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 			"gsm" => $gsm
 		);
 
-		return $this->curl($url, $sms_params);
+		return wp_remote_post($url, array(
+            'timeout' => 60,
+            'body' => $sms_params
+        ));
 	}
 
 	/**
@@ -333,29 +336,6 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 		$file = fopen($path.'smart-marketing-addon-sms-order.log', 'a+');
 		fwrite($file, $log."\xA");
 		fclose($file);
-	}
-
-	/**
-	 * cURL helper
-	 * @param $url
-	 * @param $post
-	 *
-	 * @return mixed
-	 */
-	public function curl($url, $post) {
-
-		$ch = curl_init($url);
-		curl_setopt($ch, CURLOPT_POST, 1);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-		curl_setopt($ch, CURLOPT_HEADER, 0);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 60);
-
-		$response = curl_exec($ch);
-
-		curl_close($ch);
-
-		return $response;
 	}
 
 	/**
