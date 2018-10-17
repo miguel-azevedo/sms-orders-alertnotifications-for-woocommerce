@@ -79,7 +79,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 */
 	public function enqueue_styles() {
 
-        wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/smart-marketing-addon-sms-order-admin.css', array(), $this->version, 'all' );
+        wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/smart-marketing-addon-sms-order-admin.min.css', array(), $this->version, 'all' );
 
 	}
 
@@ -90,8 +90,8 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 */
 	public function enqueue_scripts() {
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/smart-marketing-addon-sms-order-admin.js', array( 'jquery' ), $this->version, false );
-		wp_enqueue_script( 'ajax-script', plugin_dir_url( __FILE__ ) . 'js/order_action_sms_meta_box.js', array('jquery') );
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/smart-marketing-addon-sms-order-admin.min.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( 'ajax-script', plugin_dir_url( __FILE__ ) . 'js/order_action_sms_meta_box.min.js', array('jquery') );
 		wp_localize_script( 'ajax-script', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
 
 	}
