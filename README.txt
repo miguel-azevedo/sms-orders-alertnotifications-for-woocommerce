@@ -1,7 +1,7 @@
 === Plugin Name ===
 Contributors: E-goi
 Donate link: https://www.e-goi.com
-Tags: E-goi, egoi, sms, order
+Tags: SMS, Orders, WooCommerce, Notifications, Alert, sms, order, Subscribe, E-goi, Marketing Automation, egoi, List, SMS Marketing, Marketing
 Requires at least: 4.7
 Tested up to: 4.9.8
 Stable tag: 1.0.0
