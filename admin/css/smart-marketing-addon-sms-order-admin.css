@@ -1,7 +1,3 @@
-/**
- * All of the CSS for your admin-specific functionality should be
- * included in this file.
- */
 
 #sms_texts_select_lang{
     margin-bottom: 30px;
@@ -26,4 +22,9 @@
 
 .send-sms-button{
     margin-top: 5px !important;
+}
+
+.help-title {
+    font-weight: bold;
+    font-size: 16px;
 }

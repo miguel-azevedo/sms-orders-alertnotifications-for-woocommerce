@@ -16,11 +16,6 @@ $this->woocommerce_dependency_notice();
 
 if (isset($_POST['form_id'])) {
     $result = $this->process_config_form($_POST);
-    if ($result) {
-        $this->helper->admin_notice__success();
-    } else {
-	    $this->helper->admin_notice__error();
-    }
 }
 
 $sender_option = json_decode(get_option('egoi_sms_order_sender'), true);
@@ -40,7 +35,7 @@ $balance = $this->helper->get_balance();
 </p>
 <hr/>
 
-<h2 class="nav-tab-wrapper">
+<p class="nav-tab-wrapper">
     <a class="nav-tab nav-tab-addon nav-tab-active" id="nav-tab-sms-senders">
 		<?php _e('General settings', 'smart-marketing-addon-sms-order'); ?>
     </a>
@@ -52,12 +47,22 @@ $balance = $this->helper->get_balance();
     <a class="nav-tab nav-tab-addon" id="nav-tab-sms-help">
         <?php _e('Help', 'smart-marketing-addon-sms-order'); ?>
     </a>
-</h2>
+</p>
 
 <!-- wrap SMS Senders/Recipients -->
-<div class="wrap tab wrap-addon" id="tab-sms-senders">
+<div class="wrap eg-tab wrap-addon" id="tab-sms-senders">
     <div class="wrap egoi4wp-settings" id="tab-forms">
         <div class="row">
+
+            <?php
+                if (isset($_POST['form_id']) && $_POST['form_id'] == 'form-sms-order-senders') {
+                    if ($result) {
+                        $this->helper->admin_notice__success();
+                    } else {
+                        $this->helper->admin_notice__error();
+                    }
+                }
+            ?>
 
             <?php if (empty($senders)) { ?>
 
@@ -252,9 +257,20 @@ $balance = $this->helper->get_balance();
 
 
 <!-- wrap SMS Texts -->
-<div class="wrap tab wrap-addon" id="tab-sms-texts">
+<div class="wrap eg-tab wrap-addon" id="tab-sms-texts">
     <div class="wrap egoi4wp-settings" id="tab-forms">
         <div class="row">
+
+            <?php
+            if (isset($_POST['form_id']) && $_POST['form_id'] == 'form-sms-order-texts') {
+                if ($result) {
+                    $this->helper->admin_notice__success();
+                } else {
+                    $this->helper->admin_notice__error();
+                }
+            }
+            ?>
+
             <div class="main-content col col-12" style="margin:0 0 20px;">
 
                 <p class="label_text"><?php _e('Select the language', 'smart-marketing-addon-sms-order');?></p>
@@ -329,30 +345,27 @@ $balance = $this->helper->get_balance();
 
 
 
-<!-- wrap SMS Texts -->
-<div class="wrap tab wrap-addon" id="tab-sms-help">
+<!-- wrap SMS Help -->
+<div class="wrap eg-tab wrap-addon" id="tab-sms-help">
     <div class="wrap egoi4wp-settings" id="tab-forms">
         <div class="row">
             <div class="main-content col col-12" style="margin:0 0 20px;">
 
-                <h1><?php _e('Help', 'smart-marketing-addon-sms-order');?></h1>
-
-
-                <h2><?php _e('First steps', 'smart-marketing-addon-sms-order');?></h2>
+                <p class="help-title"><?php _e('First steps', 'smart-marketing-addon-sms-order');?></p>
                 <p><?php _e('Help information to start sending SMS notifications to your customers.', 'smart-marketing-addon-sms-order');?></p>
+                <br>
 
-
-                <h2><?php _e('1. Transactional Activation', 'smart-marketing-addon-sms-order');?></h2>
-                <p><?php _e('In order to send SMS notifications, you must first activate Transactional in your E-goi account.', 'smart-marketing-addon-sms-order');?></p>
-                <p>
+                <p class="help-title"><?php _e('1. Transactional Activation', 'smart-marketing-addon-sms-order');?></p>
+                <p><?php _e('In order to send SMS notifications, you must first activate Transactional in your E-goi account.', 'smart-marketing-addon-sms-order');?>
+                    <br>
                     <?php _e('To activate Transactional in your E-goi account, go to the Apps menu and choose to activate Slingshot.', 'smart-marketing-addon-sms-order');?>
                     <a href="<?php _e('https://helpdesk.e-goi.com/index.php?type=page&urlcode=708772&title=Sending-transactional-messages-with-E-gois-Slingshot', 'smart-marketing-addon-sms-order');?>" target="_blank">
                         <?php _e('See more help', 'smart-marketing-addon-sms-order');?>
                     </a>
                 </p>
+                <br>
 
-
-                <h2><?php _e('2. Adding a sender', 'smart-marketing-addon-sms-order');?></h2>
+                <p class="help-title"><?php _e('2. Adding a sender', 'smart-marketing-addon-sms-order');?></p>
                 <p>
                     <?php _e('In your E-goi account you must add a Sender to send sms,', 'smart-marketing-addon-sms-order');?>
                     <a href="<?php _e('https://helpdesk.e-goi.com/index.php?type=page&urlcode=694373&title=Adding-a-sender', 'smart-marketing-addon-sms-order');?>" target="_blank">
@@ -365,9 +378,9 @@ $balance = $this->helper->get_balance();
                             but not allowing you to receive replies)', 'smart-marketing-addon-sms-order');
                     ?>
                 </p>
+                <br>
 
-
-                <h2><?php _e('3. Add balance', 'smart-marketing-addon-sms-order');?></h2>
+                <p class="help-title"><?php _e('3. Add balance', 'smart-marketing-addon-sms-order');?></p>
                 <p>
                     <?php
                         _e('If you do not have enough balance available, log in to your E-goi Account, go to the menu related to your account (top, right) 
@@ -375,9 +388,9 @@ $balance = $this->helper->get_balance();
                             for this reason you should add a higher value)', 'smart-marketing-addon-sms-order');
                     ?>
                 </p>
+                <br>
 
-
-                <h2><?php _e('4. Select SMS Sender E-goi', 'smart-marketing-addon-sms-order');?></h2>
+                <p class="help-title"><?php _e('4. Select SMS Sender E-goi', 'smart-marketing-addon-sms-order');?></p>
                 <p>
                     <?php
                         _e('If you have already done the above steps, you can go back to the SMS plugin to select the E-goi SMS 
@@ -385,9 +398,9 @@ $balance = $this->helper->get_balance();
                             This sender will be the one used to send your SMS notifications.', 'smart-marketing-addon-sms-order');
                     ?>
                 </p>
+                <br>
 
-
-                <h2><?php _e('More information', 'smart-marketing-addon-sms-order');?></h2>
+                <p class="help-title"><?php _e('More information', 'smart-marketing-addon-sms-order');?></p>
                 <p>
                     <?php
                         _e('The option of sending SMS notification with the Multibanco (Entity, Reference, Value) 
