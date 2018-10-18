@@ -11,7 +11,7 @@
             $("#egoi_send_order_sms_error").hide();
             $("#egoi_send_order_sms_notice").show();
             var data = {
-                'action': 'order_action_sms_meta_box',
+                'action': 'smsonw_order_action_sms_meta_box',
                 'order_id': $("#egoi_send_order_sms_order_id").val(),
                 'country': $("#egoi_send_order_sms_order_country").val(),
                 'recipient': $("#egoi_send_order_sms_recipient").val(),

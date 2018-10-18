@@ -12,17 +12,17 @@
  * @subpackage Smart_Marketing_Addon_Sms_Order/admin/partials
  */
 
-$this->woocommerce_dependency_notice();
+$this->smsonw_woocommerce_dependency_notice();
 
 if (isset($_POST['form_id'])) {
-    $result = $this->process_config_form($_POST);
+    $result = $this->smsonw_process_config_form($_POST);
 }
 
 $sender_option = json_decode(get_option('egoi_sms_order_sender'), true);
 $recipients = json_decode(get_option('egoi_sms_order_recipients'), true);
 $texts = json_decode(get_option('egoi_sms_order_texts'), true);
-$senders = $this->helper->get_senders();
-$balance = $this->helper->get_balance();
+$senders = $this->helper->smsonw_get_senders();
+$balance = $this->helper->smsonw_get_balance();
 
 ?>
 <span id="form_info" data-form-id="<?=$_POST['form_id']?>" data-form-lang="<?=$_POST['sms_text_language']?>"></span>
@@ -50,16 +50,16 @@ $balance = $this->helper->get_balance();
 </p>
 
 <!-- wrap SMS Senders/Recipients -->
-<div class="wrap eg-tab wrap-addon" id="tab-sms-senders">
+<div class="wrap tab wrap-addon" id="tab-sms-senders">
     <div class="wrap egoi4wp-settings" id="tab-forms">
         <div class="row">
 
             <?php
                 if (isset($_POST['form_id']) && $_POST['form_id'] == 'form-sms-order-senders') {
                     if ($result) {
-                        $this->helper->admin_notice__success();
+                        $this->helper->smsonw_admin_notice_success();
                     } else {
-                        $this->helper->admin_notice__error();
+                        $this->helper->smsonw_admin_notice_error();
                     }
                 }
             ?>
@@ -137,7 +137,7 @@ $balance = $this->helper->get_balance();
                                     </thead>
 
                                     <tbody>
-                                    <?php foreach ($this->helper->get_order_statuses() as $cod => $name) { ?>
+                                    <?php foreach ($this->helper->smsonw_get_order_statuses() as $cod => $name) { ?>
                                         <tr>
                                             <td><?=$name?></td>
                                             <td align="center">
@@ -257,16 +257,16 @@ $balance = $this->helper->get_balance();
 
 
 <!-- wrap SMS Texts -->
-<div class="wrap eg-tab wrap-addon" id="tab-sms-texts">
+<div class="wrap tab wrap-addon" id="tab-sms-texts">
     <div class="wrap egoi4wp-settings" id="tab-forms">
         <div class="row">
 
             <?php
             if (isset($_POST['form_id']) && $_POST['form_id'] == 'form-sms-order-texts') {
                 if ($result) {
-                    $this->helper->admin_notice__success();
+                    $this->helper->smsonw_admin_notice_success();
                 } else {
-                    $this->helper->admin_notice__error();
+                    $this->helper->smsonw_admin_notice_error();
                 }
             }
             ?>
@@ -321,7 +321,7 @@ $balance = $this->helper->get_balance();
                                     </tr>
                                 </thead>
                                 <tbody>
-                                <?php foreach ($this->helper->get_order_statuses() as $cod => $name) { ?>
+                                <?php foreach ($this->helper->smsonw_get_order_statuses() as $cod => $name) { ?>
                                     <tr>
                                         <td><?php _e($name, 'smart-marketing-addon-sms-order');?></td>
                                         <td>
@@ -346,7 +346,7 @@ $balance = $this->helper->get_balance();
 
 
 <!-- wrap SMS Help -->
-<div class="wrap eg-tab wrap-addon" id="tab-sms-help">
+<div class="wrap tab wrap-addon" id="tab-sms-help">
     <div class="wrap egoi4wp-settings" id="tab-forms">
         <div class="row">
             <div class="main-content col col-12" style="margin:0 0 20px;">

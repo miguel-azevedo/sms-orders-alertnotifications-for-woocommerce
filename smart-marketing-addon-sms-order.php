@@ -34,18 +34,18 @@ if (!defined('ALTERNATE_WP_CRON')) {
     define('ALTERNATE_WP_CRON', true);
 }
 
-add_action( 'admin_init', 'child_plugin_has_parent_plugin' );
-function child_plugin_has_parent_plugin() {
+add_action( 'admin_init', 'smsonw_child_plugin_has_parent_plugin' );
+function smsonw_child_plugin_has_parent_plugin() {
     $parant_plugin = plugin_dir_path( __DIR__ ).'smart-marketing-for-wp';
 
     if (!is_dir($parant_plugin)) {
 
-        add_action( 'admin_notices', 'parent_plugin_notice' );
+        add_action( 'admin_notices', 'smsonw_parent_plugin_notice' );
 
         deactivate_plugins( plugin_basename( __FILE__ ) );
 
     } else if ( is_admin() && current_user_can( 'activate_plugins' ) &&  !is_plugin_active( 'smart-marketing-for-wp/egoi-for-wp.php' ) ) {
-        add_action( 'admin_notices', 'child_plugin_notice' );
+        add_action( 'admin_notices', 'smsonw_child_plugin_notice' );
 
         deactivate_plugins( plugin_basename( __FILE__ ) );
 
@@ -55,7 +55,7 @@ function child_plugin_has_parent_plugin() {
     }
 }
 
-function parent_plugin_notice(){
+function smsonw_parent_plugin_notice(){
     ?><div class="notice notice-error is-dismissible">
     <p>
         <?php _e('To use this plugin, you first need to install', 'smart-marketing-addon-sms-order');?>
@@ -64,7 +64,7 @@ function parent_plugin_notice(){
     </div><?php
 }
 
-function child_plugin_notice(){
+function smsonw_child_plugin_notice(){
     ?><div class="notice notice-error is-dismissible">
     <p><?php _e('By removing this plugin, you will no longer be able to use the SMS plugin', 'smart-marketing-addon-sms-order');?></p>
     </div><?php

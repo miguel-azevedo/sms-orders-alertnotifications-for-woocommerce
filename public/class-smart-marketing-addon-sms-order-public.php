@@ -59,19 +59,7 @@ class Smart_Marketing_Addon_Sms_Order_Public {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_styles() {
-
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Smart_Marketing_Addon_Sms_Order_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Smart_Marketing_Addon_Sms_Order_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
+	public function smsonw_enqueue_styles() {
 
 		//wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/smart-marketing-addon-sms-order-public.css', array(), $this->version, 'all' );
 
@@ -82,19 +70,7 @@ class Smart_Marketing_Addon_Sms_Order_Public {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_scripts() {
-
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Smart_Marketing_Addon_Sms_Order_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Smart_Marketing_Addon_Sms_Order_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
+	public function smsonw_enqueue_scripts() {
 
 		//wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/smart-marketing-addon-sms-order-public.js', array( 'jquery' ), $this->version, false );
 
@@ -105,7 +81,7 @@ class Smart_Marketing_Addon_Sms_Order_Public {
 	 *
 	 * @param $checkout
 	 */
-	function notification_checkout_field($checkout) {
+	function smsonw_notification_checkout_field($checkout) {
 		$recipients = json_decode(get_option('egoi_sms_order_recipients'), true);
 		if (isset($recipients['notification_option']) && $recipients['notification_option']) {
 			woocommerce_form_field('egoi_notification_option', array(
@@ -121,7 +97,7 @@ class Smart_Marketing_Addon_Sms_Order_Public {
 	 *
 	 * @param $order_id
 	 */
-	function notification_checkout_field_update_order_meta($order_id) {
+	function smsonw_notification_checkout_field_update_order_meta($order_id) {
 		if (isset( $_POST['egoi_notification_option'])) {
 			update_post_meta($order_id, 'egoi_notification_option', 1);
 		} else {

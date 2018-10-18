@@ -123,7 +123,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
     /**
      * @return array
      */
-    public function get_order_statuses() {
+    public function smsonw_get_order_statuses() {
         return array(
             "pending" => __("Pending payment", 'smart-marketing-addon-sms-order'),
             "failed" => __("Failed", 'smart-marketing-addon-sms-order'),
@@ -140,7 +140,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 	 *
 	 * @return array with senders
 	 */
-	public function get_senders() {
+	public function smsonw_get_senders() {
 		$params = array(
 			'apikey' 		=> $this->apikey,
 			'channel' 		=> 'telemovel'
@@ -155,7 +155,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
     /**
      * @return string
      */
-	public function get_balance() {
+	public function smsonw_get_balance() {
         $credits = explode(' ',$this->egoi_api_client->getClientData(array('apikey' => $this->apikey))['CREDITS']);
         return $credits[1].$this->currency[$credits[0]];
     }
@@ -165,7 +165,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 	 *
 	 * @return mixed
 	 */
-	public function get_not_paid_orders() {
+	public function smsonw_get_not_paid_orders() {
 		$two_days_in_sec = 2 * 24 * 60 * 60;
 		$args = array(
 			"status" => array(
@@ -187,13 +187,13 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 	 *
 	 * @return bool|mixed
 	 */
-	public function get_sms_order_message($recipient_type, $order) {
+	public function smsonw_get_sms_order_message($recipient_type, $order) {
 		$recipients = json_decode(get_option('egoi_sms_order_recipients'), true);
 		$texts = json_decode(get_option('egoi_sms_order_texts'), true);
-		$lang = $this->get_lang($order['billing']['country']);
+		$lang = $this->smsonw_get_lang($order['billing']['country']);
 
 		if (isset($texts[$lang]['egoi_sms_order_text_' . $recipient_type . '_' . $order['status']]) && isset($recipients['egoi_sms_order_' . $recipient_type . '_' . $order['status']])) {
-            return $this->get_tags_content($order, $texts[$lang]['egoi_sms_order_text_' . $recipient_type . '_' . $order['status']]);
+            return $this->smsonw_get_tags_content($order, $texts[$lang]['egoi_sms_order_text_' . $recipient_type . '_' . $order['status']]);
 		}
 		return false;
 	}
@@ -203,7 +203,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 	 *
 	 * @return bool|string
 	 */
-	public function get_lang($country) {
+	public function smsonw_get_lang($country) {
 		$country_codes = unserialize(COUNTRY_CODES);
 		$lang = $country_codes[$country]['language'];
 		$lang_allowed = array('en', 'pt', 'es');
@@ -223,7 +223,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 	 *
 	 * @return bool
 	 */
-	public function get_payment_data($order, $field) {
+	public function smsonw_get_payment_data($order, $field) {
 		$order_meta = get_post_meta($order['id']);
 
 		if (isset($this->payment_map[$order['payment_method']][$field])) {
@@ -236,7 +236,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 	/**
 	 * Prepare recipient to E-goi
 	 */
-	public function get_valid_recipient($phone, $country, $prefix = null) {
+	public function smsonw_get_valid_recipient($phone, $country, $prefix = null) {
 		$prefix = preg_replace('/[^0-9]/', '', $prefix);
 		$recipient = preg_replace('/[^0-9]/', '', $phone);
 
@@ -264,7 +264,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
      * @param $message
      * @return string
      */
-    public function get_tags_content($order, $message)
+    public function smsonw_get_tags_content($order, $message)
     {
         $tags = array(
             '%order_id%' => $order['id'],
@@ -272,18 +272,18 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
             '%total%' => $order['total'],
             '%currency%' => $order['currency'],
             '%payment_method%' => $order['payment_method'],
-            '%ref%' => $this->get_payment_data($order, 'ref'),
-            '%ent%' => $this->get_payment_data($order, 'ent'),
+            '%ref%' => $this->smsonw_get_payment_data($order, 'ref'),
+            '%ent%' => $this->smsonw_get_payment_data($order, 'ent'),
             '%shop_name%' => get_bloginfo('name'),
             '%billing_name%' => $order['billing']['first_name'] . ' ' . $order['billing']['last_name']
         );
 
         foreach ($tags as $tag => $content) {
-            if ($tag == '%ref%' && $this->get_payment_data($order, 'ref') == false) {
+            if ($tag == '%ref%' && $this->smsonw_get_payment_data($order, 'ref') == false) {
                 $message = str_replace('Ref. %ref%', '', $message);
                 continue;
             }
-            if ($tag == '%ent%' && $this->get_payment_data($order, 'ent') == false) {
+            if ($tag == '%ent%' && $this->smsonw_get_payment_data($order, 'ent') == false) {
                 $message = str_replace('Ent. %ent%', '', $message);
                 continue;
             }
@@ -304,7 +304,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 	 *
 	 * @return mixed
 	 */
-	public function send_sms($recipient, $message, $type, $order_id, $gsm = false) {
+	public function smsonw_send_sms($recipient, $message, $type, $order_id, $gsm = false) {
 		$url = 'http://dev-web-agency.e-team.biz/smaddonsms/sms';
 
 		$sender = json_decode(get_option('egoi_sms_order_sender'), true);
@@ -330,7 +330,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 	 *
 	 * @param $log
 	 */
-	public function save_logs($log) {
+	public function smsonw_save_logs($log) {
 		$path = dirname(__FILE__).'/logs/';
 
 		$file = fopen($path.'smart-marketing-addon-sms-order.log', 'a+');
@@ -341,7 +341,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 	/**
 	 * Div to success notices
 	 */
-	public function admin_notice__success() {
+	public function smsonw_admin_notice_success() {
 		?>
 		<div class="notice notice-success is-dismissible">
 			<p><?php _e( 'Changes saved successfully', 'smart-marketing-addon-sms-order' ); ?></p>
@@ -352,7 +352,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 	/**
 	 * Div to error notices
 	 */
-	public function admin_notice__error() {
+	public function smsonw_admin_notice_error() {
 		?>
 		<div class="notice notice-error is-dismissible">
 			<p><?php _e( 'Irks! An error has occurred.', 'smart-marketing-addon-sms-order' ); ?></p>
