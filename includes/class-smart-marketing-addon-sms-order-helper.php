@@ -126,12 +126,12 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
     public function smsonw_get_order_statuses() {
         return array(
             "pending" => __("Pending payment", 'smart-marketing-addon-sms-order'),
-            "failed" => __("Failed", 'smart-marketing-addon-sms-order'),
-            "on-hold" => __("On Hold", 'smart-marketing-addon-sms-order'),
             "processing" => __("Processing", 'smart-marketing-addon-sms-order'),
+            "on-hold" => __("On Hold", 'smart-marketing-addon-sms-order'),
             "completed" => __("Completed", 'smart-marketing-addon-sms-order'),
-            "refunded" => __("Refunded", 'smart-marketing-addon-sms-order'),
             "cancelled" => __("Cancelled", 'smart-marketing-addon-sms-order'),
+            "refunded" => __("Refunded", 'smart-marketing-addon-sms-order'),
+            "failed" => __("Failed", 'smart-marketing-addon-sms-order'),
         );
     }
 

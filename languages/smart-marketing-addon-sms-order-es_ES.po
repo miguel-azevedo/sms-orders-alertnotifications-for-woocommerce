@@ -3,9 +3,9 @@ msgstr ""
 "Project-Id-Version: SMS Orders Alert/Notifications for WooCommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-15 17:06+0000\n"
-"PO-Revision-Date: 2018-10-15 17:44+0000\n"
+"PO-Revision-Date: 2018-10-18 17:03+0000\n"
 "Last-Translator: Admin <procha@e-goi.com>\n"
-"Language-Team: Spanish (Spain)\n"
+"Language-Team: Español\n"
 "Language: es_ES\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "MIME-Version: 1.0\n"
@@ -32,7 +32,7 @@ msgstr "Fallido"
 
 #: includes/class-smart-marketing-addon-sms-order-helper.php:130
 msgid "On Hold"
-msgstr "En espera"
+msgstr "Espera la confirmación de pago"
 
 #: includes/class-smart-marketing-addon-sms-order-helper.php:131
 msgid "Processing"
