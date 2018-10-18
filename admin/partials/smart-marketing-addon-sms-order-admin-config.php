@@ -82,6 +82,7 @@ $balance = $this->helper->smsonw_get_balance();
                     <tr>
                         <td width="50%" valign="top" style="padding-right: 20px;">
                             <form action="#" method="post" class="form-sms-order-config" id="form-sms-order-senders">
+                                <?php wp_nonce_field( 'form-sms-order-senders' ); ?>
                                 <input name="form_id" type="hidden" value="form-sms-order-senders" />
 
                                 <p class="label_text" style="margin-top: 8px;"><?php _e('E-goi SMS Sender', 'smart-marketing-addon-sms-order');?></p>
@@ -216,6 +217,7 @@ $balance = $this->helper->smsonw_get_balance();
                                         $disabled = array('disabled' => 1);
                                     }
                                     ?>
+                                    <?php wp_nonce_field( 'form-sms-order-tests' ); ?>
                                     <input name="form_id" type="hidden" value="form-sms-order-tests" />
 
                                     <p class="label_text">
@@ -276,6 +278,7 @@ $balance = $this->helper->smsonw_get_balance();
                 <p class="label_text"><?php _e('Select the language', 'smart-marketing-addon-sms-order');?></p>
 
                 <form action="#" method="post" class="form-sms-order-config" id="form-sms-order-texts">
+                    <?php wp_nonce_field( 'form-sms-order-texts' ); ?>
                     <input name="form_id" type="hidden" value="form-sms-order-texts" />
                     <div id="sms_texts_select_lang">
                         <select class="e-goi-option-select-admin-forms" style="width: 400px;" name="sms_text_language" id="sms_text_language">

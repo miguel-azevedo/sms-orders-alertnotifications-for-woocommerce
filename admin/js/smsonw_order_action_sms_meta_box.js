@@ -15,7 +15,8 @@
                 'order_id': $("#egoi_send_order_sms_order_id").val(),
                 'country': $("#egoi_send_order_sms_order_country").val(),
                 'recipient': $("#egoi_send_order_sms_recipient").val(),
-                'message': $("#egoi_send_order_sms_message").val()
+                'message': $("#egoi_send_order_sms_message").val(),
+                'security' : ajax_object.ajax_nonce
             };
             $.post(ajax_object.ajax_url, data, function(response) {
                 var note = jQuery.parseJSON(response);

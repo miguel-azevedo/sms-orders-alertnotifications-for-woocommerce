@@ -92,7 +92,10 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/smart-marketing-addon-sms-order-admin.min.js', array( 'jquery' ), $this->version, false );
 		wp_enqueue_script( 'ajax-script', plugin_dir_url( __FILE__ ) . 'js/smsonw_order_action_sms_meta_box.min.js', array('jquery') );
-		wp_localize_script( 'ajax-script', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
+		wp_localize_script( 'ajax-script', 'ajax_object', array(
+		        'ajax_url' => admin_url( 'admin-ajax.php' ),
+                'ajax_nonce' => wp_create_nonce('egoi_send_order_sms'),
+        ) );
 
 	}
 
@@ -131,25 +134,26 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
     public function smsonw_process_config_form($post) {
 
         try {
-            unset($post['submit']);
+
+            check_admin_referer($post['form_id']);
 
             if (isset($post['form_id']) && $post['form_id'] == 'form-sms-order-senders') {
 
-                $sender_atributes = array ('sender_hash', 'admin_prefix', 'admin_phone');
-
-	            foreach ($post as $name => $input) {
-		            if (in_array($name, $sender_atributes)) {
-		                $sender[$name] = $input;
-                    } else {
-		                $recipients[$name] = $input;
-                    }
+                $sender_attributes = array ('sender_hash' => 1, 'admin_prefix' => 1, 'admin_phone' => 1);
+                $recipients_attributes = array ('notification_option' => 1, 'egoi_payment_info' => 1, 'egoi_reminders' => 1);
+                foreach ($this->helper->smsonw_get_order_statuses() as $status => $name) {
+                    $recipients_attributes['egoi_sms_order_customer_'.$status] = 1;
+                    $recipients_attributes['egoi_sms_order_admin_'.$status] = 1;
                 }
 
-                if (!isset($post['egoi_payment_info'])) {
+                $sender = array_intersect_key($post, $sender_attributes);
+                $recipients = array_intersect_key($post, $recipients_attributes);
+
+                if (!isset($recipients['egoi_payment_info'])) {
                     $recipients['egoi_payment_info'] = 0;
                 }
 
-                if (!isset($post['egoi_reminders'])) {
+                if (!isset($recipients['egoi_reminders'])) {
                     $recipients['egoi_reminders'] = 0;
                 }
 
@@ -159,7 +163,14 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
             } else if (isset($post['form_id']) && $post['form_id'] == 'form-sms-order-texts') {
 
                 $texts = json_decode(get_option('egoi_sms_order_texts'), true);
-                $texts[$post['sms_text_language']] = $post;
+
+                foreach ($this->helper->smsonw_get_order_statuses() as $status => $name) {
+                    $attributes['egoi_sms_order_text_customer_'.$status] = 1;
+                    $attributes['egoi_sms_order_text_admin_'.$status] = 1;
+                }
+
+                $texts[$post['sms_text_language']] = array_intersect_key($post, $attributes);
+
                 update_option('egoi_sms_order_texts', json_encode($texts));
 
             } else if (isset($post['form_id']) && $post['form_id'] == 'form-sms-order-tests') {
@@ -358,6 +369,8 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 * Send SMS and add note to admin order page
 	 */
 	public function smsonw_order_action_sms_meta_box() {
+        check_ajax_referer( 'egoi_send_order_sms', 'security' );
+
 		$recipient = $this->helper->smsonw_get_valid_recipient($_POST['recipient'], $_POST['country']);
 
 		$result = $this->helper->smsonw_send_sms($recipient, $_POST['message'], 'order', $_POST['order_id']);
