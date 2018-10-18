@@ -98,7 +98,8 @@ class Smart_Marketing_Addon_Sms_Order_Public {
 	 * @param $order_id
 	 */
 	function smsonw_notification_checkout_field_update_order_meta($order_id) {
-		if (isset( $_POST['egoi_notification_option'])) {
+	    $option = filter_var($_POST['egoi_notification_option'], FILTER_SANITIZE_NUMBER_INT);
+		if (isset($option) && filter_var($option, FILTER_VALIDATE_BOOLEAN)) {
 			update_post_meta($order_id, 'egoi_notification_option', 1);
 		} else {
 			update_post_meta($order_id, 'egoi_notification_option', 0);

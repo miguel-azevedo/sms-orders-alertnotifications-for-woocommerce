@@ -14,7 +14,7 @@
 
 $this->smsonw_woocommerce_dependency_notice();
 
-if (isset($_POST['form_id'])) {
+if (isset($_POST['form_id']) && strlen($_POST['form_id'])) {
     $result = $this->smsonw_process_config_form($_POST);
 }
 
@@ -25,7 +25,7 @@ $senders = $this->helper->smsonw_get_senders();
 $balance = $this->helper->smsonw_get_balance();
 
 ?>
-<span id="form_info" data-form-id="<?=$_POST['form_id']?>" data-form-lang="<?=$_POST['sms_text_language']?>"></span>
+<span id="form_info" data-form-id="<?php esc_html_e($_POST['form_id']);?>" data-form-lang="<?php esc_html_e($_POST['sms_text_language']);?>"></span>
 <!-- head -->
 <h1 class="logo">Smart Marketing - <?php _e( 'SMS Notifications', 'smart-marketing-addon-sms-order' ); ?></h1>
 <p class="breadcrumbs">
@@ -285,16 +285,16 @@ $balance = $this->helper->smsonw_get_balance();
                             <option value="" disabled selected>
                                 <?php _e('Selected the language', 'smart-marketing-addon-sms-order');?>
                             </option>
-                            <option value="pt_BR" <?php selected($_GET['sms_text_language'], 'pt_BR');?>>
+                            <option value="pt_BR" <?php selected($_POST['sms_text_language'], 'pt_BR');?>>
                                 <?php _e('Brazilian Portuguese', 'smart-marketing-addon-sms-order');?>
                             </option>
-                            <option value="en" <?php selected($_GET['sms_text_language'], 'en');?> >
+                            <option value="en" <?php selected($_POST['sms_text_language'], 'en');?> >
                                 <?php _e('English', 'smart-marketing-addon-sms-order');?>
                             </option>
-                            <option value="pt" <?php selected($_GET['sms_text_language'], 'pt');?>>
+                            <option value="pt" <?php selected($_POST['sms_text_language'], 'pt');?>>
                                 <?php _e('Portuguese', 'smart-marketing-addon-sms-order');?>
                             </option>
-                            <option value="es" <?php selected($_GET['sms_text_language'], 'es');?>>
+                            <option value="es" <?php selected($_POST['sms_text_language'], 'es');?>>
                                 <?php _e('Spanish', 'smart-marketing-addon-sms-order');?>
                             </option>
                         </select>

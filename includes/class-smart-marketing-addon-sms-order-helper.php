@@ -360,4 +360,12 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 		<?php
 	}
 
+	public function smsonw_sanitize_boolean_field($field) {
+        if (isset($_POST[$field]) && filter_var($_POST[$field], FILTER_VALIDATE_BOOLEAN)) {
+            return filter_var($_POST[$field], FILTER_SANITIZE_NUMBER_INT);
+        } else {
+            return 0;
+        }
+    }
+
 }

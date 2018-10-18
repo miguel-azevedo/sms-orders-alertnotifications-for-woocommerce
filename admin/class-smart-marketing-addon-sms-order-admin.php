@@ -134,49 +134,53 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
     public function smsonw_process_config_form($post) {
 
         try {
+            $form_id = sanitize_text_field($post['form_id']);
+            check_admin_referer($form_id);
 
-            check_admin_referer($post['form_id']);
+            if (isset($form_id) && $form_id == 'form-sms-order-senders') {
 
-            if (isset($post['form_id']) && $post['form_id'] == 'form-sms-order-senders') {
+                $sender = array (
+                    'sender_hash' => sanitize_text_field($post['sender_hash']),
+                    'admin_prefix' => filter_var($post['admin_prefix'], FILTER_SANITIZE_NUMBER_INT),
+                    'admin_phone' => sanitize_text_field($post['admin_phone'])
+                );
 
-                $sender_attributes = array ('sender_hash' => 1, 'admin_prefix' => 1, 'admin_phone' => 1);
-                $recipients_attributes = array ('notification_option' => 1, 'egoi_payment_info' => 1, 'egoi_reminders' => 1);
                 foreach ($this->helper->smsonw_get_order_statuses() as $status => $name) {
-                    $recipients_attributes['egoi_sms_order_customer_'.$status] = 1;
-                    $recipients_attributes['egoi_sms_order_admin_'.$status] = 1;
+                    $recipients['egoi_sms_order_customer_'.$status] = $this->helper->smsonw_sanitize_boolean_field('egoi_sms_order_customer_'.$status);
+                    $recipients['egoi_sms_order_admin_'.$status] = $this->helper->smsonw_sanitize_boolean_field('egoi_sms_order_admin_'.$status);
                 }
 
-                $sender = array_intersect_key($post, $sender_attributes);
-                $recipients = array_intersect_key($post, $recipients_attributes);
-
-                if (!isset($recipients['egoi_payment_info'])) {
-                    $recipients['egoi_payment_info'] = 0;
-                }
-
-                if (!isset($recipients['egoi_reminders'])) {
-                    $recipients['egoi_reminders'] = 0;
-                }
+                $recipients['notification_option'] = $this->helper->smsonw_sanitize_boolean_field('notification_option');
+                $recipients['egoi_payment_info'] = $this->helper->smsonw_sanitize_boolean_field('egoi_payment_info');
+                $recipients['egoi_reminders'] = $this->helper->smsonw_sanitize_boolean_field('egoi_reminders');
 
                 update_option('egoi_sms_order_sender', json_encode($sender));
                 update_option('egoi_sms_order_recipients', json_encode($recipients));
 
-            } else if (isset($post['form_id']) && $post['form_id'] == 'form-sms-order-texts') {
+            } else if (isset($form_id) && $form_id == 'form-sms-order-texts') {
 
                 $texts = json_decode(get_option('egoi_sms_order_texts'), true);
+                $lang = sanitize_text_field($post['sms_text_language']);
 
                 foreach ($this->helper->smsonw_get_order_statuses() as $status => $name) {
-                    $attributes['egoi_sms_order_text_customer_'.$status] = 1;
-                    $attributes['egoi_sms_order_text_admin_'.$status] = 1;
+                    if (trim($post['egoi_sms_order_text_customer_'.$status]) != '') {
+                        $messages['egoi_sms_order_text_customer_' . $status] = sanitize_textarea_field($post['egoi_sms_order_text_customer_' . $status]);
+                        $messages['egoi_sms_order_text_admin_' . $status] = sanitize_textarea_field($post['egoi_sms_order_text_admin_' . $status]);
+                    }
                 }
 
-                $texts[$post['sms_text_language']] = array_intersect_key($post, $attributes);
+                $texts[$lang] = $messages;
 
                 update_option('egoi_sms_order_texts', json_encode($texts));
 
-            } else if (isset($post['form_id']) && $post['form_id'] == 'form-sms-order-tests') {
+            } else if (isset($form_id) && $form_id == 'form-sms-order-tests') {
 
-	            $recipient = $this->helper->smsonw_get_valid_recipient($post['recipient_phone'], null, $post['recipient_prefix']);
-                $response = $this->helper->smsonw_send_sms($recipient, $post['message'], 'test', 0);
+                $prefix = filter_var($post['recipient_prefix'], FILTER_SANITIZE_NUMBER_INT);
+                $phone = sanitize_text_field($post['recipient_phone']);
+                $message = sanitize_textarea_field($post['message']);
+
+	            $recipient = $this->helper->smsonw_get_valid_recipient($phone, null, $prefix);
+                $response = $this->helper->smsonw_send_sms($recipient, $message, 'test', 0);
 
                 $response = json_decode($response['body']);
 
@@ -371,16 +375,21 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	public function smsonw_order_action_sms_meta_box() {
         check_ajax_referer( 'egoi_send_order_sms', 'security' );
 
-		$recipient = $this->helper->smsonw_get_valid_recipient($_POST['recipient'], $_POST['country']);
+        $cellphone = sanitize_text_field($_POST['recipient']);
+        $country = sanitize_text_field($_POST['country']);
+        $message = sanitize_textarea_field($_POST['message']);
+        $order_id = filter_var($_POST['order_id'], FILTER_SANITIZE_NUMBER_INT);
 
-		$result = $this->helper->smsonw_send_sms($recipient, $_POST['message'], 'order', $_POST['order_id']);
+		$recipient = $this->helper->smsonw_get_valid_recipient($cellphone, $country);
+
+		$result = $this->helper->smsonw_send_sms($recipient, $message, 'order', $order_id);
         $result = json_decode($result['body']);
 		if (!isset($result->errorCode)) {
-			$order = wc_get_order($_POST['order_id']);
-			$order->add_order_note('SMS: '.$_POST['message']);
+			$order = wc_get_order($order_id);
+			$order->add_order_note('SMS: '.$message);
 
 			$note = array(
-				"message" => 'SMS: '.$_POST['message'],
+				"message" => 'SMS: '.$message,
 				"date" => __('added on', 'smart-marketing-addon-sms-order').' '.current_time(get_option('date_format').' '.get_option('time_format'))
 			);
 			echo json_encode($note);
