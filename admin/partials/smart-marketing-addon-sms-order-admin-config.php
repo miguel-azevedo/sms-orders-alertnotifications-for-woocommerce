@@ -180,7 +180,7 @@ $balance = $this->helper->smsonw_get_balance();
                                     <label for="egoi_payment_info"><?php _e('Send SMS to your customers with Multibanco payment information', 'smart-marketing-addon-sms-order');?></label>
                                 </p>
                                 <p class="label_text_mini">
-                                    <?php if (constant("ALTERNATE_WP_CRON")) { ?>
+                                    <?php if (constant("ALTERNATE_WP_CRON") !== false) { ?>
                                         <input type="checkbox" name="egoi_reminders" id="egoi_reminders" value="1"
                                             <?php checked($recipients['egoi_reminders'], 1);?>
                                         />

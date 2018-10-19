@@ -276,6 +276,8 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
             );
             foreach ($types as $type => $phone) {
                 $message = $this->helper->smsonw_get_sms_order_message($type, $order);
+                var_dump($message);
+                exit;
                 if ($message !== false) {
                     $recipient = $type == 'customer' ? $this->helper->smsonw_get_valid_recipient($phone, $order['billing']['country']) : $phone;
                     $this->helper->smsonw_send_sms($recipient, $message, $order['status'], $order['id']);

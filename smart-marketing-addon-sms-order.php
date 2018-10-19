@@ -30,7 +30,8 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-if (!defined('ALTERNATE_WP_CRON')) {
+$recipents = json_decode(get_option('egoi_sms_order_recipients'));
+if (isset($recipents->egoi_reminders) && $recipents->egoi_reminders == 1 && !defined('ALTERNATE_WP_CRON')) {
     define('ALTERNATE_WP_CRON', true);
 }
 
