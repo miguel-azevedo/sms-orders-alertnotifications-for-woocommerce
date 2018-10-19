@@ -201,47 +201,50 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
     public function smsonw_sms_order_reminder() {
         try {
 
-            global $wpdb;
+            if (date('G') >= 10 && date('G') <= 22) {
 
-            $table_name = $wpdb->prefix. 'egoi_sms_order_reminders';
+                global $wpdb;
 
-            $sql = " SELECT DISTINCT order_id FROM $table_name ";
-            $order_ids = $wpdb->get_col($sql);
+                $table_name = $wpdb->prefix . 'egoi_sms_order_reminders';
 
-            $orders = $this->helper->smsonw_get_not_paid_orders();
+                $sql = " SELECT DISTINCT order_id FROM $table_name ";
+                $order_ids = $wpdb->get_col($sql);
 
-            if (isset($orders)) {
+                $orders = $this->helper->smsonw_get_not_paid_orders();
 
-	            $recipient_options = json_decode(get_option('egoi_sms_order_recipients'), true);
-                $count = 0;
+                if (isset($orders)) {
 
-                foreach ($orders as $order) {
+                    $recipient_options = json_decode(get_option('egoi_sms_order_recipients'), true);
+                    $count = 0;
 
-                    if ($count >= 20) {
-                        break;
-                    }
+                    foreach ($orders as $order) {
 
-                    $order_data = $order->get_data();
+                        if ($count >= 20) {
+                            break;
+                        }
 
-                    if ($recipient_options['notification_option']) {
-	                    $sms_notification = (bool) get_post_meta( $order->get_id(), 'egoi_notification_option' )[0];
-                    } else {
-                        $sms_notification = 1;
-                    }
+                        $order_data = $order->get_data();
 
-                    if (!$order->is_paid() && !in_array($order->get_id(), $order_ids) && $sms_notification && $recipient_options['egoi_reminders']  && array_key_exists($order_data['payment_method'], $this->helper->payment_map)) {
+                        if ($recipient_options['notification_option']) {
+                            $sms_notification = (bool)get_post_meta($order->get_id(), 'egoi_notification_option')[0];
+                        } else {
+                            $sms_notification = 1;
+                        }
 
-                        $lang = $this->helper->smsonw_get_lang($order_data['billing']['country']);
-                        $message = $this->helper->smsonw_get_tags_content($order_data, $this->helper->sms_payment_info['reminder'][$lang]);
+                        if (!$order->is_paid() && !in_array($order->get_id(), $order_ids) && $sms_notification && $recipient_options['egoi_reminders'] && array_key_exists($order_data['payment_method'], $this->helper->payment_map)) {
 
-                        $recipient = $this->helper->smsonw_get_valid_recipient($order->billing_phone, $order->billing_country);
-                        $this->helper->smsonw_send_sms($recipient, $message, $order->get_status(), $order->get_id(), true);
-                        $count++;
+                            $lang = $this->helper->smsonw_get_lang($order_data['billing']['country']);
+                            $message = $this->helper->smsonw_get_tags_content($order_data, $this->helper->sms_payment_info['reminder'][$lang]);
 
-	                    $wpdb->insert($table_name, array(
-		                    "time" => current_time('mysql'),
-		                    "order_id" => $order->get_id()
-	                    ));
+                            $recipient = $this->helper->smsonw_get_valid_recipient($order->billing_phone, $order->billing_country);
+                            $this->helper->smsonw_send_sms($recipient, $message, $order->get_status(), $order->get_id(), true);
+                            $count++;
+
+                            $wpdb->insert($table_name, array(
+                                "time" => current_time('mysql'),
+                                "order_id" => $order->get_id()
+                            ));
+                        }
                     }
                 }
             }
@@ -276,8 +279,6 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
             );
             foreach ($types as $type => $phone) {
                 $message = $this->helper->smsonw_get_sms_order_message($type, $order);
-                var_dump($message);
-                exit;
                 if ($message !== false) {
                     $recipient = $type == 'customer' ? $this->helper->smsonw_get_valid_recipient($phone, $order['billing']['country']) : $phone;
                     $this->helper->smsonw_send_sms($recipient, $message, $order['status'], $order['id']);
@@ -407,10 +408,10 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 *
 	 * @return mixed
 	 */
-	public function smsonw_my_add_every_five_minutes($schedules) {
-		$schedules['every_five_minutes'] = array(
-			'interval' => 300,
-			'display' => __('Every Five Minutes')
+	public function smsonw_my_add_every_fifteen_minutes($schedules) {
+		$schedules['every_fifteen_minutes'] = array(
+			'interval' => 60 * 15,
+			'display' => __('Every Fifteen Minutes')
 		);
 		return $schedules;
 	}

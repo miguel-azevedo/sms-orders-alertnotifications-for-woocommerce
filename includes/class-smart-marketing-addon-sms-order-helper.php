@@ -170,10 +170,9 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 		$args = array(
 			"status" => array(
 				"pending",
-				"failed",
 				"on-hold"
 			),
-			"date_created" => '<' . (time() - 60*5), // TODO - change time
+			"date_created" => '<' . (time() - $two_days_in_sec), // TODO - change time
 			'limit' => -1
 		);
 		return wc_get_orders($args);
@@ -192,7 +191,10 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 		$texts = json_decode(get_option('egoi_sms_order_texts'), true);
 		$lang = $this->smsonw_get_lang($order['billing']['country']);
 
-		if (isset($texts[$lang]['egoi_sms_order_text_' . $recipient_type . '_' . $order['status']]) && isset($recipients['egoi_sms_order_' . $recipient_type . '_' . $order['status']])) {
+		if (isset($texts[$lang]['egoi_sms_order_text_' . $recipient_type . '_' . $order['status']])
+            && isset($recipients['egoi_sms_order_' . $recipient_type . '_' . $order['status']])
+            && $recipients['egoi_sms_order_' . $recipient_type . '_' . $order['status']] == 1
+        ) {
             return $this->smsonw_get_tags_content($order, $texts[$lang]['egoi_sms_order_text_' . $recipient_type . '_' . $order['status']]);
 		}
 		return false;
