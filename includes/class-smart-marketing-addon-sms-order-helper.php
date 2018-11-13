@@ -11,7 +11,7 @@
  */
 
 /**
- * This class defines all generic methods.
+ * This class defines all generic attributes and methods.
  *
  * @since      1.0.0
  * @package    Smart_Marketing_Addon_Sms_Order
