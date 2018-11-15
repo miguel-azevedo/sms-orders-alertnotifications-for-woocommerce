@@ -141,14 +141,10 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 	 * @return array with senders
 	 */
 	public function smsonw_get_senders() {
-		$params = array(
-			'apikey' 		=> $this->apikey,
-			'channel' 		=> 'telemovel'
-		);
-
-		$client = new SoapClient('http://api.e-goi.com/v2/soap.php?wsdl');
-		$result = $client->getSenders($params);
-
+		$result = $this->egoi_api_client->getSenders(array(
+            'apikey' 		=> $this->apikey,
+            'channel' 		=> 'telemovel'
+        ));
 		return $result;
 	}
 

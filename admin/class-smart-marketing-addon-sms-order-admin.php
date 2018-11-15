@@ -196,7 +196,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
     }
 
 	/**
-	 * Process SMS reminders
+	 * Process SMS reminders (CRON every fifteen minutes)
 	 */
     public function smsonw_sms_order_reminder() {
         try {
@@ -269,22 +269,21 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 			$sms_notification = 1;
 		}
 
-		if ($sms_notification) {
 
-			$sender = json_decode(get_option('egoi_sms_order_sender'), true);
-            $order = wc_get_order($order_id)->get_data();
-            $types = array(
-                'customer' => $order['billing']['phone'],
-                'admin' => $sender['admin_prefix'].'-'.$sender['admin_phone']
-            );
-            foreach ($types as $type => $phone) {
-                $message = $this->helper->smsonw_get_sms_order_message($type, $order);
-                if ($message !== false) {
-                    $recipient = $type == 'customer' ? $this->helper->smsonw_get_valid_recipient($phone, $order['billing']['country']) : $phone;
-                    $this->helper->smsonw_send_sms($recipient, $message, $order['status'], $order['id']);
-                }
+        $sender = json_decode(get_option('egoi_sms_order_sender'), true);
+        $order = wc_get_order($order_id)->get_data();
+        $types = array('admin' => $sender['admin_prefix'].'-'.$sender['admin_phone']);
+        if ($sms_notification) {
+            $types['customer'] = $order['billing']['phone'];
+        }
+
+        foreach ($types as $type => $phone) {
+            $message = $this->helper->smsonw_get_sms_order_message($type, $order);
+            if ($message !== false) {
+                $recipient = $type == 'customer' ? $this->helper->smsonw_get_valid_recipient($phone, $order['billing']['country']) : $phone;
+                $this->helper->smsonw_send_sms($recipient, $message, $order['status'], $order['id']);
             }
-		}
+        }
 	}
 
 	/**
