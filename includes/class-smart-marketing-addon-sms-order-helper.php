@@ -302,7 +302,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 	 *
 	 * @return mixed
 	 */
-	public function smsonw_send_sms($recipient, $message, $type, $order_id, $gsm = false) {
+	public function smsonw_send_sms($recipient, $message, $type, $order_id, $gsm = true, $max_count = 3) {
 		$url = 'http://dev-web-agency.e-team.biz/smaddonsms/sms';
 
 		$sender = json_decode(get_option('egoi_sms_order_sender'), true);
@@ -314,7 +314,8 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 			"recipient" => $recipient,
 			"type" => $type,
 			"order_id" => $order_id,
-			"gsm" => $gsm
+			"gsm" => $gsm,
+            "max_count" => $max_count
 		);
 
 		return wp_remote_post($url, array(
@@ -363,6 +364,20 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
             return filter_var($_POST[$field], FILTER_SANITIZE_NUMBER_INT);
         } else {
             return 0;
+        }
+    }
+
+    /**
+     * @param $order_id
+     * @return bool|int
+     */
+    public function smsonw_check_notification_option($order_id) {
+        $recipient_options = json_decode(get_option('egoi_sms_order_recipients'), true);
+
+        if ($recipient_options['notification_option']) {
+            return (bool) get_post_meta($order_id, 'egoi_notification_option')[0];
+        } else {
+            return 1;
         }
     }
 
