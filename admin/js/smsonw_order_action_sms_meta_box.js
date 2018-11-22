@@ -16,9 +16,10 @@
                 'country': $("#egoi_send_order_sms_order_country").val(),
                 'recipient': $("#egoi_send_order_sms_recipient").val(),
                 'message': $("#egoi_send_order_sms_message").val(),
-                'security' : ajax_object.ajax_nonce
+                'security': smsonw_meta_box_ajax_object.ajax_nonce
             };
-            $.post(ajax_object.ajax_url, data, function(response) {
+
+            $.post(smsonw_meta_box_ajax_object.ajax_url, data, function(response) {
                 var note = jQuery.parseJSON(response);
                 if (note.message) {
                     $(".order_notes").prepend(
@@ -33,6 +34,7 @@
                     $("#egoi_send_order_sms_error").show().text(note.errors[0]);
                 }
             });
+
         });
     });
 
