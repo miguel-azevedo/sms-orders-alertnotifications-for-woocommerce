@@ -318,10 +318,20 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
             "max_count" => $max_count
 		);
 
-		return wp_remote_post($url, array(
+		$response = wp_remote_post($url, array(
             'timeout' => 60,
             'body' => $sms_params
         ));
+
+		$result = json_encode($response['body']);
+
+		if (!isset($result->errorCode)) {
+            $sms_counter = get_option('egoi_sms_counter');
+            $counter = $sms_counter ? $sms_counter+1 : 1;
+            update_option('egoi_sms_counter', $counter);
+        }
+
+		return $result;
 	}
 
 	/**

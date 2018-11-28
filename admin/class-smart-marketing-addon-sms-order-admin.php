@@ -182,8 +182,6 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	            $recipient = $this->helper->smsonw_get_valid_recipient($phone, null, $prefix);
                 $response = $this->helper->smsonw_send_sms($recipient, $message, 'test', 0);
 
-                $response = json_decode($response['body']);
-
                 if (isset($response->errorCode)) {
                     return false;
                 }
@@ -385,7 +383,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 		$recipient = $this->helper->smsonw_get_valid_recipient($cellphone, $country);
 
 		$result = $this->helper->smsonw_send_sms($recipient, $message, 'order', $order_id);
-        $result = json_decode($result['body']);
+
 		if (!isset($result->errorCode)) {
 			$order = wc_get_order($order_id);
 			$order->add_order_note('SMS: '.$message);
