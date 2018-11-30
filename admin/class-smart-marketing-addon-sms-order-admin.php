@@ -90,7 +90,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 */
 	public function smsonw_enqueue_scripts() {
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/smart-marketing-addon-sms-order-admin.min.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/smart-marketing-addon-sms-order-admin.js', array( 'jquery' ), $this->version, false );
 		wp_enqueue_script( 'smsonw-meta-box-ajax-script', plugin_dir_url( __FILE__ ) . 'js/smsonw_order_action_sms_meta_box.min.js', array('jquery') );
 		wp_localize_script( 'smsonw-meta-box-ajax-script', 'smsonw_meta_box_ajax_object', array(
 		        'ajax_url' => admin_url( 'admin-ajax.php' ),

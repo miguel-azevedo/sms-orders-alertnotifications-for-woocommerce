@@ -64,6 +64,6 @@ class Smart_Marketing_Addon_Sms_Order_Activator {
             'apikey' 		=> $apikey['api_key']
         ];
         $client = new SoapClient('http://api.e-goi.com/v2/soap.php?wsdl');
-        return $client->checklogin($params);
+        $client->checklogin($params);
     }
 }
