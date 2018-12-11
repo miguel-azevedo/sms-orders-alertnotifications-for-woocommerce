@@ -141,14 +141,10 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 	 * @return array with senders
 	 */
 	public function smsonw_get_senders() {
-		$params = array(
-			'apikey' 		=> $this->apikey,
-			'channel' 		=> 'telemovel'
-		);
-
-		$client = new SoapClient('http://api.e-goi.com/v2/soap.php?wsdl');
-		$result = $client->getSenders($params);
-
+		$result = $this->egoi_api_client->getSenders(array(
+            'apikey' 		=> $this->apikey,
+            'channel' 		=> 'telemovel'
+        ));
 		return $result;
 	}
 
@@ -306,7 +302,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 	 *
 	 * @return mixed
 	 */
-	public function smsonw_send_sms($recipient, $message, $type, $order_id, $gsm = false) {
+	public function smsonw_send_sms($recipient, $message, $type, $order_id, $gsm = true, $max_count = 3) {
 		$url = 'http://dev-web-agency.e-team.biz/smaddonsms/sms';
 
 		$sender = json_decode(get_option('egoi_sms_order_sender'), true);
@@ -318,13 +314,24 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 			"recipient" => $recipient,
 			"type" => $type,
 			"order_id" => $order_id,
-			"gsm" => $gsm
+			"gsm" => $gsm,
+            "max_count" => $max_count
 		);
 
-		return wp_remote_post($url, array(
+		$response = wp_remote_post($url, array(
             'timeout' => 60,
             'body' => $sms_params
         ));
+
+		$result = json_encode($response['body']);
+
+		if (!isset($result->errorCode)) {
+            $sms_counter = get_option('egoi_sms_counter');
+            $counter = $sms_counter ? $sms_counter+1 : 1;
+            update_option('egoi_sms_counter', $counter);
+        }
+
+		return $result;
 	}
 
 	/**
@@ -367,6 +374,20 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
             return filter_var($_POST[$field], FILTER_SANITIZE_NUMBER_INT);
         } else {
             return 0;
+        }
+    }
+
+    /**
+     * @param $order_id
+     * @return bool|int
+     */
+    public function smsonw_check_notification_option($order_id) {
+        $recipient_options = json_decode(get_option('egoi_sms_order_recipients'), true);
+
+        if ($recipient_options['notification_option']) {
+            return (bool) get_post_meta($order_id, 'egoi_notification_option')[0];
+        } else {
+            return 1;
         }
     }
 

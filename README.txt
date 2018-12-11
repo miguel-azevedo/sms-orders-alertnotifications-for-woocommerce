@@ -45,6 +45,6 @@ Envie notificações SMS aos seus clientes e administradores sempre se altere o 
 = 1.0.1 =
 * Minor improvements.
 
-= 1.0 =
+= 1.0.0 =
 * SMS Orders Alert/Notifications for WooCommerce First Version.
 

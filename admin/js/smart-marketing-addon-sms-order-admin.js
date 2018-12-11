@@ -9,19 +9,19 @@
 
 		if ($( "#form_info" ).length && form_id != 'form-sms-order-senders' && form_id != 'form-sms-order-tests' && form_id != '') {
 			var form_type = form_id.split("-");
-            activeConfigTag("#nav-tab-sms-"+form_type[3]);
+            activeConfigTab("#nav-tab-sms-"+form_type[3]);
             showConfigWrap("#tab-sms-"+form_type[3]);
 
 			$("#sms_text_language").val(form_lang);
             disableAllSmsOrderTexts(languages);
             enableSmsOrderText(form_lang);
 		} else {
-            $("#tab-sms-senders").show();
+            showConfigWrap('#tab-sms-senders');
             disableAllSmsOrderTexts(languages);
 		}
 
         $(".nav-tab-addon").on("click", function () {
-            activeConfigTag(this);
+            activeConfigTab(this);
 
             var tab = $(".nav-tab-active").attr("id");
             var wrap = "#"+tab.substring(4);
@@ -72,7 +72,7 @@
         }
 
         $("#button_view_help").on("click", function () {
-            activeConfigTag("#nav-tab-sms-help");
+            activeConfigTab("#nav-tab-sms-help");
             showConfigWrap("#tab-sms-help");
         });
 
@@ -80,7 +80,7 @@
 
 
 
-    function activeConfigTag(tag) {
+    function activeConfigTab(tag) {
         $(".nav-tab-addon").each(function () {
             $(this).attr("class", "nav-tab nav-tab-addon");
         });

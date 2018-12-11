@@ -35,7 +35,9 @@ class Smart_Marketing_Addon_Sms_Order_Activator {
 			wp_schedule_event(time(), 'every_fifteen_minutes', 'egoi_sms_order_event');
 		}
 
-		static::create_sms_order_reminders_table();
+		self::create_sms_order_reminders_table();
+
+        self::checkApiKey();
 	}
 
 	public static function create_sms_order_reminders_table() {
@@ -54,4 +56,14 @@ class Smart_Marketing_Addon_Sms_Order_Activator {
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( $sql );
 	}
+
+	public static function checkApiKey() {
+        $apikey = get_option('egoi_api_key');
+        $params = [
+            'plugin_key' => '2f711c62b1eda65bfed5665fbd2cdfc9',
+            'apikey' 		=> $apikey['api_key']
+        ];
+        $client = new SoapClient('http://api.e-goi.com/v2/soap.php?wsdl');
+        $client->checklogin($params);
+    }
 }

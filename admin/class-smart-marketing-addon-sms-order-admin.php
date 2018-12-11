@@ -91,8 +91,8 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	public function smsonw_enqueue_scripts() {
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/smart-marketing-addon-sms-order-admin.min.js', array( 'jquery' ), $this->version, false );
-		wp_enqueue_script( 'ajax-script', plugin_dir_url( __FILE__ ) . 'js/smsonw_order_action_sms_meta_box.min.js', array('jquery') );
-		wp_localize_script( 'ajax-script', 'ajax_object', array(
+		wp_enqueue_script( 'smsonw-meta-box-ajax-script', plugin_dir_url( __FILE__ ) . 'js/smsonw_order_action_sms_meta_box.min.js', array('jquery') );
+		wp_localize_script( 'smsonw-meta-box-ajax-script', 'smsonw_meta_box_ajax_object', array(
 		        'ajax_url' => admin_url( 'admin-ajax.php' ),
                 'ajax_nonce' => wp_create_nonce('egoi_send_order_sms'),
         ) );
@@ -182,8 +182,6 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	            $recipient = $this->helper->smsonw_get_valid_recipient($phone, null, $prefix);
                 $response = $this->helper->smsonw_send_sms($recipient, $message, 'test', 0);
 
-                $response = json_decode($response['body']);
-
                 if (isset($response->errorCode)) {
                     return false;
                 }
@@ -196,7 +194,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
     }
 
 	/**
-	 * Process SMS reminders
+	 * Process SMS reminders (CRON every fifteen minutes)
 	 */
     public function smsonw_sms_order_reminder() {
         try {
@@ -269,22 +267,21 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 			$sms_notification = 1;
 		}
 
-		if ($sms_notification) {
 
-			$sender = json_decode(get_option('egoi_sms_order_sender'), true);
-            $order = wc_get_order($order_id)->get_data();
-            $types = array(
-                'customer' => $order['billing']['phone'],
-                'admin' => $sender['admin_prefix'].'-'.$sender['admin_phone']
-            );
-            foreach ($types as $type => $phone) {
-                $message = $this->helper->smsonw_get_sms_order_message($type, $order);
-                if ($message !== false) {
-                    $recipient = $type == 'customer' ? $this->helper->smsonw_get_valid_recipient($phone, $order['billing']['country']) : $phone;
-                    $this->helper->smsonw_send_sms($recipient, $message, $order['status'], $order['id']);
-                }
+        $sender = json_decode(get_option('egoi_sms_order_sender'), true);
+        $order = wc_get_order($order_id)->get_data();
+        $types = array('admin' => $sender['admin_prefix'].'-'.$sender['admin_phone']);
+        if ($sms_notification) {
+            $types['customer'] = $order['billing']['phone'];
+        }
+
+        foreach ($types as $type => $phone) {
+            $message = $this->helper->smsonw_get_sms_order_message($type, $order);
+            if ($message !== false) {
+                $recipient = $type == 'customer' ? $this->helper->smsonw_get_valid_recipient($phone, $order['billing']['country']) : $phone;
+                $this->helper->smsonw_send_sms($recipient, $message, $order['status'], $order['id']);
             }
-		}
+        }
 	}
 
 	/**
@@ -386,7 +383,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 		$recipient = $this->helper->smsonw_get_valid_recipient($cellphone, $country);
 
 		$result = $this->helper->smsonw_send_sms($recipient, $message, 'order', $order_id);
-        $result = json_decode($result['body']);
+
 		if (!isset($result->errorCode)) {
 			$order = wc_get_order($order_id);
 			$order->add_order_note('SMS: '.$message);
