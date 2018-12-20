@@ -179,6 +179,21 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
                 update_option('egoi_sms_order_texts', json_encode($texts));
 
+            } else if (isset($form_id) && $form_id == 'form-sms-order-payment-texts') {
+
+                $texts = json_decode(get_option('egoi_sms_order_payment_texts'), true);
+                $method = sanitize_text_field($post['sms_payment_method']);
+
+                foreach ($this->helper->smsonw_get_languages() as $code => $lang) {
+                    if (trim($post['egoi_sms_order_payment_text_'.$code]) != '') {
+                        $messages['egoi_sms_order_payment_text_' . $code] = sanitize_textarea_field($post['egoi_sms_order_payment_text_' . $code]);
+                    }
+                }
+
+                $texts[$method] = $messages;
+
+                update_option('egoi_sms_order_payment_texts', json_encode($texts));
+
             } else if (isset($form_id) && $form_id == 'form-sms-order-tests') {
 
                 $prefix = filter_var($post['recipient_prefix'], FILTER_SANITIZE_NUMBER_INT);

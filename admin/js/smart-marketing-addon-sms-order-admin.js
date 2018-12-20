@@ -7,15 +7,22 @@
     	var methods = ['multibanco', 'payshop', 'boleto'];
 		var form_id = $("#form_info").data('form-id');
 		var form_lang = $("#form_info").data('form-lang');
+        var form_method = $("#form_info").data('form-method');
 
 		if ($( "#form_info" ).length && form_id != 'form-sms-order-senders' && form_id != 'form-sms-order-tests' && form_id != '') {
 			var form_type = form_id.split("-");
-            activeConfigTab("#nav-tab-sms-"+form_type[3]);
-            showConfigWrap("#tab-sms-"+form_type[3]);
+			var element = 'tab-sms-'+form_type[3];
+            if (typeof form_type[4] !== "undefined") {
+                element = element+'-'+form_type[4];
+            }
+
+            activeConfigTab("#nav-"+element);
+            showConfigWrap("#"+element);
 
 			$("#sms_text_language").val(form_lang);
+            $("#sms_payment_methode").val(form_method);
             disableAllSmsOrderTexts(languages, methods);
-            enableSmsOrderText(form_lang, false);
+            enableSmsOrderText(form_lang, form_method);
 		} else {
             showConfigWrap('#tab-sms-senders');
             disableAllSmsOrderTexts(languages, methods);
@@ -62,6 +69,10 @@
         });
         $("#form-sms-order-texts textarea").focusout( function () {
 			text_el = $(this);
+            position = $(this).getCursorPosition();
+        });
+        $("#form-sms-order-payment-texts textarea").focusout( function () {
+            text_el = $(this);
             position = $(this).getCursorPosition();
         });
 

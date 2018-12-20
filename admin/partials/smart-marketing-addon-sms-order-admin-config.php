@@ -21,11 +21,12 @@ if (isset($_POST['form_id']) && strlen($_POST['form_id'])) {
 $sender_option = json_decode(get_option('egoi_sms_order_sender'), true);
 $recipients = json_decode(get_option('egoi_sms_order_recipients'), true);
 $texts = json_decode(get_option('egoi_sms_order_texts'), true);
+$payment_texts = json_decode(get_option('egoi_sms_order_payment_texts'), true);
 $senders = $this->helper->smsonw_get_senders();
 $balance = $this->helper->smsonw_get_balance();
 
 ?>
-<span id="form_info" data-form-id="<?php esc_html_e($_POST['form_id']);?>" data-form-lang="<?php esc_html_e($_POST['sms_text_language']);?>"></span>
+<span id="form_info" data-form-id="<?php esc_html_e($_POST['form_id']);?>" data-form-lang="<?php esc_html_e($_POST['sms_text_language']);?>" data-form-method="<?php esc_html_e($_POST['sms_payment_method']);?>"></span>
 <!-- head -->
 <h1 class="logo">Smart Marketing - <?php _e( 'SMS Notifications', 'smart-marketing-addon-sms-order' ); ?></h1>
 <p class="breadcrumbs">
@@ -392,7 +393,7 @@ $balance = $this->helper->smsonw_get_balance();
                 <p class="label_text"><?php _e('Select the payment method', 'smart-marketing-addon-sms-order');?></p>
 
                 <form action="#" method="post" class="form-sms-order-config" id="form-sms-order-payment-texts">
-                    <?php wp_nonce_field( 'form-sms-order-texts' ); ?>
+                    <?php wp_nonce_field( 'form-sms-order-payment-texts' ); ?>
                     <input name="form_id" type="hidden" value="form-sms-order-payment-texts" />
                     <div id="sms_select_payment_method">
                         <select class="e-goi-option-select-admin-forms" style="width: 400px;" name="sms_payment_method" id="sms_payment_method">
@@ -420,8 +421,8 @@ $balance = $this->helper->smsonw_get_balance();
                         <?php } ?>
                     </div>
 
-                    <?php foreach ($this->helper->smsonw_get_payment_methods() as $code => $method) { ?>
-                    <div id="sms_order_payment_texts_<?=$code?>">
+                    <?php foreach ($this->helper->smsonw_get_payment_methods() as $method_code => $method) { ?>
+                    <div id="sms_order_payment_texts_<?=$method_code?>">
                         <table border="0" class="widefat striped" style="max-width: 900px;">
                             <thead>
                             <tr>
@@ -431,11 +432,11 @@ $balance = $this->helper->smsonw_get_balance();
                             </thead>
                             <tbody>
 
-                            <?php foreach ($this->helper->smsonw_get_languages() as $code => $lang) { ?>
+                            <?php foreach ($this->helper->smsonw_get_languages() as $lang_code => $lang) { ?>
                                 <tr>
                                     <td><?php _e($lang, 'smart-marketing-addon-sms-order');?></td>
                                     <td>
-                                        <textarea name="egoi_sms_order_payment_text_<?=$code?>" cols="40" rows="4" id="egoi_sms_order_payment_text_<?=$code?>"><?=$texts[$code]["egoi_sms_order_payment_text_".$code]?></textarea>
+                                        <textarea name="egoi_sms_order_payment_text_<?=$lang_code?>" cols="40" rows="4" id="egoi_sms_order_payment_text_<?=$lang_code?>"><?=$payment_texts[$method_code]["egoi_sms_order_payment_text_".$lang_code]?></textarea>
                                     </td>
                                 </tr>
                             <?php } ?>
