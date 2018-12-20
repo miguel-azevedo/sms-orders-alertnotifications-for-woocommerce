@@ -84,11 +84,6 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
     );
 
     /**
-     * @var array List of sms languages
-     */
-    public $languages = array( "en", "es", "pt", "pt_BR");
-
-    /**
      * @var array List of SMS text tags
      */
     public $sms_text_tags = array(
@@ -125,13 +120,36 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
      */
     public function smsonw_get_order_statuses() {
         return array(
-            "pending" => __("Pending payment", 'smart-marketing-addon-sms-order'),
-            "processing" => __("Processing", 'smart-marketing-addon-sms-order'),
-            "on-hold" => __("On Hold", 'smart-marketing-addon-sms-order'),
-            "completed" => __("Completed", 'smart-marketing-addon-sms-order'),
-            "cancelled" => __("Cancelled", 'smart-marketing-addon-sms-order'),
-            "refunded" => __("Refunded", 'smart-marketing-addon-sms-order'),
-            "failed" => __("Failed", 'smart-marketing-addon-sms-order'),
+            'pending' => __('Pending payment', 'smart-marketing-addon-sms-order'),
+            'processing' => __('Processing', 'smart-marketing-addon-sms-order'),
+            'on-hold' => __('On Hold', 'smart-marketing-addon-sms-order'),
+            'completed' => __('Completed', 'smart-marketing-addon-sms-order'),
+            'cancelled' => __('Cancelled', 'smart-marketing-addon-sms-order'),
+            'refunded' => __('Refunded', 'smart-marketing-addon-sms-order'),
+            'failed' => __('Failed', 'smart-marketing-addon-sms-order'),
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function smsonw_get_languages() {
+        return array(
+            'en' =>  __('English', 'smart-marketing-addon-sms-order'),
+            'es' =>  __('Spanish', 'smart-marketing-addon-sms-order'),
+            'pt' =>  __('Portuguese', 'smart-marketing-addon-sms-order'),
+            'pt_BR' =>  __('Brazilian Portuguese', 'smart-marketing-addon-sms-order'),
+        );
+    }
+
+    /**
+     * @return array
+     */
+    public function smsonw_get_payment_methods() {
+        return array(
+            'multibanco' =>  __('Multibanco (EuPago, IfthenPay)', 'smart-marketing-addon-sms-order'),
+            'payshop' =>  __('Payshop (EuPago)', 'smart-marketing-addon-sms-order'),
+            'boleto' =>  __('Boleto (PagSeguro)', 'smart-marketing-addon-sms-order'),
         );
     }
 

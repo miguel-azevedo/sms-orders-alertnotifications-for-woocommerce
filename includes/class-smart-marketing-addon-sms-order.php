@@ -181,6 +181,8 @@ class Smart_Marketing_Addon_Sms_Order {
 		// When change order status, send SMS
 		$this->loader->add_action('woocommerce_order_status_changed', $plugin_admin, 'smsonw_order_send_sms_new_status');
 
+        // PAGSEGURO
+        $this->loader->add_action('woocommerce_thankyou_pagseguro', $plugin_admin, 'smsonw_test_pagseguro_admin');
 	}
 
 	/**

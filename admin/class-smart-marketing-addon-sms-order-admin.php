@@ -90,7 +90,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 */
 	public function smsonw_enqueue_scripts() {
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/smart-marketing-addon-sms-order-admin.min.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/smart-marketing-addon-sms-order-admin.js', array( 'jquery' ), $this->version, false );
 		wp_enqueue_script( 'smsonw-meta-box-ajax-script', plugin_dir_url( __FILE__ ) . 'js/smsonw_order_action_sms_meta_box.min.js', array('jquery') );
 		wp_localize_script( 'smsonw-meta-box-ajax-script', 'smsonw_meta_box_ajax_object', array(
 		        'ajax_url' => admin_url( 'admin-ajax.php' ),
@@ -146,13 +146,19 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
                 );
 
                 foreach ($this->helper->smsonw_get_order_statuses() as $status => $name) {
-                    $recipients['egoi_sms_order_customer_'.$status] = $this->helper->smsonw_sanitize_boolean_field('egoi_sms_order_customer_'.$status);
-                    $recipients['egoi_sms_order_admin_'.$status] = $this->helper->smsonw_sanitize_boolean_field('egoi_sms_order_admin_'.$status);
+                    $recipients = array(
+                        'egoi_sms_order_customer_'.$status => $this->helper->smsonw_sanitize_boolean_field('egoi_sms_order_customer_'.$status),
+                        'egoi_sms_order_admin_'.$status => $this->helper->smsonw_sanitize_boolean_field('egoi_sms_order_admin_'.$status)
+                    );
                 }
 
-                $recipients['notification_option'] = $this->helper->smsonw_sanitize_boolean_field('notification_option');
-                $recipients['egoi_payment_info'] = $this->helper->smsonw_sanitize_boolean_field('egoi_payment_info');
-                $recipients['egoi_reminders'] = $this->helper->smsonw_sanitize_boolean_field('egoi_reminders');
+                $recipients = array_merge($recipients, array(
+                    'notification_option' => $this->helper->smsonw_sanitize_boolean_field('notification_option'),
+                    'egoi_payment_info' => $this->helper->smsonw_sanitize_boolean_field('egoi_payment_info'),
+                    'egoi_reminders' => $this->helper->smsonw_sanitize_boolean_field('egoi_reminders'),
+                    'egoi_payment_info_boleto' => $this->helper->smsonw_sanitize_boolean_field('egoi_payment_info_boleto'),
+                    'egoi_reminders_boleto' => $this->helper->smsonw_sanitize_boolean_field('egoi_reminders_boleto')
+                ));
 
                 update_option('egoi_sms_order_sender', json_encode($sender));
                 update_option('egoi_sms_order_recipients', json_encode($recipients));
@@ -424,6 +430,13 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
             </div>
             <?php
         }
+    }
+
+
+
+    function smsonw_test_pagseguro_admin() {
+        var_dump('teste admin');
+        var_dump($_POST);
     }
 
 }

@@ -3,7 +3,8 @@
 
     $( document ).ready(function() {
 
-    	var languages = ["en", "es", "pt", "pt_BR"];
+    	var languages = ['en', 'es', 'pt', 'pt_BR'];
+    	var methods = ['multibanco', 'payshop', 'boleto'];
 		var form_id = $("#form_info").data('form-id');
 		var form_lang = $("#form_info").data('form-lang');
 
@@ -13,11 +14,11 @@
             showConfigWrap("#tab-sms-"+form_type[3]);
 
 			$("#sms_text_language").val(form_lang);
-            disableAllSmsOrderTexts(languages);
-            enableSmsOrderText(form_lang);
+            disableAllSmsOrderTexts(languages, methods);
+            enableSmsOrderText(form_lang, false);
 		} else {
             showConfigWrap('#tab-sms-senders');
-            disableAllSmsOrderTexts(languages);
+            disableAllSmsOrderTexts(languages, methods);
 		}
 
         $(".nav-tab-addon").on("click", function () {
@@ -25,14 +26,24 @@
 
             var tab = $(".nav-tab-active").attr("id");
             var wrap = "#"+tab.substring(4);
+
             showConfigWrap(wrap);
         });
 
         $("#sms_text_language").on("change", function () {
             var lang = $(this).val();
+            var method = $('#sms_payment_method').val();
 
-            disableAllSmsOrderTexts(languages);
-            enableSmsOrderText(lang);
+            disableAllSmsOrderTexts(languages, methods);
+            enableSmsOrderText(lang, method);
+        });
+
+        $("#sms_payment_method").on("change", function () {
+            var method = $(this).val();
+            var lang = $("#sms_text_language").val();
+
+            disableAllSmsOrderTexts(languages, methods);
+            enableSmsOrderText(lang, method);
         });
 
         $("#button-test-sms").on("click", function () {
@@ -94,18 +105,32 @@
         $(wrap).show();
     }
 
-    function disableAllSmsOrderTexts(languages) {
+    function disableAllSmsOrderTexts(languages, methods) {
         languages.forEach(function (lang) {
             $("#sms_order_texts_"+lang).hide();
             $("#sms_order_texts_"+lang+" :input").attr("disabled", true);
         });
+
+        methods.forEach(function (method) {
+            $("#sms_order_payment_texts_"+method).hide();
+            $("#sms_order_payment_texts_"+method+" :input").attr("disabled", true);
+        });
+
 		$("#sms_texts_tags").hide();
+        $("#sms_payment_texts_tags").hide();
     }
 
-    function enableSmsOrderText(language) {
-        $("#sms_order_texts_"+language).show();
-        $("#sms_order_texts_"+language+" :input").attr("disabled", false);
-        $("#sms_texts_tags").show();
+    function enableSmsOrderText(language, method) {
+        if (language) {
+            $("#sms_order_texts_" + language).show();
+            $("#sms_order_texts_" + language + " :input").attr("disabled", false);
+            $("#sms_texts_tags").show();
+        }
+        if (method) {
+            $("#sms_order_payment_texts_" + method).show();
+            $("#sms_order_payment_texts_" + method + " :input").attr("disabled", false);
+            $("#sms_payment_texts_tags").show();
+        }
     }
 
     function toggleAdminOrders() {

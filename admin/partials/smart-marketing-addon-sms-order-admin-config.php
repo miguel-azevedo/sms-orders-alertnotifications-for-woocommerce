@@ -44,6 +44,10 @@ $balance = $this->helper->smsonw_get_balance();
         <?php _e('SMS Messages', 'smart-marketing-addon-sms-order'); ?>
     </a>
 
+    <a class="nav-tab nav-tab-addon" id="nav-tab-sms-payment-texts">
+        <?php _e('SMS Payment Info', 'smart-marketing-addon-sms-order'); ?>
+    </a>
+
     <a class="nav-tab nav-tab-addon" id="nav-tab-sms-help">
         <?php _e('Help', 'smart-marketing-addon-sms-order'); ?>
     </a>
@@ -51,7 +55,7 @@ $balance = $this->helper->smsonw_get_balance();
 
 <!-- wrap SMS Senders/Recipients -->
 <div class="wrap tab wrap-addon" id="tab-sms-senders">
-    <div class="wrap egoi4wp-settings" id="tab-forms">
+    <div class="wrap egoi4wp-settings">
         <div class="row">
 
             <?php
@@ -179,20 +183,46 @@ $balance = $this->helper->smsonw_get_balance();
                                     />
                                     <label for="egoi_payment_info"><?php _e('Send SMS to your customers with Multibanco payment information', 'smart-marketing-addon-sms-order');?></label>
                                 </p>
+                                <p class="label_text_mini"  style="margin-bottom: 20px;">
+                                <?php if (constant("ALTERNATE_WP_CRON") !== false) { ?>
+                                    <input type="checkbox" name="egoi_reminders" id="egoi_reminders" value="1"
+                                        <?php checked($recipients['egoi_reminders'], 1);?>
+                                    />
+                                    <label for="egoi_reminders"><?php _e('Send SMS to remind the information for payment Multibanco (after 48h)', 'smart-marketing-addon-sms-order');?></label>
+                                <?php } else { ?>
+                                    <input type="checkbox" disabled />
+                                    <?php _e('Send SMS to remind the information for payment Multibanco (after 48h)', 'smart-marketing-addon-sms-order');?>
+                                    <div style="width: 100%; background-color: white; text-align: center; border: 1px solid #dddddd; margin-top: 10px;">
+                                        <p class="label_text_mini"><?php _e('You need to enable wp_cron in wp-config, use:', 'smart-marketing-addon-sms-order');?></p>
+                                        <pre>define ('ALTERNATE_WP_CRON', true);</pre>
+                                    </div>
+                                <?php } ?>
+                                </p>
+
+                                <hr>
+
+                                <p class="label_text"><?php _e('SMS Boleto (Brazilian payment method)', 'smart-marketing-addon-sms-order');?></p>
+
                                 <p class="label_text_mini">
-                                    <?php if (constant("ALTERNATE_WP_CRON") !== false) { ?>
-                                        <input type="checkbox" name="egoi_reminders" id="egoi_reminders" value="1"
-                                            <?php checked($recipients['egoi_reminders'], 1);?>
-                                        />
-                                        <label for="egoi_reminders"><?php _e('Send SMS to remind the information for payment Multibanco (after 48h)', 'smart-marketing-addon-sms-order');?></label>
-                                    <?php } else { ?>
-                                        <input type="checkbox" disabled />
-                                        <?php _e('Send SMS to remind the information for payment Multibanco (after 48h)', 'smart-marketing-addon-sms-order');?>
-                                        <div style="width: 100%; background-color: white; text-align: center; border: 1px solid #dddddd; margin-top: 10px;">
-                                            <p class="label_text_mini"><?php _e('You need to enable wp_cron in wp-config, use:', 'smart-marketing-addon-sms-order');?></p>
-                                            <pre>define ('ALTERNATE_WP_CRON', true);</pre>
-                                        </div>
-                                    <?php } ?>
+                                    <input type="checkbox" name="egoi_payment_info_boleto" id="egoi_payment_info_boleto" value="1"
+                                        <?php echo !isset($recipients['egoi_payment_info_boleto']) || $recipients['egoi_payment_info_boleto'] == 1 ? 'checked' : null;?>
+                                    />
+                                    <label for="egoi_payment_info_boleto"><?php _e('Send SMS to your customers with Boleto payment information', 'smart-marketing-addon-sms-order');?></label>
+                                </p>
+                                <p class="label_text_mini">
+                                <?php if (constant("ALTERNATE_WP_CRON") !== false) { ?>
+                                    <input type="checkbox" name="egoi_reminders_boleto" id="egoi_reminders_boleto" value="1"
+                                        <?php checked($recipients['egoi_reminders_boleto'], 1);?>
+                                    />
+                                    <label for="egoi_reminders_boleto"><?php _e('Send SMS to remind the information for payment Boleto (after 48h)', 'smart-marketing-addon-sms-order');?></label>
+                                <?php } else { ?>
+                                <input type="checkbox" disabled />
+                                <?php _e('Send SMS to remind the information for payment Boleto (after 48h)', 'smart-marketing-addon-sms-order');?>
+                                <div style="width: 100%; background-color: white; text-align: center; border: 1px solid #dddddd; margin-top: 10px;">
+                                    <p class="label_text_mini"><?php _e('You need to enable wp_cron in wp-config, use:', 'smart-marketing-addon-sms-order');?></p>
+                                    <pre>define ('ALTERNATE_WP_CRON', true);</pre>
+                                </div>
+                                <?php } ?>
                                 </p>
 
                                 <?php submit_button(); ?>
@@ -260,7 +290,7 @@ $balance = $this->helper->smsonw_get_balance();
 
 <!-- wrap SMS Texts -->
 <div class="wrap tab wrap-addon" id="tab-sms-texts">
-    <div class="wrap egoi4wp-settings" id="tab-forms">
+    <div class="wrap egoi4wp-settings">
         <div class="row">
 
             <?php
@@ -285,18 +315,11 @@ $balance = $this->helper->smsonw_get_balance();
                             <option value="" disabled selected>
                                 <?php _e('Selected the language', 'smart-marketing-addon-sms-order');?>
                             </option>
-                            <option value="pt_BR" <?php selected($_POST['sms_text_language'], 'pt_BR');?>>
-                                <?php _e('Brazilian Portuguese', 'smart-marketing-addon-sms-order');?>
-                            </option>
-                            <option value="en" <?php selected($_POST['sms_text_language'], 'en');?> >
-                                <?php _e('English', 'smart-marketing-addon-sms-order');?>
-                            </option>
-                            <option value="pt" <?php selected($_POST['sms_text_language'], 'pt');?>>
-                                <?php _e('Portuguese', 'smart-marketing-addon-sms-order');?>
-                            </option>
-                            <option value="es" <?php selected($_POST['sms_text_language'], 'es');?>>
-                                <?php _e('Spanish', 'smart-marketing-addon-sms-order');?>
-                            </option>
+                            <?php foreach ($this->helper->smsonw_get_languages() as $code => $language) { ?>
+                                <option value="<?=$code?>" <?php selected($_POST['sms_text_language'], $code);?>>
+                                    <?=$language?>
+                                </option>
+                            <?php } ?>
                         </select>
                     </div>
 
@@ -313,8 +336,8 @@ $balance = $this->helper->smsonw_get_balance();
                         <?php } ?>
                     </div>
 
-                    <?php foreach ($this->helper->languages as $lang) { ?>
-                        <div id="sms_order_texts_<?=$lang?>">
+                    <?php foreach ($this->helper->smsonw_get_languages() as $code => $lang) { ?>
+                        <div id="sms_order_texts_<?=$code?>">
                             <table border="0" class="widefat striped" style="max-width: 900px;">
                                 <thead>
                                     <tr>
@@ -328,10 +351,10 @@ $balance = $this->helper->smsonw_get_balance();
                                     <tr>
                                         <td><?php _e($name, 'smart-marketing-addon-sms-order');?></td>
                                         <td>
-                                            <textarea name="egoi_sms_order_text_customer_<?=$cod?>" cols="40" rows="4" id="egoi_sms_order_text_customer_<?=$cod?>"><?=$texts[$lang]["egoi_sms_order_text_customer_".$cod]?></textarea>
+                                            <textarea name="egoi_sms_order_text_customer_<?=$cod?>" cols="40" rows="4" id="egoi_sms_order_text_customer_<?=$cod?>"><?=$texts[$code]["egoi_sms_order_text_customer_".$cod]?></textarea>
                                         </td>
                                         <td>
-                                            <textarea name="egoi_sms_order_text_admin_<?=$cod?>" cols="40" rows="4" id="egoi_sms_order_text_admin_<?=$cod?>"><?=$texts[$lang]["egoi_sms_order_text_admin_".$cod]?></textarea>
+                                            <textarea name="egoi_sms_order_text_admin_<?=$cod?>" cols="40" rows="4" id="egoi_sms_order_text_admin_<?=$cod?>"><?=$texts[$code]["egoi_sms_order_text_admin_".$cod]?></textarea>
                                         </td>
                                     </tr>
                                 <?php } ?>
@@ -340,6 +363,88 @@ $balance = $this->helper->smsonw_get_balance();
                             <?php submit_button(); ?>
                         </div>
                     <?php } ?>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- wrap SMS Payment Info Texts -->
+<div class="wrap tab wrap-addon" id="tab-sms-payment-texts">
+    <div class="wrap egoi4wp-settings">
+        <div class="row">
+
+            <?php
+            if (isset($_POST['form_id']) && $_POST['form_id'] == 'form-sms-order-payment-texts') {
+                if ($result) {
+                    $this->helper->smsonw_admin_notice_success();
+                } else {
+                    $this->helper->smsonw_admin_notice_error();
+                }
+            }
+            ?>
+
+            <div class="main-content col col-12" style="margin:0 0 20px;">
+
+                <p class="label_text"><?php _e('Select the payment method', 'smart-marketing-addon-sms-order');?></p>
+
+                <form action="#" method="post" class="form-sms-order-config" id="form-sms-order-payment-texts">
+                    <?php wp_nonce_field( 'form-sms-order-texts' ); ?>
+                    <input name="form_id" type="hidden" value="form-sms-order-payment-texts" />
+                    <div id="sms_select_payment_method">
+                        <select class="e-goi-option-select-admin-forms" style="width: 400px;" name="sms_payment_method" id="sms_payment_method">
+                            <option value="" disabled selected>
+                                <?php _e('Seclect the payment method', 'smart-marketing-addon-sms-order');?>
+                            </option>
+                            <?php foreach ($this->helper->smsonw_get_payment_methods() as $code => $method) { ?>
+                                <option value="<?=$code?>" <?php selected($_POST['sms_payment_method'], $code);?>>
+                                    <?=$method?>
+                                </option>
+                            <?php } ?>
+                        </select>
+                    </div>
+
+                    <div id="sms_payment_texts_tags">
+                        <p class="label_text" style="margin-bottom: 20px;">
+                            <?php _e('You can edit the SMS messages of each language', 'smart-marketing-addon-sms-order');?>
+                            <br>
+                            <span style="font-size: 13px;"><?php _e('If you want to include custom information in your SMS, use the following tags', 'smart-marketing-addon-sms-order');?></span>
+                        </p>
+                        <?php foreach ($this->helper->sms_text_tags as $tag_name => $tag_cod) { ?>
+                            <button type="button" class="button button-default sms_texts_tags_button" data-text-cod="<?=$tag_cod?>">
+                                <?php echo ucwords(str_replace('_', ' ', $tag_name)); ?>
+                            </button>
+                        <?php } ?>
+                    </div>
+
+                    <?php foreach ($this->helper->smsonw_get_payment_methods() as $code => $method) { ?>
+                    <div id="sms_order_payment_texts_<?=$code?>">
+                        <table border="0" class="widefat striped" style="max-width: 900px;">
+                            <thead>
+                            <tr>
+                                <th><?php _e('Language', 'smart-marketing-addon-sms-order');?></th>
+                                <th><?php _e('Message', 'smart-marketing-addon-sms-order');?></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            <?php foreach ($this->helper->smsonw_get_languages() as $code => $lang) { ?>
+                                <tr>
+                                    <td><?php _e($lang, 'smart-marketing-addon-sms-order');?></td>
+                                    <td>
+                                        <textarea name="egoi_sms_order_payment_text_<?=$code?>" cols="40" rows="4" id="egoi_sms_order_payment_text_<?=$code?>"><?=$texts[$code]["egoi_sms_order_payment_text_".$code]?></textarea>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                            </tbody>
+                        </table>
+                        <?php submit_button(); ?>
+                    </div>
+                    <?php } ?>
+
                 </form>
             </div>
         </div>
