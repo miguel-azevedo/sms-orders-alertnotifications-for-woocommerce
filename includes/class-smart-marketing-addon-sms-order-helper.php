@@ -95,7 +95,8 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
         "reference" => '%ref%',
         "entity" => '%ent%',
         "shop_name" => '%shop_name%',
-        "billing_name" => '%billing_name%'
+        "billing_name" => '%billing_name%',
+        "boleto_URL" => '%boleto_url%'
     );
 
     /**
