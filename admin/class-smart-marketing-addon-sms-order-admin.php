@@ -449,9 +449,12 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
 
 
-    function smsonw_test_pagseguro_admin() {
-        var_dump('teste admin');
-        var_dump($_POST);
+    function smsonw_test_pagseguro_admin($order_id) {
+        $order = wc_get_order( $order_id );
+        $data = $order->get_meta( '_wc_pagseguro_payment_data' );
+        if (isset($data['link'])) {
+
+        }
     }
 
 }
