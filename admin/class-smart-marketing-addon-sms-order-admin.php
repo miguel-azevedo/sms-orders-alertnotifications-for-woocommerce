@@ -437,7 +437,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
     /**
      * Show a error notice if don't have WooCommerce
      */
-    public function smsonw_woocommerce_dependency_notice(){
+    public function smsonw_woocommerce_dependency_notice() {
         if ( !class_exists( 'WooCommerce' ) ) {
             ?>
             <div class="notice notice-error is-dismissible">
@@ -449,12 +449,44 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
 
 
-    function smsonw_test_pagseguro_admin($order_id) {
+    function smsonw_save_boleto($order_id) {
         $order = wc_get_order( $order_id );
         $data = $order->get_meta( '_wc_pagseguro_payment_data' );
         if (isset($data['link'])) {
+            global $wpdb;
 
+            $wpdb->insert("{$wpdb->prefix}egoi_sms_order_boletos", array(
+                    'time' => current_time('mysql'),
+                    'link' => $data['link'],
+                    'code' => uniqid()
+            ));
         }
+    }
+
+    function smsonw_boleto_endpoint() {
+        register_rest_route( 'smsonw/v1', '/boleto', array(
+            'methods' => 'GET',
+            'callback' => array( $this, 'smsonw_boleto_redirect'),
+            'args' => array(
+                'c' => array(
+                    'sanitize_callback'  => 'sanitize_text_field'
+                ),
+            ),
+        ) );
+    }
+
+    function smsonw_boleto_redirect( WP_REST_Request $request ) {
+        $params = $request->get_query_params('c');
+
+        global $wpdb;
+
+        $link = $wpdb->get_var("SELECT link FROM {$wpdb->prefix}egoi_sms_order_boletos WHERE code = '$params[c]'");
+
+        if ($link) {
+            wp_redirect($link);
+            exit;
+        }
+        return $params;
     }
 
 }
