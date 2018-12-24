@@ -139,7 +139,11 @@
         }
         if (method) {
             $("#sms_order_payment_texts_" + method).show();
-            $("#sms_order_payment_texts_" + method + " :input").attr("disabled", false);
+            if (method !== 'billet') {
+                $("#sms_order_payment_texts_" + method + " :input").attr("disabled", false);
+            } else {
+                $("#sms_order_payment_texts_" + method + " :input[name='egoi_sms_order_payment_text_pt_BR']").attr('disabled', false);
+            }
             $("#sms_payment_texts_tags").show();
         }
     }
