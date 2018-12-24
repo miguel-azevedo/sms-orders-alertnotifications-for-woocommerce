@@ -254,20 +254,23 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
                         }
 
                         $lang = $this->helper->smsonw_get_lang($order_data['billing']['country']);
-
+                        $messages = json_decode(get_option('egoi_sms_order_reminder_texts'), true);
                         $payment_method = $this->helper->smsonw_get_option_payment_method($order['payment_method']);
 
                         if (!$order->is_paid() && !in_array($order->get_id(), $order_ids) && $sms_notification &&
                             $recipient_options['egoi_reminders'] && array_key_exists($order_data['payment_method'], $this->helper->payment_map)) {
 
-                            $message = $this->helper->smsonw_get_tags_content($order_data, $this->helper->sms_payment_info['reminder'][$lang]);
+                            $message = $this->helper->smsonw_get_tags_content($order_data, $messages[$payment_method]['egoi_sms_order_reminder_text_'.$lang]);
                             $send_message = $message ? true : false;
 
                         } else if (!$order->is_paid() && !in_array($order->get_id(), $order_ids) && $sms_notification &&
                             $recipient_options['egoi_reminders_billet'] && $order_data['payment_method'] == 'pagseguro') {
 
-                            $message = $this->helper->smsonw_get_tags_content($order_data, $this->helper->sms_payment_info['reminder'][$lang]);
-                            $send_message = $message ? true : false;
+                            $code = $this->smsonw_save_billet($order->get_id());
+                            if ($code) {
+                                $message = $this->helper->smsonw_get_tags_content($order, $messages[$payment_method]['egoi_sms_order_reminder_text_'.$lang], $code);
+                                $send_message = $message ? true : false;
+                            }
                         }
 
                         if ($send_message) {
