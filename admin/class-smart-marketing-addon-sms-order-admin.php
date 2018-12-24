@@ -327,22 +327,22 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
         if ($sms_notification && $recipient_options['egoi_payment_info'] && array_key_exists($order['payment_method'], $this->helper->payment_map)) {
 
             $message = $this->helper->smsonw_get_tags_content($order, $this->helper->sms_payment_info['first'][$lang]);
-            $recipient = $this->helper->smsonw_get_valid_recipient($order['billing']['phone'], $order['billing']['country']);
-            $this->helper->smsonw_send_sms($recipient, $message,'order', $order_id, true);
+            $send_message = $message ? true : false;
 
-        } else if ($order['payment_method'] == 'pagseguro') {
+        } else if ($sms_notification && $recipient_options['egoi_payment_info_billet'] && $order['payment_method'] == 'pagseguro') {
 
             $code = $this->smsonw_save_billet($order_id);
             if ($code) {
                 $messages = json_decode(get_option('egoi_sms_order_payment_texts'), true);
                 $message = $this->helper->smsonw_get_tags_content($order, $messages['billet']['egoi_sms_order_payment_text_'.$lang], $code);
-                $recipient = $this->helper->smsonw_get_valid_recipient($order['billing']['phone'], $order['billing']['country']);
-                $this->helper->smsonw_send_sms('351-917936217', $message,'order', $order_id, true);
-
+                $send_message = $message ? true : false;
             }
-
         }
 
+        if ($send_message) {
+            $recipient = $this->helper->smsonw_get_valid_recipient($order['billing']['phone'], $order['billing']['country']);
+            $this->helper->smsonw_send_sms('351-917936217', $message,'order', $order_id, true); // TODO - Put $recipient in recipient param
+        }
     }
 
 	/**
