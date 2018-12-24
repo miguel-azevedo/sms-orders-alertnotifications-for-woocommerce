@@ -156,8 +156,8 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
                     'notification_option' => $this->helper->smsonw_sanitize_boolean_field('notification_option'),
                     'egoi_payment_info' => $this->helper->smsonw_sanitize_boolean_field('egoi_payment_info'),
                     'egoi_reminders' => $this->helper->smsonw_sanitize_boolean_field('egoi_reminders'),
-                    'egoi_payment_info_boleto' => $this->helper->smsonw_sanitize_boolean_field('egoi_payment_info_boleto'),
-                    'egoi_reminders_boleto' => $this->helper->smsonw_sanitize_boolean_field('egoi_reminders_boleto')
+                    'egoi_payment_info_billet' => $this->helper->smsonw_sanitize_boolean_field('egoi_payment_info_billet'),
+                    'egoi_reminders_billet' => $this->helper->smsonw_sanitize_boolean_field('egoi_reminders_billet')
                 ));
 
                 update_option('egoi_sms_order_sender', json_encode($sender));
@@ -322,14 +322,25 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 		    $sms_notification = 1;
 	    }
 
-        if ($sms_notification && $recipient_options['egoi_payment_info'] && array_key_exists($order['payment_method'], $this->helper->payment_map)) {
-            $lang = $this->helper->smsonw_get_lang($order['billing']['country']);
-            $message = $this->helper->smsonw_get_tags_content($order, $this->helper->sms_payment_info['first'][$lang]);
+        $lang = $this->helper->smsonw_get_lang($order['billing']['country']);
 
-            if (array_key_exists($order['payment_method'], $this->helper->payment_map)) {
-	            $recipient = $this->helper->smsonw_get_valid_recipient($order['billing']['phone'], $order['billing']['country']);
-                $this->helper->smsonw_send_sms($recipient, $message,'order', $order_id, true);
+        if ($sms_notification && $recipient_options['egoi_payment_info'] && array_key_exists($order['payment_method'], $this->helper->payment_map)) {
+
+            $message = $this->helper->smsonw_get_tags_content($order, $this->helper->sms_payment_info['first'][$lang]);
+            $recipient = $this->helper->smsonw_get_valid_recipient($order['billing']['phone'], $order['billing']['country']);
+            $this->helper->smsonw_send_sms($recipient, $message,'order', $order_id, true);
+
+        } else if ($order['payment_method'] == 'pagseguro') {
+
+            $code = $this->smsonw_save_billet($order_id);
+            if ($code) {
+                $messages = json_decode(get_option('egoi_sms_order_payment_texts'), true);
+                $message = $this->helper->smsonw_get_tags_content($order, $messages['billet']['egoi_sms_order_payment_text_'.$lang], $code);
+                $recipient = $this->helper->smsonw_get_valid_recipient($order['billing']['phone'], $order['billing']['country']);
+                $this->helper->smsonw_send_sms('351-917936217', $message,'order', $order_id, true);
+
             }
+
         }
 
     }
@@ -449,24 +460,30 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
 
 
-    function smsonw_save_boleto($order_id) {
+    function smsonw_save_billet($order_id) {
         $order = wc_get_order( $order_id );
         $data = $order->get_meta( '_wc_pagseguro_payment_data' );
         if (isset($data['link'])) {
             global $wpdb;
 
-            $wpdb->insert("{$wpdb->prefix}egoi_sms_order_boletos", array(
+            $code = uniqid();
+
+            $wpdb->insert("{$wpdb->prefix}egoi_sms_order_billets", array(
                     'time' => current_time('mysql'),
+                    'order_id' => $order_id,
                     'link' => $data['link'],
-                    'code' => uniqid()
+                    'code' => $code
             ));
+
+            return $code;
         }
+        return false;
     }
 
-    function smsonw_boleto_endpoint() {
-        register_rest_route( 'smsonw/v1', '/boleto', array(
+    function smsonw_billet_endpoint() {
+        register_rest_route( 'smsonw/v1', '/billet', array(
             'methods' => 'GET',
-            'callback' => array( $this, 'smsonw_boleto_redirect'),
+            'callback' => array( $this, 'smsonw_billet_redirect'),
             'args' => array(
                 'c' => array(
                     'sanitize_callback'  => 'sanitize_text_field'
@@ -475,18 +492,18 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
         ) );
     }
 
-    function smsonw_boleto_redirect( WP_REST_Request $request ) {
+    function smsonw_billet_redirect( WP_REST_Request $request ) {
         $params = $request->get_query_params('c');
 
         global $wpdb;
 
-        $link = $wpdb->get_var("SELECT link FROM {$wpdb->prefix}egoi_sms_order_boletos WHERE code = '$params[c]'");
+        $link = $wpdb->get_var("SELECT link FROM {$wpdb->prefix}egoi_sms_order_billets WHERE code = '$params[c]'");
 
         if ($link) {
             wp_redirect($link);
             exit;
         }
-        return $params;
+        return 'Not Found';
     }
 
 }

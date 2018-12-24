@@ -96,7 +96,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
         "entity" => '%ent%',
         "shop_name" => '%shop_name%',
         "billing_name" => '%billing_name%',
-        "boleto_URL" => '%boleto_url%'
+        "billet_URL" => '%billet_url%'
     );
 
     /**
@@ -150,7 +150,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
         return array(
             'multibanco' =>  __('Multibanco (EuPago, IfthenPay)', 'smart-marketing-addon-sms-order'),
             'payshop' =>  __('Payshop (EuPago)', 'smart-marketing-addon-sms-order'),
-            'boleto' =>  __('Boleto (PagSeguro)', 'smart-marketing-addon-sms-order'),
+            'billet' =>  __('Billet (PagSeguro)', 'smart-marketing-addon-sms-order'),
         );
     }
 
@@ -281,7 +281,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
      * @param $message
      * @return string
      */
-    public function smsonw_get_tags_content($order, $message)
+    public function smsonw_get_tags_content($order, $message, $billet_code = false)
     {
         $tags = array(
             '%order_id%' => $order['id'],
@@ -294,6 +294,10 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
             '%shop_name%' => get_bloginfo('name'),
             '%billing_name%' => $order['billing']['first_name'] . ' ' . $order['billing']['last_name']
         );
+
+        if ($billet_code) {
+            $tags['%billet_url%'] = get_site_url(null, '/wp-json/smsonw/v1/billet?c=' . $billet_code);
+        }
 
         foreach ($tags as $tag => $content) {
             if ($tag == '%ref%' && $this->smsonw_get_payment_data($order, 'ref') == false) {

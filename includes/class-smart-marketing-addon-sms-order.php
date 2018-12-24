@@ -182,8 +182,8 @@ class Smart_Marketing_Addon_Sms_Order {
 		$this->loader->add_action('woocommerce_order_status_changed', $plugin_admin, 'smsonw_order_send_sms_new_status');
 
         // PagSeguro integration
-        $this->loader->add_action('woocommerce_thankyou_pagseguro', $plugin_admin, 'smsonw_save_boleto');
-        $this->loader->add_action('rest_api_init', $plugin_admin, 'smsonw_boleto_endpoint');
+        //$this->loader->add_action('woocommerce_thankyou_pagseguro', $plugin_admin, 'smsonw_save_billet');
+        $this->loader->add_action('rest_api_init', $plugin_admin, 'smsonw_billet_endpoint');
 
 	}
 

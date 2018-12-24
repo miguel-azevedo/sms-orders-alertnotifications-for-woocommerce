@@ -4,7 +4,7 @@
     $( document ).ready(function() {
 
     	var languages = ['en', 'es', 'pt', 'pt_BR'];
-    	var methods = ['multibanco', 'payshop', 'boleto'];
+    	var methods = ['multibanco', 'payshop', 'billet'];
 		var form_id = $("#form_info").data('form-id');
 		var form_lang = $("#form_info").data('form-lang');
         var form_method = $("#form_info").data('form-method');
