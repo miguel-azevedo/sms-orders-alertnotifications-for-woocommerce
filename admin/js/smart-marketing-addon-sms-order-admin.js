@@ -143,6 +143,8 @@
                 $("#sms_order_payment_texts_" + method + " :input").attr("disabled", false);
             } else {
                 $("#sms_order_payment_texts_" + method + " :input[name='egoi_sms_order_payment_text_pt_BR']").attr('disabled', false);
+                $("#sms_order_payment_texts_" + method + " :input[name='egoi_sms_order_reminder_text_pt_BR']").attr('disabled', false);
+                $("#sms_order_payment_texts_" + method + " :input[type='submit']").attr('disabled', false);
             }
             $("#sms_payment_texts_tags").show();
         }

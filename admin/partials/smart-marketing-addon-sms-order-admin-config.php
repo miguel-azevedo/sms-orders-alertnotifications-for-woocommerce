@@ -427,7 +427,8 @@ $balance = $this->helper->smsonw_get_balance();
                             <thead>
                             <tr>
                                 <th><?php _e('Language', 'smart-marketing-addon-sms-order');?></th>
-                                <th><?php _e('Message', 'smart-marketing-addon-sms-order');?></th>
+                                <th><?php _e('First Message', 'smart-marketing-addon-sms-order');?></th>
+                                <th><?php _e('Reminder', 'smart-marketing-addon-sms-order');?></th>
                             </tr>
                             </thead>
                             <tbody>
@@ -437,6 +438,9 @@ $balance = $this->helper->smsonw_get_balance();
                                     <td><?php _e($lang, 'smart-marketing-addon-sms-order');?></td>
                                     <td>
                                         <textarea name="egoi_sms_order_payment_text_<?=$lang_code?>" cols="40" rows="4" id="egoi_sms_order_payment_text_<?=$lang_code?>"><?=$payment_texts[$method_code]["egoi_sms_order_payment_text_".$lang_code]?></textarea>
+                                    </td>
+                                    <td>
+                                        <textarea name="egoi_sms_order_reminder_text_<?=$lang_code?>" cols="40" rows="4" id="egoi_sms_order_reminder_text_<?=$lang_code?>"><?=$payment_texts[$method_code]["egoi_sms_order_reminder_text_".$lang_code]?></textarea>
                                     </td>
                                 </tr>
                             <?php } ?>

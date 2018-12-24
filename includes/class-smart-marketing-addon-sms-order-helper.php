@@ -325,7 +325,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 	 *
 	 * @return mixed
 	 */
-	public function smsonw_send_sms($recipient, $message, $type, $order_id, $gsm = true, $max_count = 3) {
+	public function smsonw_send_sms($recipient, $message, $type, $order_id, $gsm = false, $max_count = 3) {
 		$url = 'http://dev-web-agency.e-team.biz/smaddonsms/sms';
 
 		$sender = json_decode(get_option('egoi_sms_order_sender'), true);
@@ -412,6 +412,18 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
         } else {
             return 1;
         }
+    }
+
+    public function smsonw_get_option_payment_method($order_payment_method) {
+        if (strpos($order_payment_method, 'multibanco') !== false) {
+            return 'multibanco';
+        } else if (strpos($order_payment_method, 'payshop') !== false) {
+            return 'payshop';
+        } else if  (strpos($order_payment_method, 'pagseguro') !== false) {
+            return 'billet';
+        }
+
+        return $order_payment_method;
     }
 
 }
