@@ -59,17 +59,76 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
      * @var array
      */
 	public $sms_payment_info = array(
-	    'first' => array(
-	        'en' => 'Hello, your order at %shop_name% is waiting for MB payment. Use Ent. %ent% Ref. %ref% Value %total%%currency% Thank you',
-            'es' => 'Hola, su pedido en %shop_name% está esperando el pago MB - Ent. %ent% Ref. %ref% Valor %total%%currency% Gracias',
-            'pt' => 'Olá, a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado',
-            'pt_BR' => 'Olá, a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado'
+        'multibanco' => array(
+            'first' => array(
+                'en' => 'Hello, your order at %shop_name% is waiting for MB payment. Use Ent. %ent% Ref. %ref% Value %total%%currency% Thank you',
+                'es' => 'Hola, su pedido en %shop_name% está esperando el pago MB - Ent. %ent% Ref. %ref% Valor %total%%currency% Gracias',
+                'pt' => 'Olá, a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado',
+                'pt_BR' => 'Olá, a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado'
+            ),
+            'reminder' => array(
+                'en' => 'Hello, we remind you that your order at %shop_name% is waiting for MB. Use Ent. %ent% Ref. %ref% Value %total%%currency% Thank you',
+                'es' => 'Hola, recordamos que su pedido en %shop_name% está esperando el pago MB - Ent. %ent% Ref. %ref% Valor %total%%currency% Gracias',
+                'pt' => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado',
+                'pt_BR' => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado'
+            ),
         ),
-        'reminder' => array(
-            'en' => 'Hello, we remind you that your order at %shop_name% is waiting for MB. Use Ent. %ent% Ref. %ref% Value %total%%currency% Thank you',
-            'es' => 'Hola, recordamos que su pedido en %shop_name% está esperando el pago MB - Ent. %ent% Ref. %ref% Valor %total%%currency% Gracias',
-            'pt' => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado',
-            'pt_BR' => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado'
+        'payshop' => array(
+            'first' => array(
+                'en' => 'Hello, your order at %shop_name% is waiting for MB payment. Use Ent. %ent% Ref. %ref% Value %total%%currency% Thank you',
+                'es' => 'Hola, su pedido en %shop_name% está esperando el pago MB - Ent. %ent% Ref. %ref% Valor %total%%currency% Gracias',
+                'pt' => 'Olá, a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado',
+                'pt_BR' => 'Olá, a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado'
+            ),
+            'reminder' => array(
+                'en' => 'Hello, we remind you that your order at %shop_name% is waiting for MB. Use Ent. %ent% Ref. %ref% Value %total%%currency% Thank you',
+                'es' => 'Hola, recordamos que su pedido en %shop_name% está esperando el pago MB - Ent. %ent% Ref. %ref% Valor %total%%currency% Gracias',
+                'pt' => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado',
+                'pt_BR' => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado'
+            ),
+        ),
+        'billet' => array(
+                'first' => array ('pt_BR' => 'Obrigado pela sua encomenda! Link do Boleto %billet_url%'),
+                'reminder' => array('pt_BR' => 'Relembramos o link para pagamento do Boleto %billet_url%')
+        )
+    );
+
+	public $sms_text_new_status = array (
+        'pt' => array (
+            'egoi_sms_order_text_customer_pending' => 'Olá, %billing_name% a sua encomenda em %shop_name% encontra-se pendente de pagamento. Obrigado',
+            'egoi_sms_order_text_customer_processing' => 'Olá, %billing_name% a sua encomenda em %shop_name% encontra-se em processamento. Obrigado',
+            'egoi_sms_order_text_customer_on-hold' => 'Olá, %billing_name% a sua encomenda em %shop_name% encontra-se aguardar confirmação de pagamento. Obrigado',
+            'egoi_sms_order_text_customer_completed' => 'Olá, %billing_name% a sua encomenda em %shop_name% está concluída. Obrigado',
+            'egoi_sms_order_text_customer_cancelled' => 'Olá, %billing_name% a sua encomenda em %shop_name% está cancelada. Obrigado',
+            'egoi_sms_order_text_customer_refunded' => 'Olá, %billing_name% a sua encomenda em %shop_name% foi reembolsada. Obrigado',
+            'egoi_sms_order_text_customer_failed' => 'Olá, %billing_name% a sua encomenda em %shop_name% falhou. Obrigado',
+        ),
+        'en' => array (
+            'egoi_sms_order_text_customer_pending' => 'Hello, %billing_name% Your order at %shop_name% is pending payment. Thank you',
+            'egoi_sms_order_text_customer_processing' => 'Hi, %billing_name% Your order at %shop_name% is currently processing. Thank you',
+            'egoi_sms_order_text_customer_on-hold' => 'Hi, %billing_name% Your order at %shop_name% is waiting for payment confirmation. Thank you',
+            'egoi_sms_order_text_customer_completed' => 'Hi, %billing_name% Your order at %shop_name% is now complete. Thank you',
+            'egoi_sms_order_text_customer_cancelled' => 'Hello, %billing_name% Your order at %shop_name% is canceled. Thank you',
+            'egoi_sms_order_text_customer_refunded' => 'Hi, %billing_name% Your order at %shop_name% was refunded. Thank you',
+            'egoi_sms_order_text_customer_failed' => 'Hello, %billing_name% Your order at %shop_name% failed. Thank you',
+        ),
+        'es' => array (
+            'egoi_sms_order_text_customer_pending' => 'Hola, %billing_name% su pedido en %shop_name% se encuentra pendiente de pago. Gracias',
+            'egoi_sms_order_text_customer_processing' => 'Hola, %billing_name% su pedido en %shop_name% se encuentra en proceso. Gracias',
+            'egoi_sms_order_text_customer_on-hold' => 'Hola, %billing_name% su pedido en %shop_name% está esperando la confirmación de pago. Gracias',
+            'egoi_sms_order_text_customer_completed' => 'Hola, %billing_name% su pedido en %shop_name% ha finalizado. Gracias',
+            'egoi_sms_order_text_customer_cancelled' => 'Hola, %billing_name% su pedido en %shop_name% está cancelada. Gracias',
+            'egoi_sms_order_text_customer_refunded' => 'Hola, %billing_name% su pedido en %shop_name% se ha reembolsado. Gracias',
+            'egoi_sms_order_text_customer_failed' => 'Hola, %billing_name% su pedido en %shop_name% à fracasado. Gracias',
+        ),
+        'pt_BR' => array (
+            'egoi_sms_order_text_customer_pending' => 'Olá, %billing_name% a sua encomenda em %shop_name% encontra-se pendente de pagamento. Obrigado',
+            'egoi_sms_order_text_customer_processing' => 'Olá, %billing_name% a sua encomenda em %shop_name% encontra-se em processamento. Obrigado',
+            'egoi_sms_order_text_customer_on-hold' => 'Olá, %billing_name% a sua encomenda em %shop_name% encontra-se aguardar confirmação de pagamento. Obrigado',
+            'egoi_sms_order_text_customer_completed' => 'Olá, %billing_name% a sua encomenda em %shop_name% está concluída. Obrigado',
+            'egoi_sms_order_text_customer_cancelled' => 'Olá, %billing_name% a sua encomenda em %shop_name% está cancelada. Obrigado',
+            'egoi_sms_order_text_customer_refunded' => 'Olá, %billing_name% a sua encomenda em %shop_name% foi reembolsada. Obrigado',
+            'egoi_sms_order_text_customer_failed' => 'Olá, %billing_name% a sua encomenda em %shop_name% falhou. Obrigado',
         ),
     );
 
@@ -148,9 +207,9 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
      */
     public function smsonw_get_payment_methods() {
         return array(
-            'multibanco' =>  __('Multibanco (EuPago, IfthenPay)', 'smart-marketing-addon-sms-order'),
-            'payshop' =>  __('Payshop (EuPago)', 'smart-marketing-addon-sms-order'),
-            'billet' =>  __('Billet (PagSeguro)', 'smart-marketing-addon-sms-order'),
+            'multibanco' =>  __('Multibanco (euPago, IfthenPay)', 'smart-marketing-addon-sms-order'),
+            'payshop' =>  __('Payshop (euPago)', 'smart-marketing-addon-sms-order'),
+            'billet' =>  __('Boleto (PagSeguro)', 'smart-marketing-addon-sms-order'),
         );
     }
 
@@ -187,7 +246,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 				"pending",
 				"on-hold"
 			),
-			"date_created" => '<' . (time() - $two_days_in_sec), // TODO - change time
+			"date_created" => '<' . (time() - 120),
 			'limit' => -1
 		);
 		return wc_get_orders($args);
@@ -211,7 +270,9 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
             && $recipients['egoi_sms_order_' . $recipient_type . '_' . $order['status']] == 1
         ) {
             return $this->smsonw_get_tags_content($order, $texts[$lang]['egoi_sms_order_text_' . $recipient_type . '_' . $order['status']]);
-		}
+		} else if (isset($this->sms_text_new_status[$lang]['egoi_sms_order_text_' . $recipient_type . '_' . $order['status']])) {
+            return $this->smsonw_get_tags_content($order, $this->sms_text_new_status[$lang]['egoi_sms_order_text_' . $recipient_type . '_' . $order['status']]);
+        }
 		return false;
 	}
 
