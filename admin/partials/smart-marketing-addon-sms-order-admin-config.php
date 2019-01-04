@@ -202,23 +202,23 @@ $balance = $this->helper->smsonw_get_balance();
 
                                 <hr>
 
-                                <p class="label_text"><?php _e('SMS Pagseguro - Boleto Bancaria (Brazilian Gateway)', 'smart-marketing-addon-sms-order');?></p>
+                                <p class="label_text"><?php _e('SMS Pagseguro (Brazilian Gateway)', 'smart-marketing-addon-sms-order');?></p>
 
                                 <p class="label_text_mini">
                                     <input type="checkbox" name="egoi_payment_info_billet" id="egoi_payment_info_billet" value="1"
                                         <?php echo !isset($recipients['egoi_payment_info_billet']) || $recipients['egoi_payment_info_billet'] == 1 ? 'checked' : null;?>
                                     />
-                                    <label for="egoi_payment_info_billet"><?php _e('Send SMS to your customers with Boleto payment information', 'smart-marketing-addon-sms-order');?></label>
+                                    <label for="egoi_payment_info_billet"><?php _e('Send SMS to your customers with PagSeguro payment information', 'smart-marketing-addon-sms-order');?></label>
                                 </p>
                                 <p class="label_text_mini">
                                 <?php if (constant("ALTERNATE_WP_CRON") !== false) { ?>
                                     <input type="checkbox" name="egoi_reminders_billet" id="egoi_reminders_billet" value="1"
                                         <?php checked($recipients['egoi_reminders_billet'], 1);?>
                                     />
-                                    <label for="egoi_reminders_billet"><?php _e('Send SMS to remind the payment information of the Boleto(after 48h)', 'smart-marketing-addon-sms-order');?></label>
+                                    <label for="egoi_reminders_billet"><?php _e('Send SMS to remind the payment information of the PagSeguro(after 48h)', 'smart-marketing-addon-sms-order');?></label>
                                 <?php } else { ?>
                                 <input type="checkbox" disabled />
-                                <?php _e('Send SMS to remind the information for payment billet (after 48h)', 'smart-marketing-addon-sms-order');?>
+                                <?php _e('Send SMS to remind the information for PagSeguro payment (after 48h)', 'smart-marketing-addon-sms-order');?>
                                 <div style="width: 100%; background-color: white; text-align: center; border: 1px solid #dddddd; margin-top: 10px;">
                                     <p class="label_text_mini"><?php _e('You need to enable wp_cron in wp-config, use:', 'smart-marketing-addon-sms-order');?></p>
                                     <pre>define ('ALTERNATE_WP_CRON', true);</pre>
@@ -398,7 +398,7 @@ $balance = $this->helper->smsonw_get_balance();
 
             <div class="main-content col col-12" style="margin:0 0 20px;">
 
-                <p class="label_text"><?php _e('This plugin is integrated with Multibanco (euPago, Ifthenpay), Payshop (euPago), Boleto Bancário (WooCommerce PagSeguro)', 'smart-marketing-addon-sms-order');?></p>
+                <p class="label_text"><?php _e('This plugin is integrated with Multibanco (euPago, Ifthenpay), Payshop (euPago), WooCommerce PagSeguro', 'smart-marketing-addon-sms-order');?></p>
 
                 <p class="label_text"><?php _e('Select payment method', 'smart-marketing-addon-sms-order');?></p>
 
@@ -545,6 +545,11 @@ $balance = $this->helper->smsonw_get_balance();
                         _e('The option of sending SMS notification with the Multibanco (Entity, Reference, Value) 
                             for instant cash payment is only compatible with Eupago and 
                             Ifthenpay portuguese payment gateways.', 'smart-marketing-addon-sms-order');
+                    ?>
+                    <br>
+                    <?php
+                        _e('Option of sending SMS with the data of Pagseguro is only 
+                            compatible with the plugin WooCommerce PagSeguro', 'smart-marketing-addon-sms-order');
                     ?>
                     <br>
                     <?php

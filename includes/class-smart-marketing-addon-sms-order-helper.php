@@ -88,8 +88,8 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
             ),
         ),
         'billet' => array(
-                'first' => array ('pt_BR' => 'Obrigado pela sua encomenda! Link do Boleto %billet_url%'),
-                'reminder' => array('pt_BR' => 'Relembramos o link para pagamento do Boleto %billet_url%')
+                'first' => array ('pt_BR' => 'Obrigado pela sua encomenda! Pague por %payment_method% usando este Link %billet_url%'),
+                'reminder' => array('pt_BR' => 'Olá %billing_name%, relembramos o link para pagamento %billet_url%')
         )
     );
 
@@ -209,7 +209,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
         return array(
             'multibanco' =>  __('Multibanco (euPago, IfthenPay)', 'smart-marketing-addon-sms-order'),
             'payshop' =>  __('Payshop (euPago)', 'smart-marketing-addon-sms-order'),
-            'billet' =>  __('Boleto (PagSeguro)', 'smart-marketing-addon-sms-order'),
+            'billet' =>  __('PagSeguro', 'smart-marketing-addon-sms-order'),
         );
     }
 
@@ -340,6 +340,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
      *
      * @param $order
      * @param $message
+     * @param $billet_code
      * @return string
      */
     public function smsonw_get_tags_content($order, $message, $billet_code = false)
@@ -358,6 +359,13 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 
         if ($billet_code) {
             $tags['%billet_url%'] = get_site_url(null, '/wp-json/smsonw/v1/billet?c=' . $billet_code);
+            $order_data = wc_get_order( $order['id'] );
+            $data = $order_data->get_meta( '_wc_pagseguro_payment_data' );
+            if (strpos($data['method'], 'Billet') !== false) {
+                $tags['%payment_method%'] = 'Boleto';
+            } else if (strpos($data['method'], 'Bank Transfer') !== false) {
+                $tags['%payment_method%'] = 'Transferência Bancária';
+            }
         }
 
         foreach ($tags as $tag => $content) {

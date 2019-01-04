@@ -53,6 +53,8 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
     protected $helper;
 
+    public $sms_sent = false;
+
 	/**
 	 * Initialize the class and set its properties.
 	 *
@@ -263,6 +265,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
                         $text = isset($messages[$payment_method]['egoi_sms_order_reminder_text_'.$lang])
                             ? $messages[$payment_method]['egoi_sms_order_reminder_text_'.$lang]
                             : $this->helper->sms_payment_info[$payment_method]['reminder'][$lang];
+                        $send_message = false;
 
                         if (!$order->is_paid() && !in_array($order->get_id(), $order_ids) && $sms_notification &&
                             $recipient_options['egoi_reminders'] && array_key_exists($order_data['payment_method'], $this->helper->payment_map)) {
@@ -306,27 +309,29 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 */
 	public function smsonw_order_send_sms_new_status($order_id) {
 
-		$recipient_options = json_decode(get_option('egoi_sms_order_recipients'), true);
+        if (!$this->sms_sent) {
+            $recipient_options = json_decode(get_option('egoi_sms_order_recipients'), true);
 
-		if ($recipient_options['notification_option']) {
-			$sms_notification = (bool) get_post_meta($order_id, 'egoi_notification_option')[0];
-		} else {
-			$sms_notification = 1;
-		}
+            if ($recipient_options['notification_option']) {
+                $sms_notification = (bool) get_post_meta($order_id, 'egoi_notification_option')[0];
+            } else {
+                $sms_notification = 1;
+            }
 
+            $sender = json_decode(get_option('egoi_sms_order_sender'), true);
+            $order = wc_get_order($order_id)->get_data();
 
-        $sender = json_decode(get_option('egoi_sms_order_sender'), true);
-        $order = wc_get_order($order_id)->get_data();
-        $types = array('admin' => $sender['admin_prefix'].'-'.$sender['admin_phone']);
-        if ($sms_notification) {
-            $types['customer'] = $order['billing']['phone'];
-        }
+            $types = array('admin' => $sender['admin_prefix'] . '-' . $sender['admin_phone']);
+            if ($sms_notification) {
+                $types['customer'] = $order['billing']['phone'];
+            }
 
-        foreach ($types as $type => $phone) {
-            $message = $this->helper->smsonw_get_sms_order_message($type, $order);
-            if ($message !== false) {
-                $recipient = $type == 'customer' ? $this->helper->smsonw_get_valid_recipient($phone, $order['billing']['country']) : $phone;
-                $this->helper->smsonw_send_sms('351-919446071', $message, $order['status'], $order['id']);
+            foreach ($types as $type => $phone) {
+                $message = $this->helper->smsonw_get_sms_order_message($type, $order);
+                if ($message !== false) {
+                    $recipient = $type == 'customer' ? $this->helper->smsonw_get_valid_recipient($phone, $order['billing']['country']) : $phone;
+                    $this->helper->smsonw_send_sms('351-919446071', $message, $order['status'], $order['id']);
+                }
             }
         }
 	}
@@ -372,6 +377,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
         if ($send_message) {
             $recipient = $this->helper->smsonw_get_valid_recipient($order['billing']['phone'], $order['billing']['country']);
             $this->helper->smsonw_send_sms('351-919446071', $message,'order', $order_id); // TODO - Put $recipient in recipient param
+            $this->sms_sent = true;
         }
     }
 

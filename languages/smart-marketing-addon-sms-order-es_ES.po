@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SMS Orders Alert/Notifications for WooCommerce\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-26 16:54+0000\n"
-"PO-Revision-Date: 2018-12-26 16:59+0000\n"
+"POT-Creation-Date: 2019-01-03 15:08+0000\n"
+"PO-Revision-Date: 2019-01-03 15:14+0000\n"
 "Last-Translator: Admin <procha@e-goi.com>\n"
 "Language-Team: Spanish (Spain)\n"
 "Language: es_ES\n"
@@ -77,53 +77,53 @@ msgid "Payshop (euPago)"
 msgstr ""
 
 #: includes/class-smart-marketing-addon-sms-order-helper.php:212
-msgid "Boleto (PagSeguro)"
+msgid "PagSeguro"
 msgstr ""
 
-#: includes/class-smart-marketing-addon-sms-order-helper.php:440
+#: includes/class-smart-marketing-addon-sms-order-helper.php:448
 msgid "Changes saved successfully"
 msgstr "Cambios grabados con éxito"
 
-#: includes/class-smart-marketing-addon-sms-order-helper.php:451
+#: includes/class-smart-marketing-addon-sms-order-helper.php:459
 msgid "Irks! An error has occurred."
 msgstr "Se ha producido un error"
 
-#: admin/class-smart-marketing-addon-sms-order-admin.php:110
-#: admin/class-smart-marketing-addon-sms-order-admin.php:111
+#: admin/class-smart-marketing-addon-sms-order-admin.php:112
+#: admin/class-smart-marketing-addon-sms-order-admin.php:113
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:31
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:35
 msgid "SMS Notifications"
 msgstr "Notificaciones SMS"
 
-#: admin/class-smart-marketing-addon-sms-order-admin.php:383
+#: admin/class-smart-marketing-addon-sms-order-admin.php:390
 msgid "Send SMS to buyer"
 msgstr "Enviar SMS al cliente"
 
-#: admin/class-smart-marketing-addon-sms-order-admin.php:418
+#: admin/class-smart-marketing-addon-sms-order-admin.php:425
 msgid "Message"
 msgstr "Mensaje"
 
-#: admin/class-smart-marketing-addon-sms-order-admin.php:422
+#: admin/class-smart-marketing-addon-sms-order-admin.php:429
 msgid "Send"
 msgstr "Enviar"
 
-#: admin/class-smart-marketing-addon-sms-order-admin.php:423
+#: admin/class-smart-marketing-addon-sms-order-admin.php:430
 msgid "You can't send a empty SMS"
 msgstr "No puedes enviar un SMS vacío"
 
-#: admin/class-smart-marketing-addon-sms-order-admin.php:424
+#: admin/class-smart-marketing-addon-sms-order-admin.php:431
 msgid "Sending... Wait please"
 msgstr "Enviando ... espera por favor"
 
-#: admin/class-smart-marketing-addon-sms-order-admin.php:429
+#: admin/class-smart-marketing-addon-sms-order-admin.php:436
 msgid "The customer doesn't want to receive sms"
 msgstr "Cliente no quiere recibir sms"
 
-#: admin/class-smart-marketing-addon-sms-order-admin.php:454
+#: admin/class-smart-marketing-addon-sms-order-admin.php:461
 msgid "added on"
 msgstr "added on"
 
-#: admin/class-smart-marketing-addon-sms-order-admin.php:484
+#: admin/class-smart-marketing-addon-sms-order-admin.php:491
 msgid "To use this plugin, you first need to install WooCommerce"
 msgstr "Para utilizar este plugin, necesita tener instalado o WooCommerce"
 
@@ -230,22 +230,22 @@ msgid "You need to enable wp_cron in wp-config, use:"
 msgstr "Necesita activar wp_cron en wp-config, usar:"
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:205
-msgid "SMS Pagseguro - Boleto Bancaria (Brazilian Gateway)"
-msgstr "SMS Pagseguro - Boleto Bancario (Brasil)"
+msgid "SMS Pagseguro (Brazilian Gateway)"
+msgstr "SMS PagSeguro (Brasil)"
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:211
-msgid "Send SMS to your customers with Boleto payment information"
-msgstr "Envíe SMS a sus clientes con información de pago de Boletos"
+msgid "Send SMS to your customers with PagSeguro payment information"
+msgstr "Envíe SMS a sus clientes con información de pago de PagSeguro"
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:218
-msgid "Send SMS to remind the payment information of the Boleto(after 48h)"
+msgid "Send SMS to remind the payment information of the PagSeguro(after 48h)"
 msgstr ""
-"Enviar SMS para recordar los datos de pago del Boleto (después de 48 h)"
+"Enviar SMS para recordar los datos de pago del PagSeguro (después de 48 h)"
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:221
-msgid "Send SMS to remind the information for payment billet (after 48h)"
+msgid "Send SMS to remind the information for PagSeguro payment (after 48h)"
 msgstr ""
-"Enviar SMS para recordar los datos de pago del Boleto (después de 48 h)"
+"Enviar SMS para recordar los datos de pago del PagSeguro (después de 48 h)"
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:235
 msgid "E-goi account information"
@@ -296,10 +296,10 @@ msgstr ""
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:401
 msgid ""
 "This plugin is integrated with Multibanco (euPago, Ifthenpay), Payshop "
-"(euPago), Boleto Bancário (WooCommerce PagSeguro)"
+"(euPago), WooCommerce PagSeguro"
 msgstr ""
 "Este plugin está integrado con el Multibanco (euPago, Ifthenpay), Payshop "
-"(euPago), Boleto Bancário (WooCommerce PagSeguro)"
+"(euPago), WooCommerce PagSeguro"
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:403
 msgid "Select payment method"
@@ -449,6 +449,14 @@ msgstr ""
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:551
 msgid ""
+"Option of sending SMS with the data of Pagseguro is only \n"
+"                            compatible with the plugin WooCommerce PagSeguro"
+msgstr ""
+"La opción de envío de SMS con los datos del Pagseguro sólo es compatible con "
+"el plugin WooCommerce PagSeguro"
+
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:556
+msgid ""
 "The balance amount displayed in the plugin may temporarily show differences, "
 "\n"
 "                            relative to the balance within your E-goi "
@@ -457,30 +465,30 @@ msgstr ""
 "El valor del saldo que aparece en el plugin puede presentar diferencias en "
 "el saldo de su cuenta E-goi."
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:556
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:561
 msgid "You can consult the article of our blog about this plugin."
 msgstr "Puede consultar el artículo de nuestro blog sobre este plugin."
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:557
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:562
 msgid "https://blog.e-goi.com/alerts-by-sms-for-your-ecommerce-orders/"
 msgstr ""
 "https://blog.e-goi.es/alertas-por-sms-para-los-pedidos-de-tu-ecommerce/"
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:558
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:563
 msgid "View blog post"
 msgstr "Ver el artículo en el blog"
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:561
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:566
 msgid ""
 "You can check at this link the cost of each sms and E-goi account plans."
 msgstr ""
 "Puede consultar en este enlace el costo de cada sms y planes de cuenta E-goi."
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:562
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:567
 msgid "https://www.e-goi.com/pricing/"
 msgstr "https://www.e-goi.es/precios/"
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:563
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:568
 msgid "Check Rates"
 msgstr "Ver precios"
 
