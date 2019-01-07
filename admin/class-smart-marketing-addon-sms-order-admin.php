@@ -92,7 +92,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 */
 	public function smsonw_enqueue_scripts() {
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/smart-marketing-addon-sms-order-admin.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/smart-marketing-addon-sms-order-admin.min.js', array( 'jquery' ), $this->version, false );
 		wp_enqueue_script( 'smsonw-meta-box-ajax-script', plugin_dir_url( __FILE__ ) . 'js/smsonw_order_action_sms_meta_box.min.js', array('jquery') );
 		wp_localize_script( 'smsonw-meta-box-ajax-script', 'smsonw_meta_box_ajax_object', array(
 		        'ajax_url' => admin_url( 'admin-ajax.php' ),
@@ -285,7 +285,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
                         if ($send_message) {
                             $recipient = $this->helper->smsonw_get_valid_recipient($order->billing_phone, $order->billing_country);
-                            $this->helper->smsonw_send_sms('351-919446071', $message, $order->get_status(), $order->get_id());
+                            $this->helper->smsonw_send_sms($recipient, $message, $order->get_status(), $order->get_id());
                             $count++;
 
                             $wpdb->insert($table_name, array(
@@ -330,7 +330,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
                 $message = $this->helper->smsonw_get_sms_order_message($type, $order);
                 if ($message !== false) {
                     $recipient = $type == 'customer' ? $this->helper->smsonw_get_valid_recipient($phone, $order['billing']['country']) : $phone;
-                    $this->helper->smsonw_send_sms('351-919446071', $message, $order['status'], $order['id']);
+                    $this->helper->smsonw_send_sms($recipient, $message, $order['status'], $order['id']);
                 }
             }
         }
@@ -376,7 +376,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
         if ($send_message) {
             $recipient = $this->helper->smsonw_get_valid_recipient($order['billing']['phone'], $order['billing']['country']);
-            $this->helper->smsonw_send_sms('351-919446071', $message,'order', $order_id); // TODO - Put $recipient in recipient param
+            $this->helper->smsonw_send_sms($recipient, $message,'order', $order_id);
             $this->sms_sent = true;
         }
     }
@@ -475,7 +475,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 */
 	public function smsonw_my_add_every_fifteen_minutes($schedules) {
 		$schedules['every_fifteen_minutes'] = array(
-			'interval' => 60 * 2,
+			'interval' => 60 * 15,
 			'display' => __('Every Fifteen Minutes')
 		);
 		return $schedules;
