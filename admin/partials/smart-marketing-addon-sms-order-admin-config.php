@@ -522,7 +522,7 @@ $balance = $this->helper->smsonw_get_balance();
                 <p class="help-title"><?php _e('3. Add balance', 'smart-marketing-addon-sms-order');?></p>
                 <p>
                     <?php
-                        _e('If you do not have enough balance available, log in to your E-goi Account, go to the menu related to your account (top, right) 
+                        _e('All E-goi Plans have included 10 SMS that you can use to test the plugin. If you do not have enough balance available, log in to your E-goi Account, go to the menu related to your account (top, right) 
                             and the Balance information choose Top Up. (you must have at least € 20 balance to be able to send sms, 
                             for this reason you should add a higher value)', 'smart-marketing-addon-sms-order');
                     ?>

@@ -402,16 +402,19 @@ msgstr "3. Add balance"
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:525
 msgid ""
+"All E-goi Plans have included 10 SMS that you can use to test the plugin. "
 "If you do not have enough balance available, log in to your E-goi Account, "
 "go to the menu related to your account (top, right) \n"
 "                            and the Balance information choose Top Up. (you "
 "must have at least € 20 balance to be able to send sms, \n"
 "                            for this reason you should add a higher value)"
 msgstr ""
-"If you do not have enough balance available, log in to your E-goi Account, "
-"go to the menu related to your account (top, right) and the Balance "
+"Todos los Planes E-goi tienen SMS incluidos que puede utilizar para probar el plugin. "
+"Si no tiene saldo disponible, entre en su cuenta E-goi, "
+"vaya al menú correspondiente a su cuenta (superior, derecho) y en la información del Saldo "
+"elija Comprar más (sólo se permiten envíos con saldo superior a 20 Eur, "
 "information choose Top Up. (you must have at least € 20 balance to be able "
-"to send sms, for this reason you should add a higher value)"
+"por lo que debe hacer una carga superior)"
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:532
 msgid "4. Select SMS Sender E-goi"
