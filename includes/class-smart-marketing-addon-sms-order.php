@@ -70,7 +70,7 @@ class Smart_Marketing_Addon_Sms_Order {
 		if ( defined( 'PLUGIN_NAME_VERSION' ) ) {
 			$this->version = PLUGIN_NAME_VERSION;
 		} else {
-			$this->version = '1.1.0';
+			$this->version = '1.1.1';
 		}
 		$this->plugin_name = 'smart-marketing-addon-sms-order';
 
