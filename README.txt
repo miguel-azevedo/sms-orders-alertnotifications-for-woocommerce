@@ -8,9 +8,9 @@ Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-== Description ==
+Aumente as suas conversões, envie notificações SMS com os dados para pagamento Multibanco e PagSeguro.
 
-**Aumente as suas conversões, envie notificações SMS com os dados para pagamento Multibanco e PagSeguro.**
+== Description ==
 
 Envie notificações SMS aos seus clientes e administradores sempre se altere o estado da encomenda no seu WooCommerce. Aumente as suas conversões, envie notificações SMS com os dados para pagamento Multibanco e PagSeguro. Reduza as encomendas sem pagamento Multibanco ou PagSeguro com o envio de lembretes SMS.
 
@@ -31,7 +31,7 @@ Envie notificações SMS aos seus clientes e administradores sempre se altere o 
 
 Necessita ter instalado o [plugin E-goi Smart Marketing](https://wordpress.org/plugins/smart-marketing-for-wp/ "Smart Marketing SMS and Newsletters Forms").
 
-É necessário uma conta E-goi. [Criar conta E-goi Gratuita](https://login.egoiapp.com/signup "Criar conta E-goi Gratuita com Oferta de 10 SMS para começar já a recuperar as suas vendas.")
+É necessário uma conta E-goi. [Criar conta E-goi Gratuita](https://login.egoiapp.com/signup "Criar conta E-goi Gratuita") com oferta de 10 SMS para começar já a recuperar as suas vendas.
 
 Se desejar enviar notificações com os dados de pagamento Multibanco necessita de ter instalado o plugin do euPago ou IfthenPay, e o [WooCommerce PagSeguro](https://wordpress.org/plugins/woocommerce-pagseguro/ "WooCommerce PagSeguro") se for usar o PagSeguro.
 
@@ -58,7 +58,7 @@ Send SMS notifications to your customers and website administrators whenever you
 
 You need to have installed the [E-goi Smart Marketing plugin](https://wordpress.org/plugins/smart-marketing-for-wp/ "Smart Marketing SMS and Newsletters Forms").
 
-You must have an E-goi account. [Create now a free E-goi account](https://login.egoiapp.com/signup "Create now a free E-goi account with 10 SMS (offer) included.")
+You must have an E-goi account. [Create now a free E-goi account](https://login.egoiapp.com/signup "Create now a free E-goi account") with 10 SMS (offer) included.
 
 If you wish to send notifications with the Multibanco payment data, you need to have the euPago or IfthenPay plugin installed, and [WooCommerce PagSeguro](https://wordpress.org/plugins/woocommerce-pagseguro/ "WooCommerce PagSeguro") if you will use PagSeguro.
 
