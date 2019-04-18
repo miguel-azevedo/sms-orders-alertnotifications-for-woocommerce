@@ -259,14 +259,21 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 	 * @return mixed
 	 */
 	public function smsonw_get_not_paid_orders() {
-		$two_days_in_sec = 2 * 24 * 60 * 60;
-//		$two_days_in_sec = 600;
+
+		$recipients = json_decode(get_option('egoi_sms_order_recipients'), true);
+
+		$seconds = 172800;
+
+		if(!empty($recipients['egoi_reminders_time'])){
+			$seconds = 3600 * (int) $recipients['egoi_reminders_time'];
+        }
+
 		$args = array(
 			"status" => array(
 				"pending",
 				"on-hold"
 			),
-			"date_created" => '<' . (time() - $two_days_in_sec),
+			"date_created" => '<' . (time() - $seconds),
 			'limit' => -1
 		);
 		return wc_get_orders($args);
