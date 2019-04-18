@@ -260,7 +260,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 	 */
 	public function smsonw_get_not_paid_orders() {
 		$two_days_in_sec = 2 * 24 * 60 * 60;
-//		$two_days_in_sec = 7200;
+//		$two_days_in_sec = 600;
 		$args = array(
 			"status" => array(
 				"pending",

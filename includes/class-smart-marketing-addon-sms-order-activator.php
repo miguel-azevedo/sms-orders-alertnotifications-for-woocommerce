@@ -46,16 +46,22 @@ class Smart_Marketing_Addon_Sms_Order_Activator {
 		$table_name = $wpdb->prefix. 'egoi_sms_order_reminders';
 		$charset_collate = $wpdb->get_charset_collate();
 
-		$sql = "CREATE TABLE IF NOT EXISTS $table_name (
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+
+
+		$sqla = "CREATE TABLE IF NOT EXISTS $table_name (
 		  id mediumint(9) NOT NULL AUTO_INCREMENT,
 		  time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
 		  order_id int NOT NULL,
 		  PRIMARY KEY  (id)
 		) $charset_collate;";
 
+
+		dbDelta( $sqla );
+
         $table_name = $wpdb->prefix. 'egoi_sms_order_billets';
 
-        $sql .= "CREATE TABLE IF NOT EXISTS $table_name (
+        $sqlb = "CREATE TABLE IF NOT EXISTS $table_name (
 		  id mediumint(9) NOT NULL AUTO_INCREMENT,
 		  time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
 		  order_id int NOT NULL,
@@ -64,8 +70,8 @@ class Smart_Marketing_Addon_Sms_Order_Activator {
 		  PRIMARY KEY  (id)
 		) $charset_collate;";
 
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-		dbDelta( $sql );
+
+		dbDelta( $sqlb );
 	}
 
 	public static function checkApiKey() {
