@@ -155,12 +155,17 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
                     ));
                 }
 
+                $egoi_reminders_time = (int) filter_var($post['egoi_reminders_time'], FILTER_SANITIZE_NUMBER_INT);
+//                $egoi_reminders_billet_time = (int) filter_var($post['egoi_reminders_billet_time'], FILTER_SANITIZE_NUMBER_INT);
+
                 $recipients = array_merge($recipients, array(
                     'notification_option' => $this->helper->smsonw_sanitize_boolean_field('notification_option'),
                     'egoi_payment_info' => $this->helper->smsonw_sanitize_boolean_field('egoi_payment_info'),
                     'egoi_reminders' => $this->helper->smsonw_sanitize_boolean_field('egoi_reminders'),
+                    'egoi_reminders_time' => empty($egoi_reminders_time) ? 48 : $egoi_reminders_time,
                     'egoi_payment_info_billet' => $this->helper->smsonw_sanitize_boolean_field('egoi_payment_info_billet'),
-                    'egoi_reminders_billet' => $this->helper->smsonw_sanitize_boolean_field('egoi_reminders_billet')
+                    'egoi_reminders_billet' => $this->helper->smsonw_sanitize_boolean_field('egoi_reminders_billet'),
+//                    'egoi_reminders_billet_time' => empty($egoi_reminders_billet_time) ? 48 : $egoi_reminders_billet_time
                 ));
 
                 update_option('egoi_sms_order_sender', json_encode($sender));

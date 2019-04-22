@@ -35,6 +35,11 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 			'ref' => '_eupago_payshop_referencia',
 			'val' => '_order_total'
 		),
+		'easypay_mb' => array(
+			'ent' => '',
+			'ref' => '',
+			'val' => '_order_total'
+		),
 		/*
 		'eupago_mbway' => array(
 			'ref' => '_eupago_mbway_referencia',
@@ -73,6 +78,20 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
                 'pt_BR' => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado'
             ),
         ),
+		'easypay_mb' => array(
+			'first' => array(
+				'en' => 'Hello, your order at %shop_name% is waiting for MB payment. Use Ent. %ent% Ref. %ref% Value %total%%currency% Thank you',
+				'es' => 'Hola, su pedido en %shop_name% está esperando el pago MB - Ent. %ent% Ref. %ref% Valor %total%%currency% Gracias',
+				'pt' => 'Olá, a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado',
+				'pt_BR' => 'Olá, a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado'
+			),
+			'reminder' => array(
+				'en' => 'Hello, we remind you that your order at %shop_name% is waiting for MB. Use Ent. %ent% Ref. %ref% Value %total%%currency% Thank you',
+				'es' => 'Hola, recordamos que su pedido en %shop_name% está esperando el pago MB - Ent. %ent% Ref. %ref% Valor %total%%currency% Gracias',
+				'pt' => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado',
+				'pt_BR' => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado'
+			),
+		),
         'payshop' => array(
             'first' => array(
                 'en' => 'Hello, your order at %shop_name% is waiting for MB payment. Use Ent. %ent% Ref. %ref% Value %total%%currency% Thank you',
@@ -207,7 +226,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
      */
     public function smsonw_get_payment_methods() {
         return array(
-            'multibanco' =>  __('Multibanco (euPago, IfthenPay)', 'smart-marketing-addon-sms-order'),
+            'multibanco' =>  __('Multibanco (euPago, IfthenPay, EasyPay)', 'smart-marketing-addon-sms-order'),
             'payshop' =>  __('Payshop (euPago)', 'smart-marketing-addon-sms-order'),
             'billet' =>  __('PagSeguro', 'smart-marketing-addon-sms-order'),
         );
@@ -240,13 +259,21 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 	 * @return mixed
 	 */
 	public function smsonw_get_not_paid_orders() {
-		$two_days_in_sec = 2 * 24 * 60 * 60;
+
+		$recipients = json_decode(get_option('egoi_sms_order_recipients'), true);
+
+		$seconds = 172800;
+
+		if(!empty($recipients['egoi_reminders_time'])){
+			$seconds = 3600 * (int) $recipients['egoi_reminders_time'];
+        }
+
 		$args = array(
 			"status" => array(
 				"pending",
 				"on-hold"
 			),
-			"date_created" => '<' . (time() - $two_days_in_sec),
+			"date_created" => '<' . (time() - $seconds),
 			'limit' => -1
 		);
 		return wc_get_orders($args);
@@ -303,6 +330,27 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 	 */
 	public function smsonw_get_payment_data($order, $field) {
 		$order_meta = get_post_meta($order['id']);
+
+		//Real biqueirada
+		if ($order['payment_method'] == 'easypay_mb') {
+			global $wpdb;
+
+			switch ($field) {
+				case 'ref':
+					$easyPayQuery = sprintf("SELECT ep_reference as %s FROM %seasypay_notifications WHERE t_key = '%s'", $field, $wpdb->prefix, $order['id']);
+
+					break;
+				case 'ent':
+					$easyPayQuery = sprintf("SELECT ep_entity as %s FROM %seasypay_notifications WHERE t_key = '%s'", $field, $wpdb->prefix, $order['id']);
+					break;
+			}
+
+			$result = $wpdb->get_results($easyPayQuery, ARRAY_A);
+
+			if (!empty($result[0][$field])) {
+				return $result[0][$field];
+			}
+		}
 
 		if (isset($this->payment_map[$order['payment_method']][$field])) {
 			$payment_field = $this->payment_map[$order['payment_method']][ $field ];

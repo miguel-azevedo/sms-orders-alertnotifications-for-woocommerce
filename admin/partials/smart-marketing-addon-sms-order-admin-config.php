@@ -24,6 +24,7 @@ $texts = json_decode(get_option('egoi_sms_order_texts'), true);
 $payment_texts = json_decode(get_option('egoi_sms_order_payment_texts'), true);
 $senders = $this->helper->smsonw_get_senders();
 $balance = $this->helper->smsonw_get_balance();
+$reminder_times = array('1','12', '24', '36', '48', '72');
 
 ?>
 <span id="form_info" data-form-id="<?php esc_html_e($_POST['form_id']);?>" data-form-lang="<?php esc_html_e($_POST['sms_text_language']);?>" data-form-method="<?php esc_html_e($_POST['sms_payment_method']);?>"></span>
@@ -185,20 +186,23 @@ $balance = $this->helper->smsonw_get_balance();
                                     <label for="egoi_payment_info"><?php _e('Send SMS to your customers with Multibanco payment information', 'smart-marketing-addon-sms-order');?></label>
                                 </p>
                                 <p class="label_text_mini"  style="margin-bottom: 20px;">
+
                                 <?php if (constant("ALTERNATE_WP_CRON") !== false) { ?>
                                     <input type="checkbox" name="egoi_reminders" id="egoi_reminders" value="1"
                                         <?php checked($recipients['egoi_reminders'], 1);?>
                                     />
-                                    <label for="egoi_reminders"><?php _e('Send SMS to remind the information for payment Multibanco (after 48h)', 'smart-marketing-addon-sms-order');?></label>
+                                    <label for="egoi_reminders"><?php _e('Send SMS to remind the information for payment Multibanco', 'smart-marketing-addon-sms-order');?></label>
+
                                 <?php } else { ?>
                                     <input type="checkbox" disabled />
-                                    <?php _e('Send SMS to remind the information for payment Multibanco (after 48h)', 'smart-marketing-addon-sms-order');?>
+                                    <?php _e('Send SMS to remind the information for payment Multibanco', 'smart-marketing-addon-sms-order');?>
                                     <div style="width: 100%; background-color: white; text-align: center; border: 1px solid #dddddd; margin-top: 10px;">
                                         <p class="label_text_mini"><?php _e('You need to enable wp_cron in wp-config, use:', 'smart-marketing-addon-sms-order');?></p>
                                         <pre>define ('ALTERNATE_WP_CRON', true);</pre>
                                     </div>
                                 <?php } ?>
                                 </p>
+
 
                                 <hr>
 
@@ -215,16 +219,33 @@ $balance = $this->helper->smsonw_get_balance();
                                     <input type="checkbox" name="egoi_reminders_billet" id="egoi_reminders_billet" value="1"
                                         <?php checked($recipients['egoi_reminders_billet'], 1);?>
                                     />
-                                    <label for="egoi_reminders_billet"><?php _e('Send SMS to remind the payment information of the PagSeguro(after 48h)', 'smart-marketing-addon-sms-order');?></label>
+                                    <label for="egoi_reminders_billet"><?php _e('Send SMS to remind the payment information of the PagSeguro', 'smart-marketing-addon-sms-order');?></label>
+
                                 <?php } else { ?>
-                                <input type="checkbox" disabled />
-                                <?php _e('Send SMS to remind the information for PagSeguro payment (after 48h)', 'smart-marketing-addon-sms-order');?>
-                                <div style="width: 100%; background-color: white; text-align: center; border: 1px solid #dddddd; margin-top: 10px;">
-                                    <p class="label_text_mini"><?php _e('You need to enable wp_cron in wp-config, use:', 'smart-marketing-addon-sms-order');?></p>
-                                    <pre>define ('ALTERNATE_WP_CRON', true);</pre>
-                                </div>
+                                    <input type="checkbox" disabled />
+                                    <?php _e('Send SMS to remind the information for PagSeguro payment (after 48h)', 'smart-marketing-addon-sms-order');?>
+                                    <div style="width: 100%; background-color: white; text-align: center; border: 1px solid #dddddd; margin-top: 10px;">
+                                        <p class="label_text_mini"><?php _e('You need to enable wp_cron in wp-config, use:', 'smart-marketing-addon-sms-order');?></p>
+                                        <pre>define ('ALTERNATE_WP_CRON', true);</pre>
+                                    </div>
                                 <?php } ?>
                                 </p>
+
+
+                                <hr>
+
+                                <p class="label_text"><?php _e('Choose the amount of time to send the reminder.', 'smart-marketing-addon-sms-order');?></p>
+
+                                <p class="label_text_mini">
+                                    <?php _e('Choose the amount of time to send the reminder. ', 'smart-marketing-addon-sms-order');?>
+                                </p>
+
+                                <select name="egoi_reminders_time" id="egoi_reminders_time" class="e-goi-option-select-admin-forms" style="width: 49%;">
+                                    <?php $recipients['egoi_reminders_time'] = empty($recipients['egoi_reminders_time']) ? 48 : $recipients['egoi_reminders_time']; ?>
+                                    <?php foreach ($reminder_times as $value) { ?>
+                                        <option value="<?=$value?>" <?php selected($value, $recipients['egoi_reminders_time']);?>><?=$value?>h</option>
+                                    <?php } ?>
+                                </select>
 
                                 <?php submit_button(); ?>
                             </form>
