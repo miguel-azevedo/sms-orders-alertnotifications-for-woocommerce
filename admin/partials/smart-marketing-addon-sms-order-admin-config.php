@@ -24,7 +24,7 @@ $texts = json_decode(get_option('egoi_sms_order_texts'), true);
 $payment_texts = json_decode(get_option('egoi_sms_order_payment_texts'), true);
 $senders = $this->helper->smsonw_get_senders();
 $balance = $this->helper->smsonw_get_balance();
-$reminder_times = array('12', '24', '36', '48', '72');
+$reminder_times = array('1','12', '24', '36', '48', '72');
 
 ?>
 <span id="form_info" data-form-id="<?php esc_html_e($_POST['form_id']);?>" data-form-lang="<?php esc_html_e($_POST['sms_text_language']);?>" data-form-method="<?php esc_html_e($_POST['sms_payment_method']);?>"></span>

@@ -14,7 +14,7 @@ Aumente as suas conversões, envie notificações SMS com os dados para pagament
 
 Envie notificações SMS aos seus clientes e administradores sempre se altere o estado da encomenda no seu WooCommerce. Aumente as suas conversões, envie notificações SMS com os dados para pagamento Multibanco. Reduza as encomendas sem pagamento Multibanco com o envio de lembretes SMS.
 
-**OFERTA SMS** [Criar conta E-goi Gratuita](https://login.egoiapp.com/signup "Criar conta E-goi Gratuita")
+**OFERTA 50 SMS** [Ao contratar um plano E-GOI Starter](https://login.egoiapp.com/signup "Contratar um plano E-GOI Starter")
 
 **Funcionalidades:**
 
@@ -30,7 +30,8 @@ Envie notificações SMS aos seus clientes e administradores sempre se altere o 
     *   Eupago [plugin EuPago para WooCommerce](https://pt.wordpress.org/plugins/eupago-for-woocommerce/ "EuPago para WooCommerce")
     *   EasyPay
 *   Opção de envio de SMS com os dados para pagamentos do PagSeguro - (de momento, compatível com o plugin WooCommerce PagSeguro)
-*   Opção de envio de lembrete SMS, em caso da encomenda ainda estar aguardar o pagamento Multibanco ou PagSeguro (48h depois)
+*   Opção de envio de lembrete SMS, em caso da encomenda ainda estar aguardar o pagamento Multibanco, PagSeguro e EasyPay
+*   Opção para configuração de prazo de envio de lembrete
 
 **Requisitos**
 
@@ -46,7 +47,7 @@ Se desejar enviar notificações com os dados de pagamento Multibanco necessita 
 
 Send SMS notifications to your customers and website administrators whenever your order status changes on your WooCommerce. Increase your conversions, send SMS notifications with the data for Multibanco (Portuguese payment gateway) and PagSeguro (Brazilian payment gateway) payment. Reduce Multibanco or PagSeguro orders without payment by sending SMS reminders.
 
-**SMS OFFER** [Create now a free E-goi account](https://login.egoiapp.com/signup "Create now a free E-goi account")
+**SMS 50 OFFER** [When subscribing to a Starter E-GOI Plan](https://login.egoiapp.com/signup "subscribe to a Starter E-GOI Plan")
 
 **Functionalities:**
 
@@ -62,7 +63,8 @@ Send SMS notifications to your customers and website administrators whenever you
     *   Eupago [plugin EuPago for WooCommerce](https://pt.wordpress.org/plugins/eupago-for-woocommerce/ "EuPago for WooCommerce")
     *   EasyPay
 *   Option to send SMS with data for PagSeguro payments - (for the moment, compatible with the plugin WooCommerce PagSeguro)
-*   Option to send SMS reminder, in case the order is still waiting for Multibanco or PagSeguro payment (48h later)
+*   Option to send SMS reminder, in case the order is still waiting for Multibanco, PagSeguro payment or EasyPay
+*   Configuration option for the SMS remider schedule
 
 **Requirements**
 
@@ -99,6 +101,7 @@ If you wish to send notifications with the Multibanco payment data, you need to 
 
 = 1.2.0 =
 * EasyPay integration.
+* Configuration option for the SMS remider schedule.
 
 = 1.1.1 =
 * Minor improvements.
