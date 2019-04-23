@@ -192,6 +192,8 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 
 		$apikey = get_option('egoi_api_key');
 		$this->apikey = $apikey['api_key'];
+		//check if api is on
+		$this->ping();
 	}
 
     /**
@@ -542,5 +544,41 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 
         return $order_payment_method;
     }
+
+	/**
+	 * @return array|mixed
+	 */
+	protected function ping ()
+	{
+		$egoiV3    = 'https://api.egoiapp.com';
+		$pluginkey = '2f711c62b1eda65bfed5665fbd2cdfc9';
+
+		try {
+			$curl = curl_init();
+
+			curl_setopt_array($curl, array(
+				CURLOPT_URL            => $egoiV3 . "/ping",
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_ENCODING       => "",
+				CURLOPT_MAXREDIRS      => 10,
+				CURLOPT_TIMEOUT        => 10,
+				CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
+				CURLOPT_CUSTOMREQUEST  => 'POST',
+				CURLOPT_HTTPHEADER     => array(
+					"cache-control: no-cache",
+					"Apikey: " . $this->apikey,
+					"Pluginkey: " . $pluginkey
+				),
+			));
+
+			curl_exec($curl);
+			curl_close($curl);
+			return true;
+
+		} catch (Exception $e) {
+			return true;
+		}
+	}
+
 
 }

@@ -557,8 +557,8 @@ $reminder_times = array('1','12', '24', '36', '48', '72');
                 <p>
                     <?php
                         _e('The option of sending SMS notification with the Multibanco (Entity, Reference, Value) 
-                            for instant cash payment is only compatible with Eupago and 
-                            Ifthenpay portuguese payment gateways.', 'smart-marketing-addon-sms-order');
+                            for instant cash payment is only compatible with Eupago, 
+                            Ifthenpay and easypay portuguese payment gateways.', 'smart-marketing-addon-sms-order');
                     ?>
                     <br>
                     <?php

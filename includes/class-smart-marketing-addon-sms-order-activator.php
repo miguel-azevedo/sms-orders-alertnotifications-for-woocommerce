@@ -74,6 +74,9 @@ class Smart_Marketing_Addon_Sms_Order_Activator {
 		dbDelta( $sqlb );
 	}
 
+	/**
+	 * @throws SoapFault
+	 */
 	public static function checkApiKey() {
         $apikey = get_option('egoi_api_key');
         $params = [
@@ -82,5 +85,43 @@ class Smart_Marketing_Addon_Sms_Order_Activator {
         ];
         $client = new SoapClient('http://api.e-goi.com/v2/soap.php?wsdl');
         $client->checklogin($params);
+        self::ping($apikey['api_key']);
     }
+
+	/**
+	 * @param $apikey
+	 *
+	 * @return array|mixed
+	 */
+	public function ping ($apikey)
+	{
+		$egoiV3    = 'https://api.egoiapp.com';
+		$pluginkey = '2f711c62b1eda65bfed5665fbd2cdfc9';
+
+		try {
+			$curl = curl_init();
+
+			curl_setopt_array($curl, array(
+				CURLOPT_URL            => $egoiV3 . "/ping",
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_ENCODING       => "",
+				CURLOPT_MAXREDIRS      => 10,
+				CURLOPT_TIMEOUT        => 10,
+				CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
+				CURLOPT_CUSTOMREQUEST  => 'POST',
+				CURLOPT_HTTPHEADER     => array(
+					"cache-control: no-cache",
+					"Apikey: " . $apikey,
+					"Pluginkey: " . $pluginkey
+				),
+			));
+
+			curl_exec($curl);
+			curl_close($curl);
+			return true;
+
+		} catch (Exception $e) {
+			return true;
+		}
+	}
 }
