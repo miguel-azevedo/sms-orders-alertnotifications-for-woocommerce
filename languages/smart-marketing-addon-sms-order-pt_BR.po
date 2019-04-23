@@ -3,16 +3,16 @@ msgstr ""
 "Project-Id-Version: SMS Orders Alert/Notifications for WooCommerce\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-03 15:08+0000\n"
-"PO-Revision-Date: 2019-01-03 16:16+0000\n"
-"Last-Translator: Admin <procha@e-goi.com>\n"
+"PO-Revision-Date: 2019-04-23 14:13+0000\n"
+"Last-Translator: Admin <rgomes@e-goi.com>\n"
 "Language-Team: Português do Brasil\n"
-"Language: pt_BR\n"
+"Language: pt-BR\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.2.0; wp-5.0.2"
+"X-Loco-Version: 2.2.2; wp-5.1.1"
 
 #: smart-marketing-addon-sms-order.php:62
 msgid "To use this plugin, you first need to install"
@@ -68,16 +68,16 @@ msgid "Brazilian Portuguese"
 msgstr "Português do Brasil"
 
 #: includes/class-smart-marketing-addon-sms-order-helper.php:210
-msgid "Multibanco (euPago, IfthenPay)"
-msgstr ""
+msgid "Multibanco (euPago, Ifthenpay, easypay)"
+msgstr "Multibanco (euPago, Ifthenpay, easypay)"
 
 #: includes/class-smart-marketing-addon-sms-order-helper.php:211
 msgid "Payshop (euPago)"
-msgstr ""
+msgstr "Payshop (euPago)"
 
 #: includes/class-smart-marketing-addon-sms-order-helper.php:212
 msgid "PagSeguro"
-msgstr ""
+msgstr "PagSeguro"
 
 #: includes/class-smart-marketing-addon-sms-order-helper.php:448
 msgid "Changes saved successfully"
@@ -219,7 +219,7 @@ msgstr "Envie SMS aos seus clientes com dados Multibanco"
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:192
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:195
-msgid "Send SMS to remind the information for payment Multibanco (after 48h)"
+msgid "Send SMS to remind the information for payment Multibanco"
 msgstr "Envie SMS a relembrar os dados Multibanco (após 48h)"
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:197
@@ -236,12 +236,16 @@ msgid "Send SMS to your customers with PagSeguro payment information"
 msgstr "Envie SMS aos seus clientes com dados de pagamento do PagSeguro"
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:218
-msgid "Send SMS to remind the payment information of the PagSeguro(after 48h)"
+msgid "Send SMS to remind the payment information of the PagSeguro"
 msgstr "Envie SMS a relembrar os dados de pagamento do PagSeguro (após 48h)"
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:221
-msgid "Send SMS to remind the information for PagSeguro payment (after 48h)"
-msgstr "Envie SMS a relembrar os dados de pagamento do PagSeguro (após 48h)"
+msgid "Send SMS to remind the information for PagSeguro payment"
+msgstr "Envie SMS a relembrar os dados de pagamento do PagSeguro"
+
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:237
+msgid "Choose the amount of time to send the reminder."
+msgstr "Escolha o período de tempo desejado."
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:235
 msgid "E-goi account information"
@@ -291,11 +295,11 @@ msgstr ""
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:401
 msgid ""
-"This plugin is integrated with Multibanco (euPago, Ifthenpay), Payshop "
-"(euPago), WooCommerce PagSeguro"
+"This plugin is integrated with Multibanco (euPago, Ifthenpay, easypay), "
+"Payshop (euPago), WooCommerce PagSeguro"
 msgstr ""
-"Este plugin está integrado com o Multibanco (euPago, Ifthenpay), Payshop "
-"(euPago), WooCommerce PagSeguro"
+"Este plugin está integrado com o Multibanco (euPago, Ifthenpay, easypay), "
+"Payshop (euPago), WooCommerce PagSeguro"
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:403
 msgid "Select payment method"
@@ -395,20 +399,17 @@ msgstr ""
 msgid "3. Add balance"
 msgstr "3. Carregamento de saldo"
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:525
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:543
 msgid ""
-"All E-goi Plans have included 10 SMS that you can use to test the plugin. "
-"If you do not have enough balance available, log in to your E-goi Account, "
-"go to the menu related to your account (top, right) \n"
-"                            and the Balance information choose Top Up. (you "
-"must have at least € 20 balance to be able to send sms, \n"
-"                            for this reason you should add a higher value)"
+"All free E-goi Plans have included 10 SMS and all Starter Plans have 50 "
+"included SMS that you can use to test the plugin. If you do not have enough "
+"balance available, log in to your E-goi Account, go to the menu related to "
+"your account (top, right) and the Balance information choose Top Up."
 msgstr ""
-"Todas os Planos E-goi têm 10 SMS incluídos que pode usar para testar o plugin. "
-"Caso não tenha saldo disponível, entre na sua Conta E-goi, vá ao menu "
-"relativo à sua conta (superior, direito) e na informação do Saldo escolha "
-"Comprar Mais (só são permitidos envios com saldo superior a R$ 75,00, por "
-"este motivo deve fazer um carregamento superior)"
+"Todos os Planos E-goi gratuitos têm 10 SMS e 50 nos Planos Starter que pode "
+"usar para testar o plugin. Caso não tenha saldo disponível, entre na sua "
+"Conta E-goi, vá ao menu relativo à sua conta (superior, direito) e na "
+"informação do Saldo escolha Comprar Mais."
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:532
 msgid "4. Select SMS Sender E-goi"
@@ -507,6 +508,7 @@ msgstr ""
 msgid ""
 "https://wordpress.org/plugins/sms-orders-alertnotifications-for-woocommerce/"
 msgstr ""
+"https://wordpress.org/plugins/sms-orders-alertnotifications-for-woocommerce/"
 
 #. Author of the plugin
 msgid "E-goi"

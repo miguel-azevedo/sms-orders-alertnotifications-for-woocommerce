@@ -68,7 +68,7 @@ msgid "Brazilian Portuguese"
 msgstr ""
 
 #: includes/class-smart-marketing-addon-sms-order-helper.php:210
-msgid "Multibanco (euPago, IfthenPay)"
+msgid "Multibanco (euPago, Ifthenpay, easypay)"
 msgstr ""
 
 #: includes/class-smart-marketing-addon-sms-order-helper.php:211
@@ -217,7 +217,7 @@ msgstr ""
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:192
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:195
-msgid "Send SMS to remind the information for payment Multibanco (after 48h)"
+msgid "Send SMS to remind the information for payment Multibanco"
 msgstr ""
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:197
@@ -234,11 +234,15 @@ msgid "Send SMS to your customers with PagSeguro payment information"
 msgstr ""
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:218
-msgid "Send SMS to remind the payment information of the PagSeguro(after 48h)"
+msgid "Send SMS to remind the payment information of the PagSeguro"
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:221
-msgid "Send SMS to remind the information for PagSeguro payment (after 48h)"
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:226
+msgid "Send SMS to remind the information for PagSeguro payment"
+msgstr ""
+
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:237
+msgid "Choose the amount of time to send the reminder."
 msgstr ""
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:235
@@ -284,7 +288,7 @@ msgstr ""
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:401
 msgid ""
-"This plugin is integrated with Multibanco (euPago, Ifthenpay), Payshop "
+"This plugin is integrated with Multibanco (euPago, Ifthenpay, easypay), Payshop "
 "(euPago), WooCommerce PagSeguro"
 msgstr ""
 
@@ -376,13 +380,11 @@ msgstr ""
 msgid "3. Add balance"
 msgstr ""
 
-#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:525
+#: admin/partials/smart-marketing-addon-sms-order-admin-config.php:543
 msgid ""
-"If you do not have enough balance available, log in to your E-goi Account, "
-"go to the menu related to your account (top, right) \n"
-"                            and the Balance information choose Top Up. (you "
-"must have at least € 20 balance to be able to send sms, \n"
-"                            for this reason you should add a higher value)"
+"All free E-goi Plans have included 10 SMS and all Starter Plans have 50 included SMS that you can use to test the plugin. "
+"If you do not have enough balance available, log in to your E-goi Account, go to the menu related to your account (top, right) "
+"and the Balance information choose Top Up."
 msgstr ""
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:532

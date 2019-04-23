@@ -226,7 +226,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
      */
     public function smsonw_get_payment_methods() {
         return array(
-            'multibanco' =>  __('Multibanco (euPago, IfthenPay, EasyPay)', 'smart-marketing-addon-sms-order'),
+            'multibanco' =>  __('Multibanco (euPago, IfthenPay, easypay)', 'smart-marketing-addon-sms-order'),
             'payshop' =>  __('Payshop (euPago)', 'smart-marketing-addon-sms-order'),
             'billet' =>  __('PagSeguro', 'smart-marketing-addon-sms-order'),
         );

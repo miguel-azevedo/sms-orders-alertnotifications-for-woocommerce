@@ -223,7 +223,7 @@ $reminder_times = array('1','12', '24', '36', '48', '72');
 
                                 <?php } else { ?>
                                     <input type="checkbox" disabled />
-                                    <?php _e('Send SMS to remind the information for PagSeguro payment (after 48h)', 'smart-marketing-addon-sms-order');?>
+                                    <?php _e('Send SMS to remind the information for PagSeguro payment', 'smart-marketing-addon-sms-order');?>
                                     <div style="width: 100%; background-color: white; text-align: center; border: 1px solid #dddddd; margin-top: 10px;">
                                         <p class="label_text_mini"><?php _e('You need to enable wp_cron in wp-config, use:', 'smart-marketing-addon-sms-order');?></p>
                                         <pre>define ('ALTERNATE_WP_CRON', true);</pre>
@@ -231,11 +231,8 @@ $reminder_times = array('1','12', '24', '36', '48', '72');
                                 <?php } ?>
                                 </p>
 
-
                                 <hr>
-
                                 <p class="label_text"><?php _e('Choose the amount of time to send the reminder.', 'smart-marketing-addon-sms-order');?></p>
-
                                 <p class="label_text_mini">
                                     <?php _e('Choose the amount of time to send the reminder. ', 'smart-marketing-addon-sms-order');?>
                                 </p>
@@ -419,7 +416,7 @@ $reminder_times = array('1','12', '24', '36', '48', '72');
 
             <div class="main-content col col-12" style="margin:0 0 20px;">
 
-                <p class="label_text"><?php _e('This plugin is integrated with Multibanco (euPago, Ifthenpay), Payshop (euPago), WooCommerce PagSeguro', 'smart-marketing-addon-sms-order');?></p>
+                <p class="label_text"><?php _e('This plugin is integrated with Multibanco (euPago, Ifthenpay, easypay), Payshop (euPago), WooCommerce PagSeguro', 'smart-marketing-addon-sms-order');?></p>
 
                 <p class="label_text"><?php _e('Select payment method', 'smart-marketing-addon-sms-order');?></p>
 
@@ -543,9 +540,8 @@ $reminder_times = array('1','12', '24', '36', '48', '72');
                 <p class="help-title"><?php _e('3. Add balance', 'smart-marketing-addon-sms-order');?></p>
                 <p>
                     <?php
-                        _e('All E-goi Plans have included 10 SMS that you can use to test the plugin. If you do not have enough balance available, log in to your E-goi Account, go to the menu related to your account (top, right) 
-                            and the Balance information choose Top Up. (you must have at least € 20 balance to be able to send sms, 
-                            for this reason you should add a higher value)', 'smart-marketing-addon-sms-order');
+                        _e('All free E-goi Plans have included 10 SMS and all Starter Plans have 50 included SMS that you can use to test the plugin. If you do not have enough balance available, log in to your E-goi Account, go to the menu related to your account (top, right) 
+                            and the Balance information choose Top Up.', 'smart-marketing-addon-sms-order');
                     ?>
                 </p>
                 <br>
