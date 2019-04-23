@@ -233,9 +233,6 @@ $reminder_times = array('1','12', '24', '36', '48', '72');
 
                                 <hr>
                                 <p class="label_text"><?php _e('Choose the amount of time to send the reminder.', 'smart-marketing-addon-sms-order');?></p>
-                                <p class="label_text_mini">
-                                    <?php _e('Choose the amount of time to send the reminder. ', 'smart-marketing-addon-sms-order');?>
-                                </p>
 
                                 <select name="egoi_reminders_time" id="egoi_reminders_time" class="e-goi-option-select-admin-forms" style="width: 49%;">
                                     <?php $recipients['egoi_reminders_time'] = empty($recipients['egoi_reminders_time']) ? 48 : $recipients['egoi_reminders_time']; ?>
