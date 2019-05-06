@@ -104,6 +104,7 @@ If you wish to send notifications with the Multibanco payment data, you need to 
 * Tested with wordpress 5.2 / Bumped `Tested up to` tag
 * Tested with WooCommerce 3.6.2 / Bumped `WC tested up to` tag
 * Added `WC requires at least` tag on the plugin main file
+* Added some texts to translations
 
 = 1.2.0 =
 * EasyPay integration.
