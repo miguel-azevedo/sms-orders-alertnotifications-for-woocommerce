@@ -98,9 +98,162 @@
             showConfigWrap("#tab-sms-help");
         });
 
+        //CUSTOM CARRIER
+        $("#add_egoi_sms_order_tracking_button").on("click", function () {
+            if($('#add_egoi_sms_order_tracking_button').attr('disabled') == 'disabled')
+                return;
+            addCustomCarrier()
+        });
+
+        $('#add_egoi_sms_order_tracking_button').attr('disabled',true);
+
+        $("#custom_carriers_rows").keydown(function (event) {
+            if(event.keyCode == 13) {
+                event.preventDefault();
+                if(!isValidFormCustom())
+                    return false;
+                addCustomCarrier();
+            }
+        });
+
+        $("#add_egoi_sms_order_tracking_url").bind('input', function(){
+            if(isValidFormCustom())
+                $('#add_egoi_sms_order_tracking_button').attr('disabled', false);
+            else
+                $('#add_egoi_sms_order_tracking_button').attr('disabled',true);
+        });
+
+        $("#add_egoi_sms_order_tracking_name").bind('input', function(){
+            if(isValidFormCustom())
+                $('#add_egoi_sms_order_tracking_button').attr('disabled', false);
+            else
+                $('#add_egoi_sms_order_tracking_button').attr('disabled',true);
+        });
+
+        $('#custom_carriers_rows').on('click', '.remove_carrier', function (event) {
+            removeCustomCarrier($(event.target).attr('id'));
+        });
+
+        $("#help_carrier_url").click(function(e) {
+            e.preventDefault();
+            activeConfigTab("#nav-tab-sms-help");
+            showConfigWrap("#tab-sms-help");
+            return false;
+        });
+
     });
 
+    function addCustomCarrier(){
+        var carrier = {
+            name:       $("#add_egoi_sms_order_tracking_name").val(),
+            url:        $("#add_egoi_sms_order_tracking_url").val(),
+            security:   smsonw_config_ajax_object.ajax_nonce,
+            action:     'smsonw_add_custom_carrier'
+        };
+        block({type:'input'});
+        $.post(smsonw_meta_box_ajax_object.ajax_url, carrier, function(response) {
+            unblock({type:'input'});
+            if(response.includes('ERROR')) {
+                response = JSON.parse(response);
+                propErrorMessage(response.ERROR);
+            }else{
+                cleanFields();
+                addRowCustomCarrier(carrier);
+            }
+        });
+    }
 
+    function addRowCustomCarrier(carrier){
+        $("#custom_carriers_rows").append('<tr id = "custom_carrier_'+ carrier.name +'">\n' +
+            '<td>\n' +
+            '<span style="width: 100%;" value="">'+ carrier.name +'</span>\n' +
+            '</td>\n' +
+            '<td>\n' +
+            '<span style="min-width: 400px;width: 100%;" value="">'+carrier.url+'</span>\n' +
+            '</td>\n' +
+            '<td>\n' +
+            '<div class="button remove_carrier remove-button" id="remove_custom_carrier_'+ carrier.name +'">x</div>\n' +
+            '</td>\n' +
+            '</tr>');
+    }
+
+    function cleanFields(){
+        $("#add_egoi_sms_order_tracking_name").val('');
+        $("#add_egoi_sms_order_tracking_url").val('');
+    }
+
+    function propErrorMessage(error){
+        $("#tracking_texts_message").append('<div class="notice notice-error is-dismissible">\n' +
+            '        <p>'+ error +'</p>\n' +
+            '        </div>');
+    }
+
+    function removeCustomCarrier(id){
+
+        var carrier = {
+            security: smsonw_config_ajax_object.ajax_nonce,
+            action: 'smsonw_remove_custom_carrier',
+            name: id.replace('remove_custom_carrier_','')
+        };
+        block({type: 'remove', id:id});
+        $.post(smsonw_meta_box_ajax_object.ajax_url, carrier, function(response) {
+            unblock({type: 'remove', id:id});
+            if(response.includes('ERROR')) {
+                response = JSON.parse(response);
+                propErrorMessage(response.ERROR);
+            }else{
+                removeCustomFromTable(id);
+            }
+        });
+    }
+
+    function removeCustomFromTable(id) {
+        $('#'+id.replace('remove_',''))
+            .children('td, th')
+            .animate({
+                padding: 0
+            })
+            .wrapInner('<div />')
+            .children()
+            .slideUp(function () {
+                $(this).closest('tr').remove();
+            });
+    }
+
+    function isValidFormCustom(){
+        return (($("#add_egoi_sms_order_tracking_url").val().length !=0) && ($("#add_egoi_sms_order_tracking_name").val().length != 0));
+    }
+
+    function block(area) {
+        switch (area.type) {
+            case 'input':
+                $( "#add_egoi_sms_order_tracking_button" ).addClass("loading");
+                $("#add_egoi_sms_order_tracking_name").attr('disabled',true);
+                $("#add_egoi_sms_order_tracking_url").attr('disabled',true);
+                break;
+            case 'remove':
+                $( "#"+area.id ).addClass("loading");
+                $( "#"+area.id ).html("&nbsp;&nbsp;");
+                break;
+        }
+    };
+
+    /**
+     * Unblock meta boxes.
+     */
+    function unblock(area) {
+        switch (area.type) {
+            case 'input':
+                $( "#add_egoi_sms_order_tracking_button" ).removeClass("loading");
+                $("#add_egoi_sms_order_tracking_name").attr('disabled',false);
+                $("#add_egoi_sms_order_tracking_url").attr('disabled',false);
+                break;
+            case 'remove':
+                $( "#"+area.id ).removeClass("loading");
+                $( "#"+area.id ).html("x");
+                break;
+        }
+    };
 
     function activeConfigTab(tag) {
         $(".nav-tab-addon").each(function () {

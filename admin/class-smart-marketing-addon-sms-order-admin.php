@@ -81,7 +81,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 */
 	public function smsonw_enqueue_styles() {
 
-        wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/smart-marketing-addon-sms-order-admin.min.css', array(), $this->version, 'all' );
+        wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/smart-marketing-addon-sms-order-admin.css', array(), $this->version, 'all' );
 
 	}
 
@@ -92,8 +92,12 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 */
 	public function smsonw_enqueue_scripts() {
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/smart-marketing-addon-sms-order-admin.min.js', array( 'jquery' ), $this->version, false );
-		wp_enqueue_script( 'smsonw-meta-box-ajax-script', plugin_dir_url( __FILE__ ) . 'js/smsonw_order_action_sms_meta_box.min.js', array('jquery') );
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/smart-marketing-addon-sms-order-admin.js', array( 'jquery' ), $this->version, false );
+        wp_localize_script( $this->plugin_name, 'smsonw_config_ajax_object', array(
+            'ajax_url' => admin_url( 'admin-ajax.php' ),
+            'ajax_nonce' => wp_create_nonce('egoi_add_custom_carrier'),
+        ) );
+		wp_enqueue_script( 'smsonw-meta-box-ajax-script', plugin_dir_url( __FILE__ ) . 'js/smsonw_order_action_sms_meta_box.js', array('jquery') );
 		wp_localize_script( 'smsonw-meta-box-ajax-script', 'smsonw_meta_box_ajax_object', array(
 		        'ajax_url' => admin_url( 'admin-ajax.php' ),
                 'ajax_nonce' => wp_create_nonce('egoi_send_order_sms'),
@@ -220,6 +224,15 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
                 if (isset($response->errorCode)) {
                     return false;
                 }
+            } else if (isset($form_id) && $form_id == 'form-sms-order-tracking-texts') {
+                unset(
+                    $post['_wpnonce'],
+                    $post['_wp_http_referer'],
+                    $post['form_id']
+                );
+
+                update_option('egoi_tracking_carriers_urls', json_encode($post));
+
             }
 	        return true;
         } catch (Exception $e) {
@@ -398,7 +411,77 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 			'side',
 			'core'
 		);
+
 	}
+
+    /**
+     * Add tracking number meta box to order admin page
+     */
+    public function smsonw_order_add_track_number_box() {
+        add_meta_box(
+            'woocommerce-order-my-custom-tracking',
+            __('SMS Tracking code', 'smart-marketing-addon-sms-order'),
+            array( $this, 'smsonw_order_display_tracking_meta_box' ),
+            'shop_order',
+            'side',
+            'core'
+        );
+    }
+
+    /**
+     * The meta box content
+     *
+     * @param $post
+     */
+    public function smsonw_order_display_tracking_meta_box($post) {
+        $order = wc_get_order($post->ID)->get_data();
+        $codes = $this->helper->smsonw_get_tracking_codes($post->ID);
+        $carriers = $this->helper->smsonw_get_tracking_carriers(true);
+        ?>
+            <div class="wide" id="egoi_tracking_for_sms">
+                <input type="hidden" name="egoi_sms_order_id" id="egoi_send_order_sms_order_id"
+                       value="<?php echo $order['id']; ?>"/>
+                <input type="hidden" name="egoi_sms_order_country" id="egoi_send_order_sms_order_country"
+                       value="<?php echo $order['billing']['country']; ?>"/>
+
+                <div class="smsonw-tracking-code__list">
+                    <strong><?php echo esc_html_e( 'Tracking code:', 'smart-marketing-addon-sms-order' ); ?></strong>
+                    <ul>
+                        <?php foreach ($codes as $val){ ?>
+                            <li id="<?php echo $val['tracking_code']; ?>">
+                                <span class="tracking-code-link"><?php echo $carriers[$val['carrier']].': '?></span>
+                                <a href="#" class="tracking-code-link" title="<?php echo $carriers[$val['carrier']]; ?>"><?php echo $val['tracking_code']; ?></a>
+                                <a class="egoi_close_x select2-selection__clear" id="tracking-<?php echo $val['tracking_code']; ?>"  href="#" >×</a>
+                                </li>
+                        <?php } ?>
+                    </ul>
+                </div>
+                <div class="wide" id="egoi_tracking_for_sms_insert" <?php echo (! empty($codes))?'disabled':''; ?> style="<?php echo (! empty($codes))?'display: none;':''; ?>">
+                    <label for="egoi-add-tracking-code"><?php esc_html_e( 'Add tracking code', 'smart-marketing-addon-sms-order' ); ?></label>
+                    <input type="text" id="egoi-add-tracking-code" name="correios_tracking" value="" style="width: 100%;"/>
+                    <div style="display: flex;flex-direction: row;flex-wrap: nowrap;">
+                        <select id="egoi_add_tracking_carrier" name="wc_order_action" style="height: 28px !important;width: 100%;box-sizing: border-box;float: left;">
+                            <option value=""><?php _e('Select an option...', 'smart-marketing-addon-sms-order'); ?></option>
+                            <?php foreach ($carriers as $key => $carrier){ ?>
+                                <option value="<?php echo $key; ?>"><?php echo $carrier ?></option>
+                            <?php } ?>
+                        </select>
+                        <div id="egoi_add_tracking" class="button wc-reload" disabled ><span><?php _e('Apply', 'smart-marketing-addon-sms-order'); ?></span></div>
+                    </div>
+                </div>
+            </div>
+
+        <style>
+            .egoi_close_x{
+
+                color: #444;
+                margin-left: .4em;
+                text-decoration: none;
+                vertical-align: baseline;
+            }
+        </style>
+        <?php
+        }
 
 	/**
 	 * The meta box content
@@ -471,6 +554,139 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 		}
 		wp_die();
 	}
+
+    /**
+     * Add track number
+     */
+    public function smsonw_order_add_tracking_number() {
+        check_ajax_referer( 'egoi_send_order_sms', 'security' );
+
+        $order_id       = filter_var($_POST['order_id'], FILTER_SANITIZE_NUMBER_INT);
+        $tracking_code  = sanitize_text_field($_POST['code']);
+        $carrier        = sanitize_text_field($_POST['carrier']);
+        $order          = wc_get_order($order_id);
+
+        if ( method_exists( $order, 'get_meta' ) ) {
+            $obj = $order->get_meta( '_tracking_code_egoi' );
+        } else {
+            $obj = $order->correios_tracking_code;
+        }
+
+        $obj = json_decode($obj,true);
+        if(json_last_error() !== JSON_ERROR_NONE)
+            $obj = [];
+
+        foreach ($obj as $track){
+            if(false !== array_search($tracking_code, array_column($track,'tracking_code'))){
+                echo json_encode(['ERROR' => 'ALREADY_EXISTS']);
+                wp_die();
+            }
+        }
+
+        $obj[]=[
+            'carrier'       => $carrier,
+            'tracking_code' => $tracking_code
+        ];
+
+        if ( method_exists( $order, 'update_meta_data' ) ) {
+            $order->update_meta_data( '_tracking_code_egoi', json_encode($obj) );
+            $order->save();
+        } else {
+            update_post_meta( $order->id, '_tracking_code_egoi', json_encode($obj) );
+        }
+
+
+        $order->add_order_note( sprintf( __( 'Added a E-goi tracking: %s', 'smart-marketing-addon-sms-order' ), $tracking_code ) );
+        echo json_encode(['RESPONSE' => 'SUCCESS']);
+        wp_die();
+    }
+
+    /*
+     * Delete tracking number
+     * */
+    public function smsonw_order_delete_tracking_number(){
+        check_ajax_referer( 'egoi_send_order_sms', 'security' );
+        $order_id       = filter_var($_POST['order_id'], FILTER_SANITIZE_NUMBER_INT);
+        $tracking_code  = sanitize_text_field($_POST['code']);
+        $order          = wc_get_order($order_id);
+
+        if ( method_exists( $order, 'get_meta' ) ) {
+            $obj = $order->get_meta( '_tracking_code_egoi' );
+        } else {
+            $obj = $order->correios_tracking_code;
+        }
+
+        $obj = $this->jsonValidOrEmpryArray($obj);
+
+        $newObjs = [];
+        foreach ($obj as $track){
+            if(false == array_search($tracking_code, array_column($track,'tracking_code'))){
+                continue;
+            }
+            $newObjs[] = $track;
+        }
+
+        if ( method_exists( $order, 'update_meta_data' ) ) {
+            $order->update_meta_data( '_tracking_code_egoi', json_encode($newObjs) );
+            $order->save();
+        } else {
+            update_post_meta( $order->id, '_tracking_code_egoi', json_encode($newObjs) );
+        }
+
+        $order->add_order_note( sprintf( __( 'Removed a E-goi tracking: %s', 'woocommerce-correios' ), $tracking_code ) );
+        echo json_encode(['RESPONSE' => 'SUCCESS']);
+        wp_die();
+    }
+
+    public function smsonw_add_custom_carrier(){
+        check_ajax_referer( 'egoi_add_custom_carrier', 'security' );
+        $carrier    = trim($_POST['name']);
+        $url        = trim($_POST['url']);
+        $obj = get_option('egoi_custom_carriers');
+
+
+        $obj = $this->jsonValidOrEmpryArray($obj);
+
+
+        if(false !== array_search($carrier, array_column($obj,'carrier'))){
+            echo json_encode(['ERROR' => __('One carrier with the same name already exists!', 'smart-marketing-addon-sms-order')]);
+            wp_die();
+        }
+
+        $obj[] = [
+            'carrier' => $carrier,
+            'url' => $url
+        ];
+
+        update_option('egoi_custom_carriers', json_encode(array_values($obj)));
+
+        echo json_encode(['RESPONSE' => 'SUCCESS']);
+        wp_die();
+    }
+
+    public function smsonw_remove_custom_carrier(){
+        check_ajax_referer( 'egoi_add_custom_carrier', 'security' );
+        $carrier    = trim($_POST['name']);
+        $obj = get_option('egoi_custom_carriers');
+
+        $obj = $this->jsonValidOrEmpryArray($obj);
+
+        if(false !== $index = array_search($carrier, array_column($obj,'carrier'))){
+            unset($obj[$index]);
+            update_option('egoi_custom_carriers', json_encode(array_values($obj)));
+            echo json_encode(['RESPONSE' => $obj]);
+            wp_die();
+        }
+        echo json_encode(['ERROR' => __('The carrier you are trying to delete was not found.', 'smart-marketing-addon-sms-order') ]);
+        wp_die();
+    }
+
+    private function jsonValidOrEmpryArray($obj){
+        $obj = json_decode($obj,true);
+        if(json_last_error() !== JSON_ERROR_NONE || empty($obj))
+            $obj = [];
+        return $obj;
+    }
 
 	/**
 	 * Add new interval to wordpress cron schedules

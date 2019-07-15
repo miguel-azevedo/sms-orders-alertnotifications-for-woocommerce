@@ -23,6 +23,7 @@ $recipients = json_decode(get_option('egoi_sms_order_recipients'), true);
 $texts = json_decode(get_option('egoi_sms_order_texts'), true);
 $payment_texts = json_decode(get_option('egoi_sms_order_payment_texts'), true);
 $senders = $this->helper->smsonw_get_senders();
+$soap_error = $this->helper->smsonw_get_soap_error();
 $balance = $this->helper->smsonw_get_balance();
 $reminder_times = array('1','12', '24', '36', '48', '72');
 
@@ -50,6 +51,10 @@ $reminder_times = array('1','12', '24', '36', '48', '72');
         <?php _e('Payments SMS', 'smart-marketing-addon-sms-order'); ?>
     </a>
 
+    <a class="nav-tab nav-tab-addon" id="nav-tab-sms-tracking-texts">
+        <?php _e('SMS URL de Tracking', 'smart-marketing-addon-sms-order'); ?>
+    </a>
+
     <a class="nav-tab nav-tab-addon" id="nav-tab-sms-help">
         <?php _e('Help', 'smart-marketing-addon-sms-order'); ?>
     </a>
@@ -70,7 +75,7 @@ $reminder_times = array('1','12', '24', '36', '48', '72');
                 }
             ?>
 
-            <?php if (empty($senders)) { ?>
+            <?php if (empty($senders) && !$soap_error)  { ?>
 
                 <div class="notice notice-error" style="max-width: 800px;">
                     <p>
@@ -79,6 +84,18 @@ $reminder_times = array('1','12', '24', '36', '48', '72');
                         <a id="button_view_help" target="_blank"><?php _e('View help','smart-marketing-addon-sms-order');?></a>
                     </p>
                 </div>
+
+            <?php } ?>
+
+            <?php if ($soap_error)  {
+                $sender=null;
+                ?>
+
+            <div class="notice notice-error" style="max-width: 800px;">
+                <p>
+                    <?php _e( 'We are having some technical difficulties reaching the endpoint. Please try again latter.', 'smart-marketing-addon-sms-order' ); ?>
+                </p>
+            </div>
 
             <?php } ?>
 
@@ -553,6 +570,14 @@ $reminder_times = array('1','12', '24', '36', '48', '72');
                 </p>
                 <br>
 
+                <p class="help-title"><?php _e('SMS Tracking', 'smart-marketing-addon-sms-order');?></p>
+                <p>
+                    <?php
+                    _e('how the tracking works info here.........', 'smart-marketing-addon-sms-order');
+                    ?>
+                </p>
+                <br>
+
                 <p class="help-title"><?php _e('More information', 'smart-marketing-addon-sms-order');?></p>
                 <p>
                     <?php
@@ -584,6 +609,115 @@ $reminder_times = array('1','12', '24', '36', '48', '72');
                 </p>
 
 
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- wrap SMS Payment Info Texts -->
+<div class="wrap tab wrap-addon" id="tab-sms-tracking-texts">
+    <div class="wrap egoi4wp-settings" id="tab-forms">
+        <div class="row">
+
+            <div id="tracking_texts_message">
+                <?php
+                if (isset($_POST['form_id']) && $_POST['form_id'] == 'form-sms-order-tracking-texts') {
+                    if ($result) {
+                        $this->helper->smsonw_admin_notice_success();
+                    } else {
+                        $this->helper->smsonw_admin_notice_error();
+                    }
+                }
+                ?>
+            </div>
+
+            <div class="main-content col col-12" style="margin:0 0 20px;">
+
+                <p class="label_text"><?php _e('This plugin is integrated with package tracking system', 'smart-marketing-addon-sms-order');?></p>
+
+                <p class="label_text"><?php _e('Insert the carrier\'s website', 'smart-marketing-addon-sms-order');?></p>
+                <br/>
+                <form action="#" method="post" class="form-sms-order-config" id="form-sms-order-tracking-texts">
+                    <?php wp_nonce_field( 'form-sms-order-tracking-texts' ); ?>
+                    <input name="form_id" type="hidden" value="form-sms-order-tracking-texts" />
+
+                    <div id="sms_order_tracking_urls">
+                        <table border="0" class="widefat striped" style="max-width: 900px;">
+                            <thead>
+                                <tr>
+                                    <th><?php _e('Carriers Name', 'smart-marketing-addon-sms-order');?></th>
+                                    <th><?php _e('Carriers URL', 'smart-marketing-addon-sms-order');?>&nbsp;&nbsp;<a href="#" class="egoi_tooltip" id="help_carrier_url"><i class="qtip tip-right" data-tip=" <?php echo __('This url will be replacing the %tracking_url% shortcode.', 'smart-marketing-addon-sms-order'); ?>">?</i></a></th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            <?php
+                            $urls = $this->helper->smsonw_get_tracking_carriers_urls();
+                            ?>
+
+                            <?php foreach ($this->helper->smsonw_get_tracking_carriers() as $tracking_code_name => $tracking_name) { ?>
+                                <tr>
+                                    <td><span><?=$tracking_name?></span></td>
+                                    <td>
+                                        <input name="<?=$tracking_code_name?>" id="egoi_sms_order_tracking_<?=$tracking_code_name?>" style="min-width: 400px;width: 100%;" value="<?php echo isset($urls[$tracking_code_name])?$urls[$tracking_code_name]:''; ?>"/>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                            </tbody>
+                        </table>
+                        <br/>
+                        <p class="label_text"><?php _e('Or add a custom carrier...', 'smart-marketing-addon-sms-order');?></p>
+                        <br/>
+                        <div class="" id="egoi_custom_carrier">
+                            <table border="0" class="widefat striped" style="max-width: 900px;">
+                                <thead>
+                                <tr>
+                                    <th><?php _e('Carriers Name', 'smart-marketing-addon-sms-order');?></th>
+                                    <th><?php _e('Carriers URL', 'smart-marketing-addon-sms-order');?>&nbsp;&nbsp;<a href="#" class="egoi_tooltip" id="help_carrier_url"><i class="qtip tip-right" data-tip=" <?php echo __('This url will be replacing the %tracking_url% shortcode.', 'smart-marketing-addon-sms-order'); ?>">?</i></a></th>
+                                    <th></th>
+                                </tr>
+                                </thead>
+                                <tbody id = "custom_carriers_rows" >
+                                <?php
+                                    $custom_carriers = $this->helper->smsonw_get_custom_tracking_carriers();
+                                ?>
+                                <tr>
+                                    <td>
+                                        <input name="add_egoi_sms_order_tracking_name" id="add_egoi_sms_order_tracking_name" style="width: 100%;" value=""/>
+                                    </td>
+                                    <td>
+                                        <input name="add_egoi_sms_order_tracking_url" id="add_egoi_sms_order_tracking_url" style="min-width: 400px;width: 100%;" value=""/>
+                                    </td>
+                                    <td>
+                                        <div class="button" id="add_egoi_sms_order_tracking_button">+</div>
+                                    </td>
+                                </tr>
+
+                                <?php foreach ($custom_carriers as $carrier){ ?>
+
+                                    <tr id = "custom_carrier_<?php echo $carrier['carrier']; ?>">
+                                        <td>
+                                            <span style="width: 100%;" value=""><?php echo $carrier['carrier']; ?></span>
+                                        </td>
+                                        <td>
+                                            <span style="min-width: 400px;width: 100%;" value=""><?php echo $carrier['url']; ?></span>
+                                        </td>
+                                        <td>
+                                            <div class="button remove_carrier remove-button" id="remove_custom_carrier_<?php echo $carrier['carrier']; ?>">x</div>
+                                        </td>
+                                    </tr>
+
+                                <?php } ?>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <?php submit_button(); ?>
+                    </div>
+
+                </form>
             </div>
         </div>
     </div>

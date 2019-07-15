@@ -165,16 +165,19 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
      * @var array List of SMS text tags
      */
     public $sms_text_tags = array(
-        "order_id" => '%order_id%',
-        "order_status" => '%order_status%',
-        "total" => '%total%',
-        "currency" => '%currency%',
-        "payment_method" => '%payment_method%',
-        "reference" => '%ref%',
-        "entity" => '%ent%',
-        "shop_name" => '%shop_name%',
-        "billing_name" => '%billing_name%',
-        "billet_URL" => '%billet_url%'
+        "order_id"          => '%order_id%',
+        "order_status"      => '%order_status%',
+        "total"             => '%total%',
+        "currency"          => '%currency%',
+        "payment_method"    => '%payment_method%',
+        "reference"         => '%ref%',
+        "entity"            => '%ent%',
+        "shop_name"         => '%shop_name%',
+        "billing_name"      => '%billing_name%',
+        "billet_URL"        => '%billet_url%',
+        "tracking_name"     => '%tracking_name%',
+        "tracking_code"     => '%tracking_code%',
+        "tracking_url"      => '%tracking_url%'
     );
 
     /**
@@ -188,13 +191,27 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 	 * @since    1.0.0
 	 */
 	public function __construct() {
-        $this->egoi_api_client = new SoapClient('http://api.e-goi.com/v2/soap.php?wsdl');
+	    try{
+            $this->egoi_api_client = new SoapClient('http://api.e-goi.com/v2/soap.php?wsdl');
+        }catch (Exception $e){
+
+	    }
 
 		$apikey = get_option('egoi_api_key');
 		$this->apikey = $apikey['api_key'];
 		//check if api is on
 		$this->ping();
 	}
+
+    /**
+     * @return bool
+     */
+    public function smsonw_get_soap_error() {
+        if(empty($this->egoi_api_client))
+            return true;
+        return false;
+    }
+
 
     /**
      * @return array
@@ -240,10 +257,14 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 	 * @return array with senders
 	 */
 	public function smsonw_get_senders() {
-		$result = $this->egoi_api_client->getSenders(array(
+
+	    if(empty($this->egoi_api_client))
+	        return [];
+        $result = $this->egoi_api_client->getSenders(array(
             'apikey' 		=> $this->apikey,
             'channel' 		=> 'telemovel'
         ));
+
 		return $result;
 	}
 
@@ -251,8 +272,13 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
      * @return string
      */
 	public function smsonw_get_balance() {
+
+        if(empty($this->egoi_api_client))
+            return '0.00$';
+
         $credits = explode(' ',$this->egoi_api_client->getClientData(array('apikey' => $this->apikey))['CREDITS']);
         return $credits[1].$this->currency[$credits[0]];
+
     }
 
 	/**
@@ -395,17 +421,33 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
      */
     public function smsonw_get_tags_content($order, $message, $billet_code = false)
     {
+        $codes = $this->smsonw_get_tracking_codes($order['id']);
+        $carriers = $this->smsonw_get_tracking_carriers(true);
+        $carriers_url = $this->smsonw_get_tracking_carriers_urls(true);
         $tags = array(
-            '%order_id%' => $order['id'],
-            '%order_status%' => $order['status'],
-            '%total%' => $order['total'],
-            '%currency%' => $order['currency'],
-            '%payment_method%' => $order['payment_method'],
-            '%ref%' => $this->smsonw_get_payment_data($order, 'ref'),
-            '%ent%' => $this->smsonw_get_payment_data($order, 'ent'),
-            '%shop_name%' => get_bloginfo('name'),
-            '%billing_name%' => $order['billing']['first_name'] . ' ' . $order['billing']['last_name']
+            '%order_id%'        => $order['id'],
+            '%order_status%'    => $order['status'],
+            '%total%'           => $order['total'],
+            '%currency%'        => $order['currency'],
+            '%payment_method%'  => $order['payment_method'],
+            '%ref%'             => $this->smsonw_get_payment_data($order, 'ref'),
+            '%ent%'             => $this->smsonw_get_payment_data($order, 'ent'),
+            '%shop_name%'       => get_bloginfo('name'),
+            '%billing_name%'    => $order['billing']['first_name'] . ' ' . $order['billing']['last_name'],
+
+            '%tracking_name%'   => (isset($codes[0]['carrier']) &&isset($carriers[$codes[0]['carrier']]))
+                ?$carriers[$codes[0]['carrier']]
+                :'',
+
+            '%tracking_code%'   => (isset($codes[0]['tracking_code']))
+                ?$codes[0]['tracking_code']
+                :'',
+
+            '%tracking_url%'    => (isset($carriers_url[$codes[0]['carrier']]))
+                ?$carriers_url[$codes[0]['carrier']]
+                :''
         );
+
 
         if ($billet_code) {
             $tags['%billet_url%'] = get_site_url(null, '/wp-json/smsonw/v1/billet?c=' . $billet_code);
@@ -429,6 +471,15 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
             }
             $message = str_replace($tag, $content, $message);
         }
+
+        wp_mail("tmota@e-goi.com","messagem",var_export(
+                [
+                    '$codes'=>$codes,
+                    '$carriers' => $carriers,
+                    '$carriers_url' => $carriers_url,
+                    'message' => $message,
+                ],true)
+        );
 
         return $message;
     }
@@ -579,6 +630,82 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 			return true;
 		}
 	}
+
+    /**
+     * Get tracking codes from order.
+     *
+     * @param  WC_Order|int $order Order ID or order data.
+     *
+     * @return array
+     */
+    function smsonw_get_tracking_codes( $order ) {
+
+        if (is_numeric($order))
+            $order = wc_get_order($order);
+
+        if(! $order instanceof WC_Order)//order not found
+            return[];
+
+        if ( method_exists( $order, 'get_meta' ) ) {
+            $codes = $order->get_meta( '_tracking_code_egoi' );
+        } else {
+            $codes = isset($order->_tracking_code_egoi)?isset($order->_tracking_code_egoi):'[]';
+        }
+
+        return json_decode($codes, true);
+    }
+
+    function smsonw_get_tracking_carriers($flag = false){
+        $methods = WC()->shipping->get_shipping_methods();
+        $output = [];
+        foreach ($methods as $key => $value){
+
+            if(empty( (is_array($value)?$value['method_title']:$value->method_title) ))
+                continue;
+
+            $output[$key] = is_array($value)?$value['method_title']:$value->method_title;
+        }
+
+        if($flag == false)
+            return $output;
+
+        $customs = $this->smsonw_get_custom_tracking_carriers();
+        foreach ($customs as $custom){
+            $output[$custom['carrier']] = $custom['carrier'];
+        }
+        return $output;
+    }
+
+    function smsonw_get_tracking_carriers_urls($flag = false){
+        $objs = get_option('egoi_tracking_carriers_urls');
+
+        $objs_costum = ($flag === true)?$this->smsonw_get_custom_tracking_carriers():[];
+
+        if(empty($objs))
+            $objs = [];
+        else
+            $objs = json_decode($objs,true);
+
+        if(empty($objs_costum))
+            $objs_costum = [];
+        else
+            $objs_costum = json_decode($objs_costum,true);
+
+        foreach ($objs_costum as $costum){
+            $objs[$costum['carrier']] = $costum['url'];
+        }
+
+        return $objs;
+    }
+
+    function smsonw_get_custom_tracking_carriers(){
+        $objs = get_option('egoi_custom_carriers');
+        if(empty($objs))
+            return [];
+        $objs = json_decode($objs,true);
+        return (json_last_error() !== JSON_ERROR_NONE)?[]:$objs;
+    }
+
 
 
 }

@@ -70,7 +70,7 @@ class Smart_Marketing_Addon_Sms_Order {
 		if ( defined( 'PLUGIN_NAME_VERSION' ) ) {
 			$this->version = PLUGIN_NAME_VERSION;
 		} else {
-			$this->version = '1.2.1';
+			$this->version = '1.3.0';
 		}
 		$this->plugin_name = 'smart-marketing-addon-sms-order';
 
@@ -173,9 +173,15 @@ class Smart_Marketing_Addon_Sms_Order {
 
 		// Box send SMS in admin order page
 		$this->loader->add_action('add_meta_boxes', $plugin_admin, 'smsonw_order_add_sms_meta_box');
+        $this->loader->add_action('add_meta_boxes', $plugin_admin, 'smsonw_order_add_track_number_box');
 		$this->loader->add_action('wp_ajax_smsonw_order_action_sms_meta_box', $plugin_admin, 'smsonw_order_action_sms_meta_box');
+        $this->loader->add_action('wp_ajax_smsonw_order_add_tracking_number', $plugin_admin, 'smsonw_order_add_tracking_number');
+        $this->loader->add_action('wp_ajax_smsonw_order_delete_tracking_number', $plugin_admin, 'smsonw_order_delete_tracking_number');
+        $this->loader->add_action('wp_ajax_smsonw_add_custom_carrier', $plugin_admin, 'smsonw_add_custom_carrier');
+        $this->loader->add_action('wp_ajax_smsonw_remove_custom_carrier', $plugin_admin, 'smsonw_remove_custom_carrier');
 
-		// Check type of payment and send SMS
+
+        // Check type of payment and send SMS
 		$this->loader->add_action('woocommerce_order_status_on-hold', $plugin_admin, 'smsonw_order_send_sms_payment_data');
 
 		// When change order status, send SMS
