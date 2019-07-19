@@ -21,7 +21,7 @@
  * Author URI:        https://www.e-goi.com
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
- * Text Domain:       sms-orders-alertnotifications-for-woocommerce
+ * Text Domain:       smart-marketing-addon-sms-order
  * Domain Path:       /languages
  * WC requires at least: 3.2
  * WC tested up to: 3.6.2

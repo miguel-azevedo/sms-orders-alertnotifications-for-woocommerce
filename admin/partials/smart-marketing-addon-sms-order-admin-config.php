@@ -52,7 +52,7 @@ $reminder_times = array('1','12', '24', '36', '48', '72');
     </a>
 
     <a class="nav-tab nav-tab-addon" id="nav-tab-sms-tracking-texts">
-        <?php _e('SMS URL de Tracking', 'smart-marketing-addon-sms-order'); ?>
+        <?php _e('SMS URL Tracking', 'smart-marketing-addon-sms-order'); ?>
     </a>
 
     <a class="nav-tab nav-tab-addon" id="nav-tab-sms-help">
