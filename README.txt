@@ -4,7 +4,7 @@ Donate link: https://www.e-goi.com
 Tags: SMS, Orders, WooCommerce, Notifications, Alert, sms, order, Subscribe, E-goi, Marketing Automation, egoi, List, SMS Marketing, Marketing
 Requires at least: 4.7
 Tested up to: 5.2.2
-Stable tag: 1.2.2
+Stable tag: 1.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -98,6 +98,13 @@ If you wish to send notifications with the Multibanco payment data, you need to 
 3. Encomenda com opção de envio de SMS directo ao cliente
 
 == Changelog ==
+
+= 1.3.0 =
+* Added order tracking code via sms
+* readme.txt improvements
+* Tested with wordpress 5.2.2 / Bumped `Tested up to` tag
+* Tested with WooCommerce 3.6.5 / Bumped `WC tested up to` tag
+* Minor improvements.
 
 = 1.2.2 =
 * Minor improvements.
