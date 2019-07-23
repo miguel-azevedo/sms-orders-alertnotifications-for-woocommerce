@@ -87,9 +87,12 @@ $reminder_times = array('1','12', '24', '36', '48', '72');
 
             <?php } ?>
 
-            <?php if ($soap_error)  {
-                $sender=null;
-                ?>
+            <?php
+
+            if ($soap_error)  {
+                    $senders=null;
+
+            ?>
 
             <div class="notice notice-error" style="max-width: 800px;">
                 <p>
@@ -111,8 +114,8 @@ $reminder_times = array('1','12', '24', '36', '48', '72');
                                 <p class="label_text" style="margin-top: 8px;"><?php _e('E-goi SMS Sender', 'smart-marketing-addon-sms-order');?></p>
 
                                 <select class="e-goi-option-select-admin-forms" style="width: 100%;" name="sender_hash" id="sender_hash" required>
-                                    <option value="" disabled selected>
-                                        <?php _e('Select sender', 'smart-marketing-addon-sms-order');?>
+                                    <option value="off" selected>
+                                        <?php _e('Disable', 'smart-marketing-addon-sms-order');?>
                                     </option>
                                     <?php
                                     if (isset($senders) && count($senders) > 0) {
@@ -573,7 +576,7 @@ $reminder_times = array('1','12', '24', '36', '48', '72');
                 <p class="help-title"><?php _e('SMS Tracking', 'smart-marketing-addon-sms-order');?></p>
                 <p>
                     <?php
-                    _e('how the tracking works info here.........', 'smart-marketing-addon-sms-order');
+                    _e('To send SMS with the shipping info, you must configure the carriers you want to use and their tracking or website URLs. You need to include the customization codes (tracking_code, tracking_url, tracking_name) in the order statuses and messages you want to send. The plugin will add a widget on the order page where you can choose which carrier will be used for the shipment and its tracking code. This data will be used in SMS.', 'smart-marketing-addon-sms-order');
                     ?>
                 </p>
                 <br>
@@ -634,9 +637,9 @@ $reminder_times = array('1','12', '24', '36', '48', '72');
 
             <div class="main-content col col-12" style="margin:0 0 20px;">
 
-                <p class="label_text"><?php _e('This plugin is integrated with package tracking system', 'smart-marketing-addon-sms-order');?></p>
+                <p class="label_text"><?php _e('Use this plugin to send SMS with information about shipping orders. You can use the carriers already configured in your WooCommerce or insert the ones you want.', 'smart-marketing-addon-sms-order');?></p>
 
-                <p class="label_text"><?php _e('Insert the carrier\'s website', 'smart-marketing-addon-sms-order');?></p>
+                <p class="label_text"><?php _e('Carriers already configured in your WooCommerce. Add tracking url or website.', 'smart-marketing-addon-sms-order');?></p>
                 <br/>
                 <form action="#" method="post" class="form-sms-order-config" id="form-sms-order-tracking-texts">
                     <?php wp_nonce_field( 'form-sms-order-tracking-texts' ); ?>
@@ -668,7 +671,7 @@ $reminder_times = array('1','12', '24', '36', '48', '72');
                             </tbody>
                         </table>
                         <br/>
-                        <p class="label_text"><?php _e('Or add a custom carrier...', 'smart-marketing-addon-sms-order');?></p>
+                        <p class="label_text"><?php _e('Need more Carriers? Please add it here. Insert tracking url or website.', 'smart-marketing-addon-sms-order');?></p>
                         <br/>
                         <div class="" id="egoi_custom_carrier">
                             <table border="0" class="widefat striped" style="max-width: 900px;">

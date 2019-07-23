@@ -72,6 +72,8 @@ class Smart_Marketing_Addon_Sms_Order_Activator {
 
 
 		dbDelta( $sqlb );
+
+        update_option('egoi_activation_data', time());
 	}
 
 	/**

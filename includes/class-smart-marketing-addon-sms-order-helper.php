@@ -320,12 +320,15 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 		$texts = json_decode(get_option('egoi_sms_order_texts'), true);
 		$lang = $this->smsonw_get_lang($order['billing']['country']);
 
-		if (isset($texts[$lang]['egoi_sms_order_text_' . $recipient_type . '_' . $order['status']])
+        if (isset($texts[$lang]['egoi_sms_order_text_' . $recipient_type . '_' . $order['status']])
             && isset($recipients['egoi_sms_order_' . $recipient_type . '_' . $order['status']])
             && $recipients['egoi_sms_order_' . $recipient_type . '_' . $order['status']] == 1
         ) {
             return $this->smsonw_get_tags_content($order, $texts[$lang]['egoi_sms_order_text_' . $recipient_type . '_' . $order['status']]);
-		} else if (isset($this->sms_text_new_status[$lang]['egoi_sms_order_text_' . $recipient_type . '_' . $order['status']])) {
+		} else if (isset($this->sms_text_new_status[$lang]['egoi_sms_order_text_' . $recipient_type . '_' . $order['status']])
+            && isset($recipients['egoi_sms_order_' . $recipient_type . '_' . $order['status']])
+            && $recipients['egoi_sms_order_' . $recipient_type . '_' . $order['status']] == 1
+        ) {
             return $this->smsonw_get_tags_content($order, $this->sms_text_new_status[$lang]['egoi_sms_order_text_' . $recipient_type . '_' . $order['status']]);
         }
 		return false;
@@ -472,14 +475,6 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
             $message = str_replace($tag, $content, $message);
         }
 
-        wp_mail("tmota@e-goi.com","messagem",var_export(
-                [
-                    '$codes'=>$codes,
-                    '$carriers' => $carriers,
-                    '$carriers_url' => $carriers_url,
-                    'message' => $message,
-                ],true)
-        );
 
         return $message;
     }

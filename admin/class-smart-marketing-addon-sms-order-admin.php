@@ -173,6 +173,8 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
                 ));
 
                 update_option('egoi_sms_order_sender', json_encode($sender));
+                if($post['sender_hash'] == 'off')
+                    delete_option('egoi_sms_order_sender');
                 update_option('egoi_sms_order_recipients', json_encode($recipients));
 
             } else if (isset($form_id) && $form_id == 'form-sms-order-texts') {
@@ -320,11 +322,12 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
         }
     }
 
-	/**
+    /**
      * Send SMS when order status changed
      *
-	 * @param $order_id
-	 */
+     * @param $order_id
+     * @return bool
+     */
 	public function smsonw_order_send_sms_new_status($order_id) {
 
         if (!$this->sms_sent) {
@@ -337,6 +340,10 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
             }
 
             $sender = json_decode(get_option('egoi_sms_order_sender'), true);
+
+            if(empty($sender))
+                return false;
+
             $order = wc_get_order($order_id)->get_data();
 
             $types = array('admin' => $sender['admin_prefix'] . '-' . $sender['admin_phone']);
@@ -351,7 +358,9 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
                     $this->helper->smsonw_send_sms($recipient, $message, $order['status'], $order['id']);
                 }
             }
+            return true;
         }
+        return false;
 	}
 
 	/**
