@@ -1,7 +1,7 @@
-=== Plugin Name ===
+=== SMS Orders Alert/Notifications for WooCommerce ===
 Contributors: E-goi
 Donate link: https://www.e-goi.com
-Tags: SMS, Orders, WooCommerce, Notifications, Alert, sms, order, Subscribe, E-goi, Marketing Automation, egoi, List, SMS Marketing, Marketing
+Tags: SMS, Orders, WooCommerce, Notifications, Alert, sms, order, Subscribe, E-goi, Marketing Automation, egoi, List, SMS Marketing, Marketing, shipping, tracking number, carrier, transportadora
 Requires at least: 4.7
 Tested up to: 5.2.2
 Stable tag: 1.3.2
@@ -12,7 +12,7 @@ Aumente as suas conversões, envie notificações SMS com os dados para pagament
 
 == Description ==
 
-Envie notificações SMS aos seus clientes e administradores sempre se altere o estado da encomenda no seu WooCommerce. Aumente as suas conversões, envie notificações SMS com os dados para pagamento Multibanco. Reduza as encomendas sem pagamento Multibanco com o envio de lembretes SMS.
+Envie notificações SMS aos seus clientes e administradores sempre se altere o estado da encomenda no seu WooCommerce. Aumente as suas conversões, envie notificações SMS com os dados para pagamento Multibanco e informações sobre o envio da encomenda. Reduza as encomendas sem pagamento Multibanco com o envio de lembretes SMS.
 
 **OFERTA 50 SMS** [Ao contratar um plano E-GOI Starter](https://login.egoiapp.com/signup "Contratar um plano E-GOI Starter")
 
@@ -32,6 +32,11 @@ Envie notificações SMS aos seus clientes e administradores sempre se altere o 
 *   Opção de envio de SMS com os dados para pagamentos do PagSeguro - (de momento, compatível com o plugin WooCommerce PagSeguro)
 *   Opção de envio de lembrete SMS, em caso da encomenda ainda estar aguardar o pagamento Multibanco, PagSeguro e EasyPay
 *   Opção para configuração de prazo de envio de lembrete
+*	**Novidade** Envio de SMS com os dados do Envio (Nome da Transportadora, Código de acompanhamento, URL)
+*	**Novidade** Identificação das transportadoras já configuradas no WooCommerce.
+*	**Novidade** Possibilidade a adicionar novas transportadoras.
+*	**Novidade** Escolha do serviço de envio a usar, directamente da página de encomenda.
+
 
 **Requisitos**
 
@@ -42,10 +47,12 @@ Necessita ter instalado o [plugin E-goi Smart Marketing](https://wordpress.org/p
 Se desejar enviar notificações com os dados de pagamento Multibanco necessita de ter instalado o plugin do euPago ou IfthenPay, e o [WooCommerce PagSeguro](https://wordpress.org/plugins/woocommerce-pagseguro/ "WooCommerce PagSeguro") se for usar o PagSeguro.
 
 ---
+---
+---
 
 **Increase your conversions, send SMS notifications with the data for Multibanco (Portuguese payment gateway) and PagSeguro (Brazilian payment gateway) payment.**
 
-Send SMS notifications to your customers and website administrators whenever your order status changes on your WooCommerce. Increase your conversions, send SMS notifications with the data for Multibanco (Portuguese payment gateway) and PagSeguro (Brazilian payment gateway) payment. Reduce Multibanco or PagSeguro orders without payment by sending SMS reminders.
+Send SMS notifications to your customers and website administrators whenever your order status changes on your WooCommerce. Increase your conversions, send SMS notifications with the data for Multibanco (Portuguese payment gateway), PagSeguro (Brazilian payment gateway) payment and order shipping information. Reduce Multibanco or PagSeguro orders without payment by sending SMS reminders.
 
 **SMS 50 OFFER** [When subscribing to a Starter E-GOI Plan](https://login.egoiapp.com/signup "subscribe to a Starter E-GOI Plan")
 
@@ -65,6 +72,11 @@ Send SMS notifications to your customers and website administrators whenever you
 *   Option to send SMS with data for PagSeguro payments - (for the moment, compatible with the plugin WooCommerce PagSeguro)
 *   Option to send SMS reminder, in case the order is still waiting for Multibanco, PagSeguro payment or EasyPay
 *   Configuration option for the SMS remider schedule
+*	**New** Send SMS with Shipping info (Carrier Name, Tracking number, URL)
+*	**New** Send SMS with information from carriers already configured on your WooCommerce.
+*	**New** Add new custom carriers.
+*	**New** Choose which shipping service to use, directly from the ordering page.
+
 
 **Requirements**
 
@@ -132,4 +144,3 @@ If you wish to send notifications with the Multibanco payment data, you need to 
 
 = 1.0.0 =
 * SMS Orders Alert/Notifications for WooCommerce First Version.
-
