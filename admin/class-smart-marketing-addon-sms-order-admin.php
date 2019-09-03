@@ -90,19 +90,22 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 	 *
 	 * @since    1.0.0
 	 */
-	public function smsonw_enqueue_scripts() {
+	public function smsonw_enqueue_scripts($hook) {
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/smart-marketing-addon-sms-order-admin.js', array( 'jquery' ), $this->version, false );
-        wp_localize_script( $this->plugin_name, 'smsonw_config_ajax_object', array(
-            'ajax_url' => admin_url( 'admin-ajax.php' ),
-            'ajax_nonce' => wp_create_nonce('egoi_add_custom_carrier'),
-        ) );
-		wp_enqueue_script( 'smsonw-meta-box-ajax-script', plugin_dir_url( __FILE__ ) . 'js/smsonw_order_action_sms_meta_box.js', array('jquery') );
-		wp_localize_script( 'smsonw-meta-box-ajax-script', 'smsonw_meta_box_ajax_object', array(
-		        'ajax_url' => admin_url( 'admin-ajax.php' ),
+        if(strpos($hook,'post.php') !== false) {
+            wp_enqueue_script('smsonw-meta-box-ajax-script', plugin_dir_url(__FILE__) . 'js/smsonw_order_action_sms_meta_box.js', array('jquery'));
+            wp_localize_script('smsonw-meta-box-ajax-script', 'smsonw_meta_box_ajax_object', array(
+                'ajax_url' => admin_url('admin-ajax.php'),
                 'ajax_nonce' => wp_create_nonce('egoi_send_order_sms'),
-        ) );
-
+            ));
+        }
+        if(strpos($hook,'smart-marketing-addon-sms-order-config') !== false){
+            wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/smart-marketing-addon-sms-order-admin.js', array( 'jquery' ), $this->version, false );
+            wp_localize_script( $this->plugin_name, 'smsonw_config_ajax_object', array(
+                'ajax_url' => admin_url( 'admin-ajax.php' ),
+                'ajax_nonce' => wp_create_nonce('egoi_add_custom_carrier'),
+            ) );
+        }
 	}
 
     /**
