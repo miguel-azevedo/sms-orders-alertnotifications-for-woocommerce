@@ -468,9 +468,9 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
                 </div>
                 <div class="wide" id="egoi_tracking_for_sms_insert" <?php echo (! empty($codes))?'disabled':''; ?> style="<?php echo (! empty($codes))?'display: none;':''; ?>">
                     <label for="egoi-add-tracking-code"><?php esc_html_e( 'Add tracking code', 'smart-marketing-addon-sms-order' ); ?></label>
-                    <input type="text" id="egoi-add-tracking-code" name="correios_tracking" value="" style="width: 100%;"/>
+                    <input type="text" id="egoi-add-tracking-code" value="" style="width: 100%;"/>
                     <div style="display: flex;flex-direction: row;flex-wrap: nowrap;">
-                        <select id="egoi_add_tracking_carrier" name="wc_order_action" style="height: 28px !important;width: 100%;box-sizing: border-box;float: left;">
+                        <select id="egoi_add_tracking_carrier" style="height: 28px !important;width: 100%;box-sizing: border-box;float: left;">
                             <option value=""><?php _e('Select an option...', 'smart-marketing-addon-sms-order'); ?></option>
                             <?php foreach ($carriers as $key => $carrier){ ?>
                                 <option value="<?php echo $key; ?>"><?php echo $carrier ?></option>
