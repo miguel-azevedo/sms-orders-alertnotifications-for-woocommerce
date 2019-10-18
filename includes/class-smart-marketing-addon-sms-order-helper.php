@@ -40,6 +40,16 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 			'ref' => '',
 			'val' => '_order_total'
 		),
+        'hipaymultibanco' => array(
+            'ent' => '',
+            'ref' => '',
+            'val' => '_order_total'
+        ),
+        'lusopaygateway' => array(//todo:validate name
+            'ent' => '',
+            'ref' => '',
+            'val' => '_order_total'
+        ),
 		/*
 		'eupago_mbway' => array(
 			'ref' => '_eupago_mbway_referencia',
@@ -60,6 +70,27 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 		*/
 	);
 
+	public $payment_foreign_table = array(
+        'easypay_mb'        => array(
+            'table'     => 'easypay_notifications',
+            'order_id'  => 't_key',
+            'ref'       => 'ep_reference',
+            'ent'       => 'ep_entity',
+        ),
+        'hipaymultibanco'   => array(
+            'table'     => 'woocommerce_hipay_mb',
+            'order_id'  => 'order_id',
+            'ref'       => 'reference',
+            'ent'       => 'entity',
+        ),
+        'lusopaygateway'   => array(
+            'table'     => 'magnimeiosreferences',
+            'order_id'  => 'id_order',
+            'ref'       => 'refMB',
+            'ent'       => 'entidade',
+        ),
+    );
+
     /**
      * @var array
      */
@@ -78,20 +109,6 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
                 'pt_BR' => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado'
             ),
         ),
-		'easypay_mb' => array(
-			'first' => array(
-				'en' => 'Hello, your order at %shop_name% is waiting for MB payment. Use Ent. %ent% Ref. %ref% Value %total%%currency% Thank you',
-				'es' => 'Hola, su pedido en %shop_name% está esperando el pago MB - Ent. %ent% Ref. %ref% Valor %total%%currency% Gracias',
-				'pt' => 'Olá, a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado',
-				'pt_BR' => 'Olá, a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado'
-			),
-			'reminder' => array(
-				'en' => 'Hello, we remind you that your order at %shop_name% is waiting for MB. Use Ent. %ent% Ref. %ref% Value %total%%currency% Thank you',
-				'es' => 'Hola, recordamos que su pedido en %shop_name% está esperando el pago MB - Ent. %ent% Ref. %ref% Valor %total%%currency% Gracias',
-				'pt' => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado',
-				'pt_BR' => 'Olá, lembramos que a sua encomenda em %shop_name% está aguardar pagamento MB use Ent. %ent% Ref. %ref% Valor %total%%currency% Obrigado'
-			),
-		),
         'payshop' => array(
             'first' => array(
                 'en' => 'Hello, your order at %shop_name% is waiting for MB payment. Use Ent. %ent% Ref. %ref% Value %total%%currency% Thank you',
@@ -245,7 +262,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
      */
     public function smsonw_get_payment_methods() {
         return array(
-            'multibanco' =>  __('Multibanco (euPago, IfthenPay, easypay)', 'smart-marketing-addon-sms-order'),
+            'multibanco' =>  __('Multibanco (euPago, IfthenPay, easypay, hipaymultibanco)', 'smart-marketing-addon-sms-order'),
             'payshop' =>  __('Payshop (euPago)', 'smart-marketing-addon-sms-order'),
             'billet' =>  __('PagSeguro', 'smart-marketing-addon-sms-order'),
         );
@@ -351,6 +368,26 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 		return 'en';
     }
 
+    private function priv_get_data_table($method,$action, $order_id){
+        global $wpdb;
+
+        $easyPayQuery = sprintf(
+                "SELECT %s as %s FROM %s%s WHERE %s = '%s'",
+                $this->payment_foreign_table[$method][$action], //$method=easy_pay $action=ref|ent result = ep_reference|ep_entity
+                $action,
+                $wpdb->prefix,
+                $this->payment_foreign_table[$method]['table'],
+                $this->payment_foreign_table[$method]['order_id'],
+                $order_id
+        );
+
+
+        $result = $wpdb->get_results($easyPayQuery, ARRAY_A);
+        if (!empty($result[0][$action])) {
+            return $result[0][$action];
+        }
+    }
+
 	/**
 	 * Get order payment instructions
 	 *
@@ -362,26 +399,10 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 	public function smsonw_get_payment_data($order, $field) {
 		$order_meta = get_post_meta($order['id']);
 
-		//Real biqueirada
-		if ($order['payment_method'] == 'easypay_mb') {
-			global $wpdb;
-
-			switch ($field) {
-				case 'ref':
-					$easyPayQuery = sprintf("SELECT ep_reference as %s FROM %seasypay_notifications WHERE t_key = '%s'", $field, $wpdb->prefix, $order['id']);
-
-					break;
-				case 'ent':
-					$easyPayQuery = sprintf("SELECT ep_entity as %s FROM %seasypay_notifications WHERE t_key = '%s'", $field, $wpdb->prefix, $order['id']);
-					break;
-			}
-
-			$result = $wpdb->get_results($easyPayQuery, ARRAY_A);
-
-			if (!empty($result[0][$field])) {
-				return $result[0][$field];
-			}
-		}
+		//fix
+        if(key_exists($order['payment_method'], $this->payment_foreign_table)){
+            return $this->priv_get_data_table($order['payment_method'], $field, $order['id']);
+        }
 
 		if (isset($this->payment_map[$order['payment_method']][$field])) {
 			$payment_field = $this->payment_map[$order['payment_method']][ $field ];
@@ -580,7 +601,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
     }
 
     public function smsonw_get_option_payment_method($order_payment_method) {
-        if (strpos($order_payment_method, 'multibanco') !== false) {
+        if (strpos($order_payment_method, 'multibanco') !== false || strpos($order_payment_method, 'easypay_mb') !== false ) {
             return 'multibanco';
         } else if (strpos($order_payment_method, 'payshop') !== false) {
             return 'payshop';
