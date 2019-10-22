@@ -40,6 +40,11 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 			'ref' => '',
 			'val' => '_order_total'
 		),
+        'sibs_multibanco' => array(
+            'ent' => '',
+            'ref' => '',
+            'val' => '_order_total'
+        ),
         'hipaymultibanco' => array(
             'ent' => '',
             'ref' => '',
@@ -77,6 +82,12 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
             'ref'       => 'ep_reference',
             'ent'       => 'ep_entity',
         ),
+        'sibs_multibanco'        => array(
+            'table'     => 'sibs_transaction',
+            'order_id'  => 'order_no',
+            'ref'       => 'additional_information',
+            'ent'       => 'additional_information',
+        ),
         'hipaymultibanco'   => array(
             'table'     => 'woocommerce_hipay_mb',
             'order_id'  => 'order_id',
@@ -90,6 +101,8 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
             'ent'       => 'entidade',
         ),
     );
+
+	public $multibanco_bypass = ['lusopaygateway','hipaymultibanco','easypay_mb'];
 
     /**
      * @var array
@@ -262,7 +275,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
      */
     public function smsonw_get_payment_methods() {
         return array(
-            'multibanco' =>  __('Multibanco (euPago, IfthenPay, easypay, hipaymultibanco)', 'smart-marketing-addon-sms-order'),
+            'multibanco' =>  __('Multibanco (euPago, IfthenPay, easypay, hipaymultibanco, sibs, lusopay)', 'smart-marketing-addon-sms-order'),
             'payshop' =>  __('Payshop (euPago)', 'smart-marketing-addon-sms-order'),
             'billet' =>  __('PagSeguro', 'smart-marketing-addon-sms-order'),
         );
@@ -383,6 +396,14 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 
 
         $result = $wpdb->get_results($easyPayQuery, ARRAY_A);
+        if($method == 'sibs_multibanco'){
+            $entEref = explode('|',$result[0][$action]);
+            if($action == 'ref')
+                return $entEref[1];
+            else
+                return $entEref[0];
+        }
+
         if (!empty($result[0][$action])) {
             return $result[0][$action];
         }
@@ -601,7 +622,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
     }
 
     public function smsonw_get_option_payment_method($order_payment_method) {
-        if (strpos($order_payment_method, 'multibanco') !== false || strpos($order_payment_method, 'easypay_mb') !== false ) {
+        if (strpos($order_payment_method, 'multibanco') !== false || in_array($order_payment_method,$this->multibanco_bypass) ) {
             return 'multibanco';
         } else if (strpos($order_payment_method, 'payshop') !== false) {
             return 'payshop';

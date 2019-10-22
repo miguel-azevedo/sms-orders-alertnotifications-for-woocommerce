@@ -3,7 +3,7 @@ Contributors: E-goi
 Donate link: https://www.e-goi.com
 Tags: SMS, Orders, WooCommerce, Notifications, Alert, sms, order, Subscribe, E-goi, Marketing Automation, egoi, List, SMS Marketing, Marketing, shipping, tracking number, carrier, transportadora
 Requires at least: 4.7
-Tested up to: 5.2.3
+Tested up to: 5.2.4
 Stable tag: 1.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -71,6 +71,8 @@ Send SMS notifications to your customers and website administrators whenever you
     *   Eupago [plugin EuPago for WooCommerce](https://pt.wordpress.org/plugins/eupago-for-woocommerce/ "EuPago for WooCommerce")
     *   EasyPay [plugin EasyPay for WooCommerce](https://docs.easypay.pt/assets/easypay_docs/woocommerce-easypay_mb.zip "EasyPay for WooCommerce")
     *   Hipay Compra Facil [plugin Compra Facil for WooCommerce](http://downloads.hipay.pt/download/hipay-comprafacil-multibanco-para-woocommerce/ "Compra Facil for WooCommerce")
+    *   Sibs [plugin Sibs for WooCommerce](https://wordpress.org/plugins/sibs-woocommerce/ "Sibs for WooCommerce")
+    *   LusoPay [plugin LusoPay for WooCommerce](https://wordpress.org/plugins/multibanco-e-ou-payshop-by-lusopay/ "LusoPay for WooCommerce")
 *   Option to send SMS with data for PagSeguro payments - (for the moment, compatible with the plugin WooCommerce PagSeguro)
 *   Option to send SMS reminder, in case the order is still waiting for Multibanco, PagSeguro payment or EasyPay
 *   Configuration option for the SMS remider schedule
@@ -115,6 +117,9 @@ If you wish to send notifications with the Multibanco payment data, you need to 
 
 = 1.4.0 =
 * Hipay Compra Facil integration.
+* Sibs integration.
+* LusoPay integration.
+
 
 = 1.3.4 =
 * Order tracking code fix
