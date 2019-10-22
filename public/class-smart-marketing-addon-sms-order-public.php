@@ -84,11 +84,13 @@ class Smart_Marketing_Addon_Sms_Order_Public {
 	function smsonw_notification_checkout_field($checkout) {
 		$recipients = json_decode(get_option('egoi_sms_order_recipients'), true);
 		if (isset($recipients['notification_option']) && $recipients['notification_option']) {
-			woocommerce_form_field('egoi_notification_option', array(
+            $checked = $checkout->get_value( 'egoi_notification_option' ) ? $checkout->get_value( 'egoi_notification_option' ) : 1;
+
+            woocommerce_form_field('egoi_notification_option', array(
 				'type'          => 'checkbox',
 				'class'         => array('my-field-class form-row-wide'),
 				'label'         => __('I want to be notified by SMS (Order Status)', 'smart-marketing-addon-sms-order'),
-			), $checkout->get_value( 'egoi_notification_option'));
+			), $checked);
 		}
 	}
 

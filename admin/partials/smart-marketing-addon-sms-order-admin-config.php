@@ -433,7 +433,7 @@ $reminder_times = array('1','12', '24', '36', '48', '72');
 
             <div class="main-content col col-12" style="margin:0 0 20px;">
 
-                <p class="label_text"><?php _e('This plugin is integrated with Multibanco (euPago, Ifthenpay, easypay), Payshop (euPago), WooCommerce PagSeguro', 'smart-marketing-addon-sms-order');?></p>
+                <p class="label_text"><?php _e('This plugin is integrated with Multibanco (euPago, Ifthenpay, easypay, Hipay Compra Facil, Sibs, LusoPay), Payshop (euPago), WooCommerce PagSeguro', 'smart-marketing-addon-sms-order');?></p>
 
                 <p class="label_text"><?php _e('Select payment method', 'smart-marketing-addon-sms-order');?></p>
 

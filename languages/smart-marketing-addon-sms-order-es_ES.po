@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: SMS Orders Alert/Notifications for WooCommerce\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-07-23 14:14+0000\n"
-"PO-Revision-Date: 2019-07-23 14:16+0000\n"
+"POT-Creation-Date: 2019-10-22 09:43+0000\n"
+"PO-Revision-Date: 2019-10-22 09:45+0000\n"
 "Last-Translator: egoidev <tmota@e-goi.com>\n"
 "Language-Team: Spanish (Spain)\n"
 "Language: es_ES\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Loco https://localise.biz/\n"
-"X-Loco-Version: 2.3.0; wp-5.2.2"
+"X-Loco-Version: 2.3.0; wp-5.2.4"
 
 #: smart-marketing-addon-sms-order.php:64
 msgid "To use this plugin, you first need to install"
@@ -23,144 +23,144 @@ msgid ""
 "By removing this plugin, you will no longer be able to use the SMS plugin"
 msgstr "Al quitar este plugin, ya no podrá utilizar el plugin de SMS"
 
-#: includes/class-smart-marketing-addon-sms-order-helper.php:221
+#: includes/class-smart-marketing-addon-sms-order-helper.php:251
 msgid "Pending payment"
 msgstr "Pendiente de pago"
 
-#: includes/class-smart-marketing-addon-sms-order-helper.php:222
+#: includes/class-smart-marketing-addon-sms-order-helper.php:252
 msgid "Processing"
 msgstr "Processando"
 
-#: includes/class-smart-marketing-addon-sms-order-helper.php:223
+#: includes/class-smart-marketing-addon-sms-order-helper.php:253
 msgid "On Hold"
 msgstr "Espera la confirmación de pago"
 
-#: includes/class-smart-marketing-addon-sms-order-helper.php:224
+#: includes/class-smart-marketing-addon-sms-order-helper.php:254
 msgid "Completed"
 msgstr "Completado"
 
-#: includes/class-smart-marketing-addon-sms-order-helper.php:225
+#: includes/class-smart-marketing-addon-sms-order-helper.php:255
 msgid "Cancelled"
 msgstr "Cancelado"
 
-#: includes/class-smart-marketing-addon-sms-order-helper.php:226
+#: includes/class-smart-marketing-addon-sms-order-helper.php:256
 msgid "Refunded"
 msgstr "Reembolsado"
 
-#: includes/class-smart-marketing-addon-sms-order-helper.php:227
+#: includes/class-smart-marketing-addon-sms-order-helper.php:257
 msgid "Failed"
 msgstr "Fallido"
 
-#: includes/class-smart-marketing-addon-sms-order-helper.php:236
+#: includes/class-smart-marketing-addon-sms-order-helper.php:266
 msgid "English"
 msgstr "Inglés"
 
-#: includes/class-smart-marketing-addon-sms-order-helper.php:237
+#: includes/class-smart-marketing-addon-sms-order-helper.php:267
 msgid "Spanish"
 msgstr "Español"
 
-#: includes/class-smart-marketing-addon-sms-order-helper.php:238
+#: includes/class-smart-marketing-addon-sms-order-helper.php:268
 msgid "Portuguese"
 msgstr "Portugués"
 
-#: includes/class-smart-marketing-addon-sms-order-helper.php:239
+#: includes/class-smart-marketing-addon-sms-order-helper.php:269
 msgid "Brazilian Portuguese"
 msgstr ""
 "Portugués Brasileño\n"
 
-#: includes/class-smart-marketing-addon-sms-order-helper.php:248
-msgid "Multibanco (euPago, IfthenPay, easypay)"
+#: includes/class-smart-marketing-addon-sms-order-helper.php:278
+msgid "Multibanco (euPago, IfthenPay, easypay, hipaymultibanco, sibs, lusopay)"
 msgstr ""
 
-#: includes/class-smart-marketing-addon-sms-order-helper.php:249
+#: includes/class-smart-marketing-addon-sms-order-helper.php:279
 msgid "Payshop (euPago)"
 msgstr "Payshop (euPago)"
 
-#: includes/class-smart-marketing-addon-sms-order-helper.php:250
+#: includes/class-smart-marketing-addon-sms-order-helper.php:280
 msgid "PagSeguro"
 msgstr "PagSeguro"
 
-#: includes/class-smart-marketing-addon-sms-order-helper.php:544
+#: includes/class-smart-marketing-addon-sms-order-helper.php:586
 msgid "Changes saved successfully"
 msgstr "Cambios grabados con éxito"
 
-#: includes/class-smart-marketing-addon-sms-order-helper.php:555
+#: includes/class-smart-marketing-addon-sms-order-helper.php:597
 msgid "Irks! An error has occurred."
 msgstr "Se ha producido un error"
 
-#: admin/class-smart-marketing-addon-sms-order-admin.php:116
 #: admin/class-smart-marketing-addon-sms-order-admin.php:117
+#: admin/class-smart-marketing-addon-sms-order-admin.php:118
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:33
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:37
 msgid "SMS Notifications"
 msgstr "Notificaciones SMS"
 
-#: admin/class-smart-marketing-addon-sms-order-admin.php:417
+#: admin/class-smart-marketing-addon-sms-order-admin.php:418
 msgid "Send SMS to buyer"
 msgstr "Enviar SMS al cliente"
 
-#: admin/class-smart-marketing-addon-sms-order-admin.php:432
+#: admin/class-smart-marketing-addon-sms-order-admin.php:433
 msgid "SMS Tracking code"
 msgstr ""
 
-#: admin/class-smart-marketing-addon-sms-order-admin.php:457
+#: admin/class-smart-marketing-addon-sms-order-admin.php:458
 msgid "Tracking code:"
 msgstr ""
 
-#: admin/class-smart-marketing-addon-sms-order-admin.php:469
+#: admin/class-smart-marketing-addon-sms-order-admin.php:470
 msgid "Add tracking code"
 msgstr "Añadir código de tracking"
 
-#: admin/class-smart-marketing-addon-sms-order-admin.php:473
+#: admin/class-smart-marketing-addon-sms-order-admin.php:474
 msgid "Select an option..."
 msgstr "Seleccione una opcion..."
 
-#: admin/class-smart-marketing-addon-sms-order-admin.php:478
+#: admin/class-smart-marketing-addon-sms-order-admin.php:479
 msgid "Apply"
 msgstr ""
 
-#: admin/class-smart-marketing-addon-sms-order-admin.php:522
+#: admin/class-smart-marketing-addon-sms-order-admin.php:523
 msgid "Message"
 msgstr "Mensaje"
 
-#: admin/class-smart-marketing-addon-sms-order-admin.php:526
+#: admin/class-smart-marketing-addon-sms-order-admin.php:527
 msgid "Send"
 msgstr "Enviar"
 
-#: admin/class-smart-marketing-addon-sms-order-admin.php:527
+#: admin/class-smart-marketing-addon-sms-order-admin.php:528
 msgid "You can't send a empty SMS"
 msgstr "No puedes enviar un SMS vacío"
 
-#: admin/class-smart-marketing-addon-sms-order-admin.php:528
+#: admin/class-smart-marketing-addon-sms-order-admin.php:529
 msgid "Sending... Wait please"
 msgstr "Enviando ... espera por favor"
 
-#: admin/class-smart-marketing-addon-sms-order-admin.php:533
+#: admin/class-smart-marketing-addon-sms-order-admin.php:534
 msgid "The customer doesn't want to receive sms"
 msgstr "Cliente no quiere recibir sms"
 
-#: admin/class-smart-marketing-addon-sms-order-admin.php:558
+#: admin/class-smart-marketing-addon-sms-order-admin.php:559
 msgid "added on"
 msgstr "added on"
 
-#: admin/class-smart-marketing-addon-sms-order-admin.php:608
+#: admin/class-smart-marketing-addon-sms-order-admin.php:609
 #, php-format
 msgid "Added a E-goi tracking: %s"
 msgstr "Se agregó un tracking de E-goi: %s"
 
-#: admin/class-smart-marketing-addon-sms-order-admin.php:661
+#: admin/class-smart-marketing-addon-sms-order-admin.php:662
 msgid "One carrier with the same name already exists!"
 msgstr "¡Ya existe un transportista con el mismo nombre!"
 
-#: admin/class-smart-marketing-addon-sms-order-admin.php:689
+#: admin/class-smart-marketing-addon-sms-order-admin.php:690
 msgid "The carrier you are trying to delete was not found."
 msgstr "No se encontró el operador que está intentando eliminar."
 
-#: admin/class-smart-marketing-addon-sms-order-admin.php:721
+#: admin/class-smart-marketing-addon-sms-order-admin.php:722
 msgid "To use this plugin, you first need to install WooCommerce"
 msgstr "Para utilizar este plugin, necesita tener instalado o WooCommerce"
 
-#: public/class-smart-marketing-addon-sms-order-public.php:90
+#: public/class-smart-marketing-addon-sms-order-public.php:92
 msgid "I want to be notified by SMS (Order Status)"
 msgstr "Quiero ser notificado por SMS (Estado del pedido)"
 
@@ -341,11 +341,11 @@ msgstr ""
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:436
 msgid ""
-"This plugin is integrated with Multibanco (euPago, Ifthenpay, easypay), "
-"Payshop (euPago), WooCommerce PagSeguro"
+"This plugin is integrated with Multibanco (euPago, Ifthenpay, easypay, Hipay "
+"Compra Facil, Sibs, LusoPay), Payshop (euPago), WooCommerce PagSeguro"
 msgstr ""
-"Este plugin está integrado con el Multibanco (euPago, Ifthenpay, easypay), "
-"Payshop (euPago), WooCommerce PagSeguro"
+"Este plugin está integrado con Multibanco (euPago, Ifthenpay, easypay, Hipay "
+"Compra Facil, Sibs, LusoPay), Payshop (euPago), WooCommerce PagSeguro\n"
 
 #: admin/partials/smart-marketing-addon-sms-order-admin-config.php:438
 msgid "Select payment method"
