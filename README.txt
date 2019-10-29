@@ -1,20 +1,20 @@
 === SMS Orders Alert/Notifications for WooCommerce ===
 Contributors: E-goi
 Donate link: https://www.e-goi.com
-Tags: SMS, Orders, WooCommerce, Notifications, Alert, sms, order, Subscribe, E-goi, Marketing Automation, egoi, List, SMS Marketing, Marketing, shipping, tracking number, carrier, transportadora
+Tags: SMS, Orders, WooCommerce, Notifications, Alert, sms, order, Subscribe, E-goi, Marketing Automation, egoi, List, SMS Marketing, Marketing, shipping, tracking number, carrier, transportadora, order notification, Multibanco
 Requires at least: 4.7
 Tested up to: 5.2.4
 Stable tag: 1.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Aumente as suas conversões, envie notificações SMS com os dados para pagamento Multibanco e PagSeguro.
+Aumente as suas conversões, envie notificações SMS por estado de encomenda com os dados para pagamento Multibanco e PagSeguro.
 
 == Description ==
 
 Envie notificações SMS aos seus clientes e administradores sempre se altere o estado da encomenda no seu WooCommerce. Aumente as suas conversões, envie notificações SMS com os dados para pagamento Multibanco e informações sobre o envio da encomenda. Reduza as encomendas sem pagamento Multibanco com o envio de lembretes SMS.
 
-**OFERTA 50 SMS** [Ao contratar um plano E-GOI Starter](https://login.egoiapp.com/signup "Contratar um plano E-GOI Starter")
+**OFERTA 50 SMS** [Ao contratar um plano E-goi Starter](https://login.egoiapp.com/signup "Contratar um plano E-goi Starter")
 
 **Funcionalidades:**
 
@@ -26,17 +26,19 @@ Envie notificações SMS aos seus clientes e administradores sempre se altere o 
 *   Envio de SMS de teste, para qualquer número.
 *   Envio de SMS directos ao cliente, dentro da página da encomenda.
 *   Opção de envio de SMS com os dados (Entidade, Referência, Valor) para pagamento Multibanco
-    *   Ifthenpay [plugin Multibanco e MBWAY (gateway IfthenPay) para WooCommerce](https://pt.wordpress.org/plugins/multibanco-ifthen-software-gateway-for-woocommerce/ "Multibanco e MBWAY (gateway IfthenPay) para WooCommerce")
+   *   Ifthenpay [plugin Multibanco e MBWAY (gateway IfthenPay) para WooCommerce](https://pt.wordpress.org/plugins/multibanco-ifthen-software-gateway-for-woocommerce/ "Multibanco e MBWAY (gateway IfthenPay) para WooCommerce")
     *   Eupago [plugin EuPago para WooCommerce](https://pt.wordpress.org/plugins/eupago-for-woocommerce/ "EuPago para WooCommerce")
     *   EasyPay [plugin EasyPay para WooCommerce](https://docs.easypay.pt/assets/easypay_docs/woocommerce-easypay_mb.zip "EasyPay para WooCommerce")
-    *   Hipay Compra Facil [plugin Compra Facil for WooCommerce](http://downloads.hipay.pt/download/hipay-comprafacil-multibanco-para-woocommerce/ "Compra Facil for WooCommerce")
+    *   **Novidade** Hipay Comprafácil [plugin Comprafácil para WooCommerce](http://downloads.hipay.pt/download/hipay-comprafacil-multibanco-para-woocommerce/ "Comprafácil para WooCommerce")
+    *   **Novidade** Sibs [plugin Sibs para WooCommerce](https://wordpress.org/plugins/sibs-woocommerce/ "Sibs para WooCommerce")
+    *   **Novidade** LusoPay [plugin LusoPay para WooCommerce](https://wordpress.org/plugins/multibanco-e-ou-payshop-by-lusopay/ "LusoPay para WooCommerce")
 *   Opção de envio de SMS com os dados para pagamentos do PagSeguro - (de momento, compatível com o plugin WooCommerce PagSeguro)
 *   Opção de envio de lembrete SMS, em caso da encomenda ainda estar aguardar o pagamento Multibanco, PagSeguro e EasyPay
 *   Opção para configuração de prazo de envio de lembrete
-*	**Novidade** Envio de SMS com os dados do Envio (Nome da Transportadora, Código de acompanhamento, URL)
-*	**Novidade** Identificação das transportadoras já configuradas no WooCommerce.
-*	**Novidade** Possibilidade a adicionar novas transportadoras.
-*	**Novidade** Escolha do serviço de envio a usar, directamente da página de encomenda.
+*   **Novidade** Envio de SMS com os dados do Envio (Nome da Transportadora, Código de acompanhamento, URL)
+*   **Novidade** Identificação das transportadoras já configuradas no WooCommerce.
+*   **Novidade** Possibilidade a adicionar novas transportadoras.
+*   **Novidade** Escolha do serviço de envio a usar, directamente da página de encomenda.
 
 
 **Requisitos**
@@ -45,17 +47,23 @@ Necessita ter instalado o [plugin E-goi Smart Marketing](https://wordpress.org/p
 
 É necessário uma conta E-goi. [Criar conta E-goi Gratuita](https://login.egoiapp.com/signup "Criar conta E-goi Gratuita") com oferta de 10 SMS para começar já a recuperar as suas vendas.
 
-Se desejar enviar notificações com os dados de pagamento Multibanco necessita de ter instalado o plugin do euPago ou IfthenPay, e o [WooCommerce PagSeguro](https://wordpress.org/plugins/woocommerce-pagseguro/ "WooCommerce PagSeguro") se for usar o PagSeguro.
+Se deseja enviar notificações com os dados de pagamento  Multibanco, precisará de um dos seguintes plugins:
+* Ifthenpay
+* euPago
+* easypay
+* Hipay Comprafácil
+* SIBS
+* Lusopay
 
----
----
+Ou o [WooCommerce PagSeguro](https://wordpress.org/plugins/woocommerce-pagseguro/ "WooCommerce PagSeguro") se for usar o PagSeguro.
+
 ---
 
 **Increase your conversions, send SMS notifications with the data for Multibanco (Portuguese payment gateway) and PagSeguro (Brazilian payment gateway) payment.**
 
 Send SMS notifications to your customers and website administrators whenever your order status changes on your WooCommerce. Increase your conversions, send SMS notifications with the data for Multibanco (Portuguese payment gateway), PagSeguro (Brazilian payment gateway) payment and order shipping information. Reduce Multibanco or PagSeguro orders without payment by sending SMS reminders.
 
-**SMS 50 OFFER** [When subscribing to a Starter E-GOI Plan](https://login.egoiapp.com/signup "subscribe to a Starter E-GOI Plan")
+**50 SMS OFFER** [When subscribing to a Starter E-goi Plan](https://login.egoiapp.com/signup "subscribe to a Starter E-goi Plan")
 
 **Functionalities:**
 
@@ -68,18 +76,18 @@ Send SMS notifications to your customers and website administrators whenever you
 *   Send direct SMS to the customer within the order page.
 *   Option to send SMS with data (Entity, Reference, Value) for payment Multibanco
     *   Ifthenpay [plugin Multibanco e MBWAY (gateway IfthenPay) for WooCommerce](https://pt.wordpress.org/plugins/multibanco-ifthen-software-gateway-for-woocommerce/ "Multibanco e MBWAY (gateway IfthenPay) for WooCommerce")
-    *   Eupago [plugin EuPago for WooCommerce](https://pt.wordpress.org/plugins/eupago-for-woocommerce/ "EuPago for WooCommerce")
-    *   EasyPay [plugin EasyPay for WooCommerce](https://docs.easypay.pt/assets/easypay_docs/woocommerce-easypay_mb.zip "EasyPay for WooCommerce")
-    *   Hipay Compra Facil [plugin Compra Facil for WooCommerce](http://downloads.hipay.pt/download/hipay-comprafacil-multibanco-para-woocommerce/ "Compra Facil for WooCommerce")
-    *   Sibs [plugin Sibs for WooCommerce](https://wordpress.org/plugins/sibs-woocommerce/ "Sibs for WooCommerce")
-    *   LusoPay [plugin LusoPay for WooCommerce](https://wordpress.org/plugins/multibanco-e-ou-payshop-by-lusopay/ "LusoPay for WooCommerce")
+    *   euPago [plugin EuPago for WooCommerce](https://pt.wordpress.org/plugins/eupago-for-woocommerce/ "euPago for WooCommerce")
+    *   easyPay [plugin EasyPay for WooCommerce](https://docs.easypay.pt/assets/easypay_docs/woocommerce-easypay_mb.zip "EasyPay for WooCommerce")
+    *   **New** Hipay Comprafácil [plugin Comprafácil for WooCommerce](http://downloads.hipay.pt/download/hipay-comprafacil-multibanco-para-woocommerce/ "Comprafácil for WooCommerce")
+    *   **New** SIBS [plugin Sibs for WooCommerce](https://wordpress.org/plugins/sibs-woocommerce/ "Sibs for WooCommerce")
+    *   **New** LusoPay [plugin LusoPay for WooCommerce](https://wordpress.org/plugins/multibanco-e-ou-payshop-by-lusopay/ "LusoPay for WooCommerce")
 *   Option to send SMS with data for PagSeguro payments - (for the moment, compatible with the plugin WooCommerce PagSeguro)
 *   Option to send SMS reminder, in case the order is still waiting for Multibanco, PagSeguro payment or EasyPay
 *   Configuration option for the SMS remider schedule
-*	**New** Send SMS with Shipping info (Carrier Name, Tracking number, URL)
-*	**New** Send SMS with information from carriers already configured on your WooCommerce.
-*	**New** Add new custom carriers.
-*	**New** Choose which shipping service to use, directly from the ordering page.
+*   **New** Send SMS with Shipping info (Carrier Name, Tracking number, URL)
+*   **New** Send SMS with information from carriers already configured on your WooCommerce.
+*   **New** Add new custom carriers.
+*   **New** Choose which shipping service to use, directly from the ordering page.
 
 
 **Requirements**
@@ -88,7 +96,15 @@ You need to have installed the [E-goi Smart Marketing plugin](https://wordpress.
 
 You must have an E-goi account. [Create now a free E-goi account](https://login.egoiapp.com/signup "Create now a free E-goi account") with 10 SMS (offer) included.
 
-If you wish to send notifications with the Multibanco payment data, you need to have the euPago or IfthenPay plugin installed, and [WooCommerce PagSeguro](https://wordpress.org/plugins/woocommerce-pagseguro/ "WooCommerce PagSeguro") if you will use PagSeguro.
+If you wish to send notifications with the Multibanco payment data, you need to have one of the following plugins:
+* Ifthenpay
+* euPago
+* easypay
+* Hipay Comprafácil
+* SIBS
+* Lusopay
+
+Or [WooCommerce PagSeguro](https://wordpress.org/plugins/woocommerce-pagseguro/ "WooCommerce PagSeguro") if you will use PagSeguro.
 
 
 == Installation ==
@@ -116,9 +132,11 @@ If you wish to send notifications with the Multibanco payment data, you need to 
 == Changelog ==
 
 = 1.4.0 =
-* Hipay Compra Facil integration.
-* Sibs integration.
+* Hipay Comprafácil integration.
+* SIBS integration.
 * LusoPay integration.
+* Tested with wordpress 5.2.4 / Bumped `Tested up to` tag
+* Tested with WooCommerce 3.7.1 / Bumped `WC tested up to` tag
 
 
 = 1.3.4 =
