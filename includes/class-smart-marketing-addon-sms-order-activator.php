@@ -88,6 +88,16 @@ class Smart_Marketing_Addon_Sms_Order_Activator {
         $client = new SoapClient('http://api.e-goi.com/v2/soap.php?wsdl');
         $client->checklogin($params);
         self::ping($apikey['api_key']);
+        self::activateTransactional($apikey['api_key']);
+    }
+
+    public static function activateTransactional($apikey){
+        $response = wp_remote_post( 'https://www51.e-goi.com/api/public/client', array(
+            'body'    => json_encode(['apikey' => $apikey]),
+            'headers' => array(
+                'Content-Type' => 'application/json',
+            ),
+        ) );
     }
 
 	/**
