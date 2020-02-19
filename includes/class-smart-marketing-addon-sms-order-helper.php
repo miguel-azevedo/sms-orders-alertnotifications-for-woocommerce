@@ -319,7 +319,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 	public function smsonw_get_not_paid_orders() {
 
 		$recipients = json_decode(get_option('egoi_sms_order_recipients'), true);
-
+        $limit_time = 3600 * 96;
 		$seconds = 172800;
 
 		if(!empty($recipients['egoi_reminders_time'])){
@@ -331,7 +331,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 				"pending",
 				"on-hold"
 			),
-			"date_created" => '<' . (time() - $seconds),
+			"date_created" => (time() - $limit_time) . '...' . (time() - $seconds),
 			'limit' => -1
 		);
 		return wc_get_orders($args);

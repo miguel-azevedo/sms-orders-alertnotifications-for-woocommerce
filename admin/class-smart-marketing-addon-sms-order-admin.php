@@ -268,7 +268,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
                     foreach ($orders as $order) {
 
-                        if ($count >= 20) {
+                        if ($count >= 40) {
                             break;
                         }
 

@@ -3,8 +3,8 @@ Contributors: E-goi
 Donate link: https://www.e-goi.com
 Tags: SMS, Orders, WooCommerce, Notifications, Alert, sms, order, Subscribe, E-goi, Marketing Automation, egoi, List, SMS Marketing, Marketing, shipping, tracking number, carrier, transportadora
 Requires at least: 4.7
-Tested up to: 5.2.4
-Stable tag: 1.4.0
+Tested up to: 5.3.2
+Stable tag: 1.4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -114,6 +114,9 @@ If you wish to send notifications with the Multibanco payment data, you need to 
 3. Encomenda com opção de envio de SMS directo ao cliente
 
 == Changelog ==
+
+= 1.4.1 =
+* Reminder Bug Fix
 
 = 1.4.0 =
 * Hipay Compra Facil integration.
