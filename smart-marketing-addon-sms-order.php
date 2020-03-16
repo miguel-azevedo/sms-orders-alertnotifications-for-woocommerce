@@ -24,7 +24,7 @@
  * Text Domain:       smart-marketing-addon-sms-order
  * Domain Path:       /languages
  * WC requires at least: 3.2
- * WC tested up to: 3.6.5
+ * WC tested up to: 4.0.0
  */
 
 // If this file is called directly, abort.
