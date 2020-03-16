@@ -280,16 +280,16 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
                             $sms_notification = 1;
                         }
 
-                        $lang = $this->helper->smsonw_get_lang($order_data['billing']['country']);
-                        $messages = json_decode(get_option('egoi_sms_order_reminder_texts'), true);
-                        $payment_method = $this->helper->smsonw_get_option_payment_method($order_data['payment_method']);
+                        $lang = $this->helper->smsonw_get_lang($order->get_billing_country());
+                        $messages = json_decode(get_option('egoi_sms_order_payment_texts'), true);
+                        $payment_method = $this->helper->smsonw_get_option_payment_method($order->get_payment_method());
                         $text = isset($messages[$payment_method]['egoi_sms_order_reminder_text_'.$lang])
                             ? $messages[$payment_method]['egoi_sms_order_reminder_text_'.$lang]
                             : $this->helper->sms_payment_info[$payment_method]['reminder'][$lang];
                         $send_message = false;
 
                         if (!$order->is_paid() && !in_array($order->get_id(), $order_ids) && $sms_notification &&
-                            $recipient_options['egoi_reminders'] && array_key_exists($order_data['payment_method'], $this->helper->payment_map)) {
+                            $recipient_options['egoi_reminders'] && array_key_exists($order->get_payment_method(), $this->helper->payment_map)) {
 
                             $message = $this->helper->smsonw_get_tags_content($order_data, $text);
                             $send_message = $message ? true : false;
