@@ -3,7 +3,7 @@ Contributors: E-goi
 Donate link: https://www.e-goi.com
 Tags: SMS, Orders, WooCommerce, Notifications, Alert, sms, order, Subscribe, E-goi, Marketing Automation, egoi, List, SMS Marketing, Marketing, shipping, tracking number, carrier, transportadora, order notification, Multibanco
 Requires at least: 4.7
-Tested up to: 5.3.2
+Tested up to: 5.5.1
 Stable tag: 1.4.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -45,7 +45,7 @@ Envie notificações SMS aos seus clientes e administradores sempre se altere o 
 
 Necessita ter instalado o [plugin E-goi Smart Marketing](https://wordpress.org/plugins/smart-marketing-for-wp/ "Smart Marketing SMS and Newsletters Forms").
 
-É necessário uma conta E-goi. [Criar conta E-goi Gratuita](https://login.egoiapp.com/signup "Criar conta E-goi Gratuita") com oferta de 10 SMS para começar já a recuperar as suas vendas.
+É necessário uma conta E-goi. [Criar conta E-goi Trial](https://login.egoiapp.com/signup "Criar conta E-goi Trial").
 
 Se deseja enviar notificações com os dados de pagamento  Multibanco, precisará de um dos seguintes plugins:
 * Ifthenpay
@@ -94,7 +94,7 @@ Send SMS notifications to your customers and website administrators whenever you
 
 You need to have installed the [E-goi Smart Marketing plugin](https://wordpress.org/plugins/smart-marketing-for-wp/ "Smart Marketing SMS and Newsletters Forms").
 
-You must have an E-goi account. [Create now a free E-goi account](https://login.egoiapp.com/signup "Create now a free E-goi account") with 10 SMS (offer) included.
+You must have an E-goi account. [Create now a trial E-goi account](https://login.egoiapp.com/signup "Create now a trial E-goi account").
 
 If you wish to send notifications with the Multibanco payment data, you need to have one of the following plugins:
 * Ifthenpay
