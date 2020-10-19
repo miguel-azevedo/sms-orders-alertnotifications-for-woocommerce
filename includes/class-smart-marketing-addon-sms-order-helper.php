@@ -113,7 +113,7 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
         ),
     );
 
-	public $multibanco_bypass = ['lusopaygateway','hipaymultibanco','easypay_mb'];
+	public $multibanco_bypass = ['lusopaygateway','hipaymultibanco','easypay_mb','easypay_mb_2'];
 
     /**
      * @var array
@@ -340,7 +340,9 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 		$args = array(
 			"status" => array(
 				"pending",
-				"on-hold"
+				"on-hold",
+                "wc-on-hold",
+                "wc-pending",
 			),
 			"date_created" => (time() - $limit_time) . '...' . (time() - $seconds),
 			'limit' => -1
