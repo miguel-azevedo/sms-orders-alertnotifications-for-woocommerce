@@ -606,6 +606,37 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 		<?php
 	}
 
+    /**
+     * Return all possible possitions
+     * @return array|string
+     */
+    public function smsonw_admin_follow_price_positions() {
+        return array('woocommerce_before_single_product',
+            'woocommerce_before_single_product_summary',
+            'woocommerce_before_single_product_summary',
+            'woocommerce_product_thumbnails',
+            'woocommerce_single_product_summary',
+            'woocommerce_single_product_summary',
+            'woocommerce_single_product_summary',
+            'woocommerce_single_product_summary',
+            'woocommerce_single_product_summary',
+            'woocommerce_single_product_summary',
+            'woocommerce_single_product_summary',
+            'woocommerce_simple_add_to_cart',
+            'woocommerce_grouped_add_to_cart',
+            'woocommerce_variable_add_to_cart',
+            'woocommerce_external_add_to_cart',
+            'woocommerce_single_variation',
+            'woocommerce_single_variation',
+            'woocommerce_after_single_product_summary',
+            'woocommerce_after_single_product_summary',
+            'woocommerce_after_single_product_summary',
+            'woocommerce_review_before',
+            'woocommerce_review_before_comment_meta',
+            'woocommerce_review_meta',
+            'woocommerce_review_comment_text');
+    }
+
 	public function smsonw_sanitize_boolean_field($field) {
         if (isset($_POST[$field]) && filter_var($_POST[$field], FILTER_VALIDATE_BOOLEAN)) {
             return filter_var($_POST[$field], FILTER_SANITIZE_NUMBER_INT);
@@ -674,6 +705,38 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 			return true;
 		}
 	}
+
+    /**
+     * Short a link using transacional.
+     *
+     * @param  link|string.
+     * @param  name|string.
+     *
+     * @return array
+     */
+	public function shortener($link, $name = ""){
+        $slingshot    = 'https://www51.e-goi.com';
+
+        $data = array(
+            "apikey" => $this->apikey,
+            "name" => ($name == "")? $link : $name,
+            "originalLink" => $link
+        );
+
+        try {
+            // API URL
+            $ch = curl_init($slingshot . "/api/public/shortener");
+            $payload = json_encode($data);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $result = curl_exec($ch);
+            curl_close($ch);
+            return json_decode($result, true);
+        } catch (Exception $e) {
+            die;
+        }
+    }
 
     /**
      * Get tracking codes from order.

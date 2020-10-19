@@ -236,6 +236,22 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
 
                 update_option('egoi_tracking_carriers_urls', json_encode($post));
 
+            } else if( isset($form_id) && $form_id == 'form-sms-follow-price'){
+                unset(
+                    $post['_wpnonce'],
+                    $post['_wp_http_referer'],
+                    $post['form_id']
+                );
+
+                update_option('egoi_sms_follow_price', json_encode($post));
+            } else if( isset($form_id) && $form_id == 'form-sms-order-abandoned-cart'){
+                unset(
+                    $post['_wpnonce'],
+                    $post['_wp_http_referer'],
+                    $post['form_id']
+                );
+
+                update_option('egoi_sms_abandoned_cart', json_encode($post));
             }
 	        return true;
         } catch (Exception $e) {
@@ -677,7 +693,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
     public function smsonw_remove_custom_carrier(){
         check_ajax_referer( 'egoi_add_custom_carrier', 'security' );
         $carrier    = trim($_POST['name']);
-        $obj = get_option('egoi_custom_carriers');
+        $obj = get_option('egoi_custom_c§arriers');
 
         $obj = $this->jsonValidOrEmpryArray($obj);
 
@@ -777,5 +793,42 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
         }
         return 'Not Found';
     }
+
+    function smsonw_sms_abandoned_cart_process(){
+
+    }
+
+    function update_the_product_price( $new ){
+        $product = wc_get_product( $new->id );
+        if($new->regular_price != $product->regular_price
+        || $new->price != $product->price
+        || $new->sale_price != $product->sale_price)
+        {
+            foreach ( $this->getAllMobilesToNotify($new->id) as $notify){
+                $follow_price = json_decode(get_option('egoi_sms_follow_price'), true);
+                if( isset($follow_price["follow_price_message"] ) && $follow_price["follow_price_message"]!= ''){
+                    $response = $this->helper->smsonw_send_sms($notify['mobile'], $this->prepareMessage($follow_price["follow_price_message"], $new->id), 'test', 0);
+                }
+            }
+        }
+    }
+
+    function getAllMobilesToNotify($product_id){
+        global $wpdb;
+        return $wpdb->get_results("SELECT mobile From {$wpdb->prefix}egoi_sms_follow_price where  product_id = '".$product_id."'", ARRAY_A);
+    }
+
+    function prepareMessage($message, $product_id){
+        $url = get_permalink( $product_id ) ;
+
+        $follow_price = json_decode(get_option('egoi_sms_follow_price'), true);
+        if(isset($follow_price["follow_price_shortener"]) && $follow_price["follow_price_shortener"] == "on"){
+            $url = $this->helper->shortener($url);
+            $url = $url['fullLink'];
+        }
+
+        return str_replace("%link%", $url, $message);
+    }
+
 
 }

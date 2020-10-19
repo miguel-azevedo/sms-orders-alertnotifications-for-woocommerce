@@ -74,6 +74,11 @@ class Smart_Marketing_Addon_Sms_Order_Public {
 
 		//wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/smart-marketing-addon-sms-order-public.js', array( 'jquery' ), $this->version, false );
 
+        wp_enqueue_script('jquery');
+        wp_localize_script( 'jquery', 'egoi_public_object', array(
+                'ajax_url'       => admin_url( 'admin-ajax.php' ),
+                'ajax_nonce'     => wp_create_nonce( 'egoi_public_object' ))
+        );
 	}
 
 	/**
@@ -107,5 +112,169 @@ class Smart_Marketing_Addon_Sms_Order_Public {
 			update_post_meta($order_id, 'egoi_notification_option', 0);
 		}
 	}
+
+
+	/**
+     FOLLOW PRICE
+     */
+
+	function smsonw_follow_price_add_button(){
+        //$saved = $this->processRequest($_POST);
+        $follow_price = json_decode(get_option('egoi_sms_follow_price'), true);
+        $button_text = ( isset($follow_price['follow_price_button_name']) && $follow_price['follow_price_button_name'] != '') ? $follow_price['follow_price_button_name'] : 'Follow price!';
+        ?>
+        <a class="button" id="triggerFollowPrice"><?php echo $button_text ?></a>
+        <?php
+
+        //if(is_array($saved) && $saved['status'] == 'error'){
+        //    echo '<div>' . $saved['message']. '</div>';
+        //}
+
+        $this->printFollowPriceForm();
+    }
+
+
+    private function processRequest($post){
+	    if(isset($post['egoi_action']) &&  $post['egoi_action']=='saveFollowPrice') {
+            //Validate ProductId
+            if (!isset($post["productId"]) || $post["productId"] <= 0) {
+                wp_send_json_error("Product not found!");
+            }
+
+            //Validate mphone
+            if (!isset($post["mphone"]) || $post["mphone"] == '') {
+                wp_send_json_error("Must enter your mobile phone");
+            }
+
+            //Validate prefix mphone
+            if (!isset($post["prefixMphone"]) || $post["prefixMphone"] == '') {
+                wp_send_json_error("Must enter your mobile phone country code");
+            }
+
+            $this->saveFollowPrice($post["productId"], $post["prefixMphone"]."-".$post["mphone"]);
+            wp_send_json_success("Save with success!");
+        }
+	    return;
+    }
+
+
+    private function printFollowPriceForm()
+    {
+        $this->getCustomerMobilePhone();
+        if (!is_product()) { return; }
+        ?>
+        <style>
+            #printFollowPriceForm{
+                position: absolute;
+                margin: 0 auto;
+                right: 0px;
+                z-index: 100;
+                padding: 1em;
+            }
+        </style>
+        <div id="printFollowPriceForm" style="display: none;">
+            <form method="POST" action="#" id="saveFollowPriceEgoi" >
+                <input type="hidden" name="egoi_action" value="saveFollowPrice" />
+                <input type="hidden" name="action" value="egoi_cellphone_actions" />
+                <input type="hidden" name="productId" value="<?php echo wc_get_product()->get_id(); ?>" />
+                <p> <?php echo __('Please enter your mobile phone','smart-marketing-addon-sms-order'); ?> </p>
+                <p>  + <input name="prefixMphone" placeholder="351" style="width: 35px;" value="<?php echo $this->getCustomerMobilePhone()[0]; ?>" /> <input name="mphone" placeholder="917789988" value="<?php echo $this->getCustomerMobilePhone()[1] ?>" /> </p>
+                <p> <input type="submit" value="OK" /> </p>
+            </form>
+            <div id="followPriceMessage" style="display: none;">
+                <span></span>
+            </div>
+        </div>
+        <script>
+            (function( $ ) {
+
+                $( document ).ready(function() {
+
+                    const anim = 200;
+                    var messageRef = $('#followPriceMessage');
+
+                    const tooglePopFollowPrice = () => {
+                        if( jQuery('#printFollowPriceForm').css('display') == 'none' ) { jQuery('#printFollowPriceForm').show(anim); } else {jQuery('#printFollowPriceForm').hide(anim);} return true;
+                    }
+
+                    $('#triggerFollowPrice').on('click', () => {
+                        tooglePopFollowPrice();
+                    });
+
+                    $('#saveFollowPriceEgoi').submit(function(e){
+                        e.preventDefault();
+                        var data = {
+                            security: egoi_public_object.ajax_nonce
+                        };
+
+                        $(this).serializeArray().forEach((obj) => {
+                            data[obj.name] = obj.value
+                        })
+
+                        $.post(egoi_public_object.ajax_url, data, function(response) {
+                            if(!response.success){
+                                var messageHolder = $(messageRef.find("span")[0]);
+                                messageHolder.text(response.data)
+                                messageRef.show(anim)
+                                return;
+                            }
+                            else{
+                                tooglePopFollowPrice();
+                            }
+
+                        });
+                    });
+
+                });
+
+            })( jQuery );
+        </script>
+        <?php
+    }
+
+    function getCustomerMobilePhone(){
+        $customer_id = get_current_user_id();
+        $phone = get_user_meta( $customer_id, 'billing_phone', true );
+        //TODO:set default if not found
+        return explode("-", $phone);
+    }
+
+
+    function saveFollowPrice($product_id, $mobile) {
+	    if( $this->getFollowPrice($product_id, $mobile) > 0 ){
+	        return true;
+        }
+
+        global $wpdb;
+        $wpdb->insert("{$wpdb->prefix}egoi_sms_follow_price", array(
+            'product_id' => $product_id,
+            'mobile' => $mobile,
+            'time' => current_time('mysql')
+        ));
+        return true;
+    }
+
+    function getFollowPrice($product_id, $mobile) {
+        global $wpdb;
+        $result = $wpdb->get_results("SELECT count(1) as exist From {$wpdb->prefix}egoi_sms_follow_price where mobile = '".$mobile."' and product_id = '".$product_id."'", ARRAY_A);
+        return $result[0]["exist"];
+    }
+
+	function smsonw_notification_abandoned_cart_trigger(){
+	    require_once plugin_dir_path( dirname( __FILE__ ) ).'includes/class-smart-marketing-addon-sms-order-abandonned-cart.php';
+	    $abandonedService = new Smart_Marketing_Addon_Sms_Order_Abandoned_Cart();
+        $abandonedService->start();
+    }
+
+    function smsonw_notification_abandoned_cart_clear(){
+        require_once plugin_dir_path( dirname( __FILE__ ) ).'includes/class-smart-marketing-addon-sms-order-abandonned-cart.php';
+        $abandonedService = new Smart_Marketing_Addon_Sms_Order_Abandoned_Cart();
+        $abandonedService->convertCart();
+    }
+
+    function egoi_cellphone_actions(){
+        check_ajax_referer( 'egoi_public_object', 'security' );
+        $result = $this->processRequest($_POST);
+    }
 
 }
