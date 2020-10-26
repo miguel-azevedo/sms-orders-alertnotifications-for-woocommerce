@@ -169,7 +169,7 @@ class Smart_Marketing_Addon_Sms_Order {
 
 		// CRON and payment reminder
 		$this->loader->add_action('cron_schedules', $plugin_admin, 'smsonw_my_add_every_fifteen_minutes');
-		$this->loader->add_action('egoi_sms_order_event', $plugin_admin, 'smsonw_sms_order_reminder');
+		$this->loader->add_filter('egoi_sms_order_event', $plugin_admin, 'smsonw_sms_order_reminder');
 
 		// Box send SMS in admin order page
 		$this->loader->add_action('add_meta_boxes', $plugin_admin, 'smsonw_order_add_sms_meta_box');
