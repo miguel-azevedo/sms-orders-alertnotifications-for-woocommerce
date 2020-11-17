@@ -4,7 +4,7 @@ Donate link: https://www.e-goi.com
 Tags: SMS, Orders, WooCommerce, Notifications, Alert, sms, order, Subscribe, E-goi, Marketing Automation, egoi, List, SMS Marketing, Marketing, shipping, tracking number, carrier, transportadora, order notification, Multibanco
 Requires at least: 4.7
 Tested up to: 5.5.1
-Stable tag: 1.4.3
+Stable tag: 1.5.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -130,6 +130,11 @@ Or [WooCommerce PagSeguro](https://wordpress.org/plugins/woocommerce-pagseguro/ 
 3. Encomenda com opção de envio de SMS directo ao cliente
 
 == Changelog ==
+
+= 1.5.0 =
+* Abandoned Cart Sms Reminder notification
+* Follow Price Sms Reminder notification
+* Minor fixes
 
 = 1.4.3 =
 * Fix: Sms For Pending payment not being sent

@@ -693,7 +693,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
     public function smsonw_remove_custom_carrier(){
         check_ajax_referer( 'egoi_add_custom_carrier', 'security' );
         $carrier    = trim($_POST['name']);
-        $obj = get_option('egoi_custom_c§arriers');
+        $obj = get_option('egoi_custom_carriers');
 
         $obj = $this->jsonValidOrEmpryArray($obj);
 
@@ -714,19 +714,6 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
         return $obj;
     }
 
-	/**
-	 * Add new interval to wordpress cron schedules
-	 * @param $schedules
-	 *
-	 * @return mixed
-	 */
-	public function smsonw_my_add_every_fifteen_minutes($schedules) {
-		$schedules['every_fifteen_minutes'] = array(
-			'interval' => 60 * 15,
-			'display' => __('Every Fifteen Minutes')
-		);
-		return $schedules;
-	}
 
     /**
      * Show a error notice if don't have WooCommerce
@@ -740,8 +727,6 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
             <?php
         }
     }
-
-
 
     function smsonw_save_billet($order_id) {
         $order = wc_get_order( $order_id );
@@ -794,10 +779,89 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
         return 'Not Found';
     }
 
-    function smsonw_sms_abandoned_cart_process(){
+	/**
+	 * Process SMS reminders for abandoned carts (CRON every fifteen minutes)
+	 */
+    function smsonw_sms_abandoned_cart_process()
+    {
 
+	    try {
+
+		    if ( date( 'G' ) >= 10 && date( 'G' ) <= 22 ) {
+			    global $wpdb;
+
+			    $table_name = $wpdb->prefix . 'egoi_sms_abandoned_carts';
+			    $limit_time = 3600 * 96;
+			    $seconds = 172800;
+			    $recipients = json_decode(get_option('egoi_sms_order_recipients'), true);
+
+			    if(!empty($recipients['egoi_reminders_time'])){
+				    $seconds = 3600 * (int) $recipients['egoi_reminders_time'];
+			    }
+
+			    $startTime = date('Y-m-d H:i:s', (time() - $limit_time));
+			    $endTime = date('Y-m-d H:i:s', (time() - $seconds));
+
+			    $betweenStatement = "BETWEEN '" . $startTime . "' AND '" . $endTime . "'";
+
+			    $filterStatus = 'standby';
+
+			    $abandonedCarts = $wpdb->get_results("SELECT id, woo_session_key, php_session_key, cellphone FROM $table_name WHERE `time` $betweenStatement AND status='$filterStatus'");
+
+			    if (!empty($abandonedCarts)) {
+				    $count = 0;
+
+				    $abandoned_cart_obj = json_decode(get_option('egoi_sms_abandoned_cart'), true);
+
+				    foreach ($abandonedCarts as $cart) {
+
+					    $cart = (array)  $cart;
+
+					    if ( $count >= 40 ) {
+						    break;
+					    }
+
+					    $cartUrl = self::getCartUrl($cart['woo_session_key']);
+
+                        file_put_contents('/home/admin/web/wp.wemakethings.pt/log.txt', __LINE__ . " - " . __FUNCTION__ . ": \n". print_r($cartUrl, true) . "\n\n");
+
+					    if(empty($cartUrl)){
+						    $wpdb->update($table_name, ['status' => 'cart_not_found'], ['id' => $cart['id']]);
+					    }
+
+					    $cartUrl = $this->helper->shortener($cartUrl, 'wp egoi cart recover');
+					    $message = null;
+
+					    if(!empty($abandoned_cart_obj["message"])){
+
+					        $message = str_replace(array('%shop_name%', '%link%'), array(get_bloginfo('name'), $cartUrl['fullLink']), $abandoned_cart_obj["message"]);
+
+					        if (!empty($message)) {
+
+							    $mesageSend = $this->helper->smsonw_send_sms($cart['cellphone'], $message, 'abandoned_cart', 0);
+						        file_put_contents('/home/admin/web/wp.wemakethings.pt/log.txt', __LINE__ . " - " . __FUNCTION__ . ": \n". print_r($mesageSend, true) . "\n\n");
+
+							    if(!empty($mesageSend)) {
+								    if (isset($mesageSend->errorCode)) {
+									    return false;
+								    }
+								    $wpdb->update($table_name, ['status' => 'send'], ['id' => $cart['id']]);
+							    }
+							    $count++;
+						    }
+					    }
+				    }
+			    }
+		    }
+	    } catch (Exception $e) {
+		    file_put_contents('/home/admin/web/wp.wemakethings.pt/log.txt', __LINE__ . ": " . __FUNCTION__ . " ERROR:\n".$e->getMessage(), FILE_APPEND);
+		    $this->helper->smsonw_save_logs('sms_abandoned_cart_process: ' . $e->getMessage());
+        }
     }
 
+	/**
+	 * @param $new
+	 */
     function update_the_product_price( $new ){
         $product = wc_get_product( $new->id );
         if($new->regular_price != $product->regular_price
@@ -807,7 +871,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
             foreach ( $this->getAllMobilesToNotify($new->id) as $notify){
                 $follow_price = json_decode(get_option('egoi_sms_follow_price'), true);
                 if( isset($follow_price["follow_price_message"] ) && $follow_price["follow_price_message"]!= ''){
-                    $response = $this->helper->smsonw_send_sms($notify['mobile'], $this->prepareMessage($follow_price["follow_price_message"], $new->id), 'test', 0);
+                    $response = $this->helper->smsonw_send_sms($notify['mobile'], $this->prepareMessage($follow_price["follow_price_message"], $new->id, $product->name), 'test', 0);
                 }
             }
         }
@@ -818,7 +882,7 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
         return $wpdb->get_results("SELECT mobile From {$wpdb->prefix}egoi_sms_follow_price where  product_id = '".$product_id."'", ARRAY_A);
     }
 
-    function prepareMessage($message, $product_id){
+    function prepareMessage($message, $product_id, $product_name){
         $url = get_permalink( $product_id ) ;
 
         $follow_price = json_decode(get_option('egoi_sms_follow_price'), true);
@@ -827,8 +891,99 @@ class Smart_Marketing_Addon_Sms_Order_Admin {
             $url = $url['fullLink'];
         }
 
-        return str_replace("%link%", $url, $message);
+	    $message = str_replace(array('%shop_name%', '%link%', '%product_name%', '%product%'), array(get_bloginfo('name'), $url, $product_name, $product_name), $message);
+
+
+	    return str_replace("%link%", $url, $message);
     }
 
+	/**
+	 * @param $wc_session
+	 * @return string
+	 */
+	public static function getCartUrl($wc_session){
+		$cartArray = self::getCartBySessionId($wc_session);
+		if(empty($cartArray)){
+		    return false;
+		}
+
+        $url = self::cartArrayToUrlParam($cartArray,$wc_session);
+
+		if(empty($url)){
+		    return false;
+		}
+
+		return wc_get_checkout_url().$url;
+	}
+
+	/**
+	 * @param $wc_session
+	 * @return array|false
+	 */
+	private static function getCartBySessionId($wc_session)
+    {
+
+		global $wpdb;
+		$query = sprintf(
+			"SELECT %s FROM %s%s WHERE %s = '%s'",
+			'session_value',
+			$wpdb->prefix,
+			'woocommerce_sessions',
+			'session_key',
+			$wc_session
+		);
+
+		$result = $wpdb->get_var($query);
+
+	    if(empty($result)){return false;}
+		$cart = unserialize(unserialize($result)['cart']);
+
+		$output = [];
+		foreach ($cart as $item){
+			if(!empty($item['variation_id'])){
+				$output[$item['variation_id']] = $item['quantity'];
+				continue;
+			}
+			$output[$item['product_id']] = $item['quantity'];
+		}
+
+	    return $output;
+	}
+
+	/**
+	 * @param $cartArray
+	 * @param $wc_session
+	 * @return string
+	 */
+	public static function cartArrayToUrlParam($cartArray,$wc_session)
+    {
+		global $wpdb;
+		$query = sprintf(
+			"SELECT %s FROM %s%s WHERE %s = '%s' AND %s = '%s'",
+			'php_session_key',
+			$wpdb->prefix,
+			'egoi_sms_abandoned_carts',
+			'woo_session_key',
+			$wc_session,
+			'status',
+			'standby'
+		);
+
+	    $result = $wpdb->get_var($query);
+
+	    if(!empty($result)){
+		    $output = '?sid_eg='.$result . '&create-cart=';
+	    } else {
+		    return false;
+	    }
+
+		foreach ($cartArray as $product_id => $quantity){
+			$output .= "$product_id:$quantity,";
+		}
+
+	    $output = rtrim($output, ',');
+
+	    return $output;
+	}
 
 }

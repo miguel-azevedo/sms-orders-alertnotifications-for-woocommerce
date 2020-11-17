@@ -566,6 +566,8 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
             $sms_counter = get_option('egoi_sms_counter');
             $counter = $sms_counter ? $sms_counter+1 : 1;
             update_option('egoi_sms_counter', $counter);
+        } else {
+		    return false;
         }
 
 		return $result;
@@ -607,34 +609,21 @@ class Smart_Marketing_Addon_Sms_Order_Helper {
 	}
 
     /**
-     * Return all possible possitions
+     * Return all (not all) possible positions for price drop button
      * @return array|string
      */
     public function smsonw_admin_follow_price_positions() {
-        return array('woocommerce_before_single_product',
-            'woocommerce_before_single_product_summary',
-            'woocommerce_before_single_product_summary',
-            'woocommerce_product_thumbnails',
-            'woocommerce_single_product_summary',
-            'woocommerce_single_product_summary',
-            'woocommerce_single_product_summary',
-            'woocommerce_single_product_summary',
-            'woocommerce_single_product_summary',
-            'woocommerce_single_product_summary',
-            'woocommerce_single_product_summary',
-            'woocommerce_simple_add_to_cart',
-            'woocommerce_grouped_add_to_cart',
-            'woocommerce_variable_add_to_cart',
-            'woocommerce_external_add_to_cart',
-            'woocommerce_single_variation',
-            'woocommerce_single_variation',
-            'woocommerce_after_single_product_summary',
-            'woocommerce_after_single_product_summary',
-            'woocommerce_after_single_product_summary',
-            'woocommerce_review_before',
-            'woocommerce_review_before_comment_meta',
-            'woocommerce_review_meta',
-            'woocommerce_review_comment_text');
+	    return array(
+		    'woocommerce_before_single_product'         => 'Before Single Product',
+		    'woocommerce_before_single_product_summary' => 'Before Single Product Summary',
+		    'woocommerce_after_single_product_summary'  => 'After Single Product Summary',
+		    'woocommerce_product_thumbnails'            => 'Before Single Product Thumbnails',
+		    'woocommerce_single_product_summary'        => 'Single Product Summary',
+		    'woocommerce_simple_add_to_cart'            => 'Before add to cart Button',
+		    'woocommerce_after_add_to_cart_button'      => 'After add to cart Button',
+		    'woocommerce_after_add_to_cart_form'        => 'After add to cart form',
+		    'woocommerce_grouped_add_to_cart'           => 'Before add to cart Button in grouped products',
+	    );
     }
 
 	public function smsonw_sanitize_boolean_field($field) {

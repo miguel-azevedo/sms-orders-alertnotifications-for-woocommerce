@@ -16,7 +16,7 @@
  * Plugin Name:       SMS Orders Alert/Notifications for WooCommerce
  * Plugin URI:        https://wordpress.org/plugins/sms-orders-alertnotifications-for-woocommerce/
  * Description:       Send SMS notifications to your buyers and admins for each change to the order status in your WooCommerce store. Increase your conversions and better communicate with your customers.
- * Version:           1.4.3
+ * Version:           1.5.0
  * Author:            E-goi
  * Author URI:        https://www.e-goi.com
  * License:           GPL-2.0+
@@ -24,7 +24,7 @@
  * Text Domain:       smart-marketing-addon-sms-order
  * Domain Path:       /languages
  * WC requires at least: 3.2
- * WC tested up to: 4.6.1
+ * WC tested up to: 4.7.0
  */
 
 // If this file is called directly, abort.
@@ -78,7 +78,7 @@ function smsonw_child_plugin_notice(){
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'PLUGIN_NAME_VERSION', '1.4.3' );
+define( 'PLUGIN_NAME_VERSION', '1.5.0' );
 
 /**
  * The code that runs during plugin activation.
@@ -128,62 +128,45 @@ function run_smart_marketing_addon_sms_order_action($action){
     $plugin->$action();
 }
 
+/**
+ * @param false $url
+ *
+ * @return bool
+ */
 function egoi_add_multiple_products_to_cart( $url = false ) {
 
     if ( ! class_exists( 'WC_Form_Handler' ) || empty( $_REQUEST['create-cart'] ) || false === strpos( $_REQUEST['create-cart'], ',' ) ) {
-        return;
+        return false;
     }
     add_filter( 'wc_add_to_cart_message_html', '__return_false' );
     $product_ids = explode( ',', $_REQUEST['create-cart'] );
-    $count       = count( $product_ids );
-    $number      = 0;
 
-    WC()->cart->empty_cart();
+	if(!empty($_REQUEST['sid_eg'])){
+		global $wpdb;
+		$_SESSION['sid_eg'] = filter_var($_REQUEST['sid_eg'], FILTER_SANITIZE_STRING);
+		$wpdb->update($wpdb->prefix.'egoi_sms_abandoned_carts', ['status' => 'clicked'], ['php_session_key' => $_SESSION['sid_eg']]);
+	} else {
+	    return false;
+    }
+
+	WC()->cart->empty_cart();
     foreach ( $product_ids as $id_and_quantity ) {
-        // Check for quantities defined in curie notation (<product_id>:<product_quantity>)
 
-        $id_and_quantity = explode( ':', $id_and_quantity );
-        $product_id = $id_and_quantity[0];
+	    $id_and_quantity = explode( ':', $id_and_quantity );
 
-        $_REQUEST['quantity'] = ! empty( $id_and_quantity[1] ) ? absint( $id_and_quantity[1] ) : 1;
+	    $product_id = $id_and_quantity[0];
+	    $quantity = ! empty( $id_and_quantity[1] ) ? absint( $id_and_quantity[1] ) : 1;
 
-        if ( ++$number === $count ) {
-            // Ok, final item, let's send it back to woocommerce's add_to_cart_action method for handling.
-            $_REQUEST['create-cart'] = $product_id;
-
-            return WC_Form_Handler::add_to_cart_action( $url );
-        }
-
-        $product_id        = apply_filters( 'woocommerce_add_to_cart_product_id', absint( $product_id ) );
-        $was_added_to_cart = false;
-        $adding_to_cart    = wc_get_product( $product_id );
-
+	    $adding_to_cart    = wc_get_product( $product_id );
         if ( ! $adding_to_cart ) {
             continue;
         }
 
-        $add_to_cart_handler = apply_filters( 'woocommerce_add_to_cart_handler', $adding_to_cart->get_type(), $adding_to_cart );
+	    WC()->cart->add_to_cart( $product_id, $quantity );
 
-        // Variable product handling
-        if ( 'variable' === $add_to_cart_handler ) {
-            woo_hack_invoke_private_method( 'WC_Form_Handler', 'add_to_cart_handler_variable', $product_id );
-
-            // Grouped Products
-        } elseif ( 'grouped' === $add_to_cart_handler ) {
-            woo_hack_invoke_private_method( 'WC_Form_Handler', 'add_to_cart_handler_grouped', $product_id );
-
-            // Custom Handler
-        } elseif ( has_action( 'woocommerce_add_to_cart_handler_' . $add_to_cart_handler ) ){
-            do_action( 'woocommerce_add_to_cart_handler_' . $add_to_cart_handler, $url );
-
-            // Simple Products
-        } else {
-            woo_hack_invoke_private_method( 'WC_Form_Handler', 'add_to_cart_handler_simple', $product_id );
-        }
     }
-    if(!empty($_REQUEST['sid_eg'])){
-        $_SESSION['sid_eg'] = filter_var($_REQUEST['sid_eg'], FILTER_SANITIZE_STRING);
-    }
+
+    return true;
 }
 
 add_action( 'wp_loaded', 'egoi_add_multiple_products_to_cart', 15 );
@@ -219,6 +202,25 @@ add_action('wp_ajax_process_cellphone', 'process_cellphone');
 add_action('wp_ajax_nopriv_process_cellphone', 'process_cellphone');
 function process_cellphone(){
     run_smart_marketing_addon_sms_order_action(__FUNCTION__);
+}
+
+/**
+ * Add new interval to wordpress cron schedules
+ * @param $schedules
+ *
+ * @return mixed
+ */
+function smsonw_my_add_every_fifteen_minutes($schedules) {
+    $schedules['every_fifteen_minutes'] = array(
+        'interval' => 60 * 15,
+        'display' => __('Every Fifteen Minutes')
+    );
+    return $schedules;
+}
+add_filter('cron_schedules', 'smsonw_my_add_every_fifteen_minutes');
+// Schedule an action if it's not already scheduled
+if ( ! wp_next_scheduled( 'smsonw_my_add_every_fifteen_minutes' ) ) {
+    wp_schedule_event( time(), 'every_fifteen_minutes', 'smsonw_my_add_every_fifteen_minutes' );
 }
 
 run_smart_marketing_addon_sms_order();

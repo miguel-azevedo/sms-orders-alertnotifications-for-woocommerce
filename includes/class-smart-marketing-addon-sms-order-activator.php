@@ -106,12 +106,13 @@ class Smart_Marketing_Addon_Sms_Order_Activator {
 
 
         $sqla = "CREATE TABLE IF NOT EXISTS $table_name (
-		  id mediumint(9) NOT NULL AUTO_INCREMENT,
+		  id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 		  time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
 		  woo_session_key VARCHAR(255) NOT NULL,
 		  php_session_key VARCHAR(255) NOT NULL,
 		  cellphone VARCHAR(255) NOT NULL,
-          status VARCHAR(255) NOT NULL DEFAULT 'waiting',
+		  order_id bigint(20) UNSIGNED NOT NULL,
+          status VARCHAR(255) NOT NULL DEFAULT 'standby',
 		  PRIMARY KEY  (id)
 		) $charset_collate;";
 

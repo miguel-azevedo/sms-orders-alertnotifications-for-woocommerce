@@ -118,23 +118,21 @@ class Smart_Marketing_Addon_Sms_Order_Public {
      FOLLOW PRICE
      */
 
-	function smsonw_follow_price_add_button(){
-        //$saved = $this->processRequest($_POST);
+	function smsonw_follow_price_add_button()
+    {
         $follow_price = json_decode(get_option('egoi_sms_follow_price'), true);
         $button_text = ( isset($follow_price['follow_price_button_name']) && $follow_price['follow_price_button_name'] != '') ? $follow_price['follow_price_button_name'] : 'Follow price!';
+
         ?>
         <a class="button" id="triggerFollowPrice"><?php echo $button_text ?></a>
         <?php
 
-        //if(is_array($saved) && $saved['status'] == 'error'){
-        //    echo '<div>' . $saved['message']. '</div>';
-        //}
-
-        $this->printFollowPriceForm();
+        $this->printFollowPriceForm($follow_price);
     }
 
 
     private function processRequest($post){
+
 	    if(isset($post['egoi_action']) &&  $post['egoi_action']=='saveFollowPrice') {
             //Validate ProductId
             if (!isset($post["productId"]) || $post["productId"] <= 0) {
@@ -157,32 +155,72 @@ class Smart_Marketing_Addon_Sms_Order_Public {
 	    return;
     }
 
-
-    private function printFollowPriceForm()
+	/**
+	 * @param array $follow_price
+	 */
+    private function printFollowPriceForm($follow_price=array())
     {
+
         $this->getCustomerMobilePhone();
         if (!is_product()) { return; }
         ?>
         <style>
-            #printFollowPriceForm{
+            #printFollowPriceForm {
                 position: absolute;
                 margin: 0 auto;
                 right: 0px;
-                z-index: 100;
-                padding: 1em;
+                z-index: 999999;
+                background: <?=$follow_price['follow_background_color']; ?>;
+                padding: 2em;
+                border: 2px solid <?=$follow_price['follow_background_color']; ?>;
+                border-radius: 5px;
+            }
+            #printFollowPriceForm input[type=text] {
+                width: 190px;
+                height: 30px;
+                border: none;
+                background-color: #fff;
+                -moz-border-radius: 4px;
+                border-radius: 4px;
+                padding-left: 10px;
+                padding-right: 10px;
+                border: 1px solid #ccc;
+            }
+
+            #printFollowPriceForm input[type=submit],
+            #printFollowPriceForm input[type=button]{
+                font-size: 100%;
+                margin: 0;
+                line-height: 1;
+                cursor: pointer;
+                position: relative;
+                text-decoration: none;
+                overflow: visible;
+                padding: .618em 1em;
+                font-weight: 700;
+                border-radius: 3px;
+                left: auto;
+                color: <?=$follow_price['follow_button_text_color']; ?>;
+                background-color: <?=$follow_price['follow_button_color']; ?>;
+                border: 0;
+                display: inline-block;
+                background-image: none;
+                box-shadow: none;
+                text-shadow: none;
             }
         </style>
+
         <div id="printFollowPriceForm" style="display: none;">
             <form method="POST" action="#" id="saveFollowPriceEgoi" >
                 <input type="hidden" name="egoi_action" value="saveFollowPrice" />
                 <input type="hidden" name="action" value="egoi_cellphone_actions" />
                 <input type="hidden" name="productId" value="<?php echo wc_get_product()->get_id(); ?>" />
-                <p> <?php echo __('Please enter your mobile phone','smart-marketing-addon-sms-order'); ?> </p>
-                <p>  + <input name="prefixMphone" placeholder="351" style="width: 35px;" value="<?php echo $this->getCustomerMobilePhone()[0]; ?>" /> <input name="mphone" placeholder="917789988" value="<?php echo $this->getCustomerMobilePhone()[1] ?>" /> </p>
+                <p style="color: <?=$follow_price['follow_text_color']; ?>;"><?=$follow_price['follow_title_pop']; ?> </p>
+                <p>  + <input name="prefixMphone" placeholder="351" style="width: 35px;" value="" /> <input name="mphone" placeholder="917789988" value="<?php echo $this->getCustomerMobilePhone()[1] ?>" /> </p>
                 <p> <input type="submit" value="OK" /> </p>
             </form>
-            <div id="followPriceMessage" style="display: none;">
-                <span></span>
+            <div id="followPriceMessage" style="display: none; color: <?=$follow_price['follow_text_color']; ?>;">
+                <span><?php _e('An error has occurred! Please try later.', 'smart-marketing-addon-sms-order');?></span>
             </div>
         </div>
         <script>
@@ -211,20 +249,21 @@ class Smart_Marketing_Addon_Sms_Order_Public {
                             data[obj.name] = obj.value
                         })
 
-                        $.post(egoi_public_object.ajax_url, data, function(response) {
-                            if(!response.success){
+                        $.ajax({
+                            url: egoi_public_object.ajax_url,
+                            type: "POST",
+                            data:data,
+                            success: function(data){
+                                tooglePopFollowPrice();
+                            },
+                            error: function() {
                                 var messageHolder = $(messageRef.find("span")[0]);
                                 messageHolder.text(response.data)
                                 messageRef.show(anim)
                                 return;
                             }
-                            else{
-                                tooglePopFollowPrice();
-                            }
-
                         });
                     });
-
                 });
 
             })( jQuery );
@@ -260,16 +299,16 @@ class Smart_Marketing_Addon_Sms_Order_Public {
         return $result[0]["exist"];
     }
 
-	function smsonw_notification_abandoned_cart_trigger(){
+	function smsonw_notification_abandoned_cart_trigger() {
 	    require_once plugin_dir_path( dirname( __FILE__ ) ).'includes/class-smart-marketing-addon-sms-order-abandonned-cart.php';
 	    $abandonedService = new Smart_Marketing_Addon_Sms_Order_Abandoned_Cart();
         $abandonedService->start();
     }
 
-    function smsonw_notification_abandoned_cart_clear(){
+    function smsonw_notification_abandoned_cart_clear($order_id){
         require_once plugin_dir_path( dirname( __FILE__ ) ).'includes/class-smart-marketing-addon-sms-order-abandonned-cart.php';
         $abandonedService = new Smart_Marketing_Addon_Sms_Order_Abandoned_Cart();
-        $abandonedService->convertCart();
+        $abandonedService->convertCart($order_id);
     }
 
     function egoi_cellphone_actions(){
