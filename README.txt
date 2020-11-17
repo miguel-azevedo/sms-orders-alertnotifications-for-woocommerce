@@ -14,10 +14,11 @@ Aumente as suas conversões, envie notificações SMS por estado de encomenda co
 
 Envie notificações SMS aos seus clientes e administradores sempre se altere o estado da encomenda no seu WooCommerce. Aumente as suas conversões, envie notificações SMS com os dados para pagamento Multibanco e informações sobre o envio da encomenda. Reduza as encomendas sem pagamento Multibanco com o envio de lembretes SMS.
 
-**OFERTA 50 SMS** [Ao contratar um plano E-goi Starter](https://login.egoiapp.com/signup "Contratar um plano E-goi Starter")
 
 **Funcionalidades:**
 
+*   **Novidade** SMS Recuperação de Carrinho Abandonado
+*   **Novidade** SMS Follow Price
 *   Envios de SMS sempre que exista uma nova encomenda ou alteração ao estado.
 *   Envios de SMS independentes para o cliente e administrador do site
 *   Envio de SMS em todos os estados de encomenda ou apenas nos selecionados.
@@ -35,10 +36,10 @@ Envie notificações SMS aos seus clientes e administradores sempre se altere o 
 *   Opção de envio de SMS com os dados para pagamentos do PagSeguro - (de momento, compatível com o plugin WooCommerce PagSeguro)
 *   Opção de envio de lembrete SMS, em caso da encomenda ainda estar aguardar o pagamento Multibanco, PagSeguro e EasyPay
 *   Opção para configuração de prazo de envio de lembrete
-*   **Novidade** Envio de SMS com os dados do Envio (Nome da Transportadora, Código de acompanhamento, URL)
-*   **Novidade** Identificação das transportadoras já configuradas no WooCommerce.
-*   **Novidade** Possibilidade a adicionar novas transportadoras.
-*   **Novidade** Escolha do serviço de envio a usar, directamente da página de encomenda.
+*   Envio de SMS com os dados do Envio (Nome da Transportadora, Código de acompanhamento, URL)
+*   Identificação das transportadoras já configuradas no WooCommerce.
+*   Possibilidade a adicionar novas transportadoras.
+*   Escolha do serviço de envio a usar, directamente da página de encomenda.
 
 
 **Requisitos**
@@ -63,10 +64,11 @@ Ou o [WooCommerce PagSeguro](https://wordpress.org/plugins/woocommerce-pagseguro
 
 Send SMS notifications to your customers and website administrators whenever your order status changes on your WooCommerce. Increase your conversions, send SMS notifications with the data for Multibanco (Portuguese payment gateway), PagSeguro (Brazilian payment gateway) payment and order shipping information. Reduce Multibanco or PagSeguro orders without payment by sending SMS reminders.
 
-**50 SMS OFFER** [When subscribing to a Starter E-goi Plan](https://login.egoiapp.com/signup "subscribe to a Starter E-goi Plan")
 
 **Functionalities:**
 
+*   **New** SMS Abandoned Cart Recovery
+*   **New** SMS Follow Price
 *   Send SMS whenever there is a new order or change in status.
 *   Independent SMS submissions to the client and site administrator
 *   Send SMS in all order statuses or only in selected ones.
@@ -84,10 +86,10 @@ Send SMS notifications to your customers and website administrators whenever you
 *   Option to send SMS with data for PagSeguro payments - (for the moment, compatible with the plugin WooCommerce PagSeguro)
 *   Option to send SMS reminder, in case the order is still waiting for Multibanco, PagSeguro payment or EasyPay
 *   Configuration option for the SMS remider schedule
-*   **New** Send SMS with Shipping info (Carrier Name, Tracking number, URL)
-*   **New** Send SMS with information from carriers already configured on your WooCommerce.
-*   **New** Add new custom carriers.
-*   **New** Choose which shipping service to use, directly from the ordering page.
+*   Send SMS with Shipping info (Carrier Name, Tracking number, URL)
+*   Send SMS with information from carriers already configured on your WooCommerce.
+*   Add new custom carriers.
+*   Choose which shipping service to use, directly from the ordering page.
 
 
 **Requirements**
